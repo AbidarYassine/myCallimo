@@ -12,7 +12,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
-@Component
+//@Component
 @Slf4j
 public class BatchLauncher implements ApplicationListener<ContextRefreshedEvent> {
 
@@ -40,8 +40,8 @@ public class BatchLauncher implements ApplicationListener<ContextRefreshedEvent>
     @SneakyThrows
     @Override
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
-        if (alreadySetup) return;
-        log.info("Setup Job");
+        if (alreadySetup)
+            return;
         this.run();
         alreadySetup = true;
     }

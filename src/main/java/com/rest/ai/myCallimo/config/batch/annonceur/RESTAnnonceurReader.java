@@ -1,17 +1,24 @@
 package com.rest.ai.myCallimo.config.batch.annonceur;
 
 import com.rest.ai.myCallimo.entities.base.AnnonceurBase;
+import com.rest.ai.myCallimo.entities.base.CityBase;
+import com.rest.ai.myCallimo.shared.Utils;
 import org.springframework.batch.item.ItemReader;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class RESTAnnonceurReader implements ItemReader<AnnonceurBase> {
 
     private final String apiUrl;
     private final RestTemplate restTemplate;
+
+    @Autowired
+    Utils utils;
 
     public RESTAnnonceurReader(String apiUrl, RestTemplate restTemplate) {
         this.apiUrl = apiUrl;
@@ -27,17 +34,17 @@ public class RESTAnnonceurReader implements ItemReader<AnnonceurBase> {
         if (studentDataIsNotInitialized()) {
             annonceurBasetData = fetchStudentDataFromAPI();
         }
-        AnnonceurBase nextStudent = null;
+        AnnonceurBase nextAnnonceur = null;
 
         if (nextStudentIndex < annonceurBasetData.size()) {
-            nextStudent = annonceurBasetData.get(nextStudentIndex);
+            nextAnnonceur = annonceurBasetData.get(nextStudentIndex);
             nextStudentIndex++;
         } else {
             nextStudentIndex = 0;
             annonceurBasetData = null;
         }
 
-        return nextStudent;
+        return nextAnnonceur;
     }
 
     private boolean studentDataIsNotInitialized() {
@@ -49,6 +56,8 @@ public class RESTAnnonceurReader implements ItemReader<AnnonceurBase> {
                 AnnonceurBase[].class
         );
         AnnonceurBase[] annonceurBasetData = response.getBody();
-        return Arrays.asList(annonceurBasetData);
+        System.out.println("lenght response " + annonceurBasetData.length);
+        return Arrays.stream(annonceurBasetData).filter(x -> x.getOffer_telephone() != null).filter(utils.distinctByKey(AnnonceurBase::getOffer_telephone)).collect(Collectors.toList());
+
     }
 }

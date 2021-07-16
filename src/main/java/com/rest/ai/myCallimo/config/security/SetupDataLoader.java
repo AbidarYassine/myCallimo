@@ -62,7 +62,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         user.setEmail("admin@gmail.com");
         user.setUserId(utils.generateUserId(12));
         user.setRole(adminRole);
-        userDao.save(user);
+//        userDao.save(user);
         alreadySetup = true;
     }
 
