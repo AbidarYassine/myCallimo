@@ -4,6 +4,10 @@ import org.springframework.stereotype.Component;
 
 import java.security.SecureRandom;
 import java.util.Random;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 @Component
 public class Utils {
@@ -16,5 +20,10 @@ public class Utils {
             returnIdValue.append(STRINGALPHNUM.charAt(random.nextInt(STRINGALPHNUM.length())));
         }
         return new String(returnIdValue);
+    }
+
+    public <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
+        Set<Object> seen = ConcurrentHashMap.newKeySet();
+        return t -> seen.add(keyExtractor.apply(t));
     }
 }

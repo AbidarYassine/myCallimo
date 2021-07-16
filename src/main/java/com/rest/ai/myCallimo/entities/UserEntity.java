@@ -39,7 +39,7 @@ public class UserEntity implements Serializable {
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "roles_id")
-    private Role role;
+    private RoleEntity role;
 
 
 }

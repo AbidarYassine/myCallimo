@@ -3,7 +3,7 @@ package com.rest.ai.myCallimo.services.impl;
 import com.rest.ai.myCallimo.dao.UserDao;
 import com.rest.ai.myCallimo.dto.RoleDto;
 import com.rest.ai.myCallimo.dto.UserDto;
-import com.rest.ai.myCallimo.entities.Role;
+import com.rest.ai.myCallimo.entities.RoleEntity;
 import com.rest.ai.myCallimo.entities.UserEntity;
 import com.rest.ai.myCallimo.exception.role.RoleNotFoundException;
 import com.rest.ai.myCallimo.services.facade.RoleService;
@@ -45,7 +45,7 @@ public class UserServiceImpl implements UserService {
         RoleDto roleDto = roleService.findByName(role);
         if (roleDto == null)
             throw new RoleNotFoundException("Role not found");
-        Role roleS = modelMapper.map(roleDto, Role.class);
+        RoleEntity roleS = modelMapper.map(roleDto, RoleEntity.class);
         user.setRole(roleS);
         UserEntity userEntity = userDao.save(user);
         return modelMapper.map(userEntity, UserDto.class);

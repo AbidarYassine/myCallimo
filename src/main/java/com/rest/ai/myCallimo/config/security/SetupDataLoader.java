@@ -3,8 +3,10 @@ package com.rest.ai.myCallimo.config.security;
 
 import com.rest.ai.myCallimo.dao.RoleDao;
 import com.rest.ai.myCallimo.dao.UserDao;
-import com.rest.ai.myCallimo.entities.Role;
+import com.rest.ai.myCallimo.entities.CategoryEntity;
+import com.rest.ai.myCallimo.entities.RoleEntity;
 import com.rest.ai.myCallimo.entities.UserEntity;
+import com.rest.ai.myCallimo.services.facade.CategoryService;
 import com.rest.ai.myCallimo.shared.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
@@ -13,6 +15,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Component
@@ -50,7 +54,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         createRoleIfNotFound("SUPERVISOR");
         createRoleIfNotFound("CALLER");
 
-        Role adminRole = roleDao.findByName("ADMIN");
+        RoleEntity adminRole = roleDao.findByName("ADMIN");
         UserEntity user = new UserEntity();
         user.setFirstName("Admin");
         user.setLastName("Admin");
@@ -59,15 +63,14 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         user.setUserId(utils.generateUserId(12));
         user.setRole(adminRole);
         userDao.save(user);
-
         alreadySetup = true;
     }
 
     @Transactional
-    Role createRoleIfNotFound(String name) {
-        Role role = roleDao.findByName(name);
+    RoleEntity createRoleIfNotFound(String name) {
+        RoleEntity role = roleDao.findByName(name);
         if (role == null) {
-            role = new Role();
+            role = new RoleEntity();
             role.setName(name);
             roleDao.save(role);
         }

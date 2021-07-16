@@ -2,7 +2,7 @@ package com.rest.ai.myCallimo.services.impl;
 
 import com.rest.ai.myCallimo.dao.RoleDao;
 import com.rest.ai.myCallimo.dao.UserDao;
-import com.rest.ai.myCallimo.entities.Role;
+import com.rest.ai.myCallimo.entities.RoleEntity;
 import com.rest.ai.myCallimo.entities.UserEntity;
 import com.rest.ai.myCallimo.exception.user.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,15 +61,15 @@ public class UserDetailService implements UserDetailsService {
 
     //
     private Collection<? extends GrantedAuthority> getAuthorities(
-            Collection<Role> roles) {
+            Collection<RoleEntity> roles) {
         return getGrantedAuthorities(getPrivileges(roles));
     }
 
-    private List<String> getPrivileges(Collection<Role> roles) {
+    private List<String> getPrivileges(Collection<RoleEntity> roles) {
 
         List<String> privileges = new ArrayList<>();
 
-        for (Role role : roles) {
+        for (RoleEntity role : roles) {
             privileges.add(role.getName());
         }
         return privileges;

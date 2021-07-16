@@ -17,7 +17,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class BaseOffre implements Serializable {
+public class OffreBase implements Serializable {
 
     //    Particiliers
     private static final long serialVersionUID = 4685133920522631453L;

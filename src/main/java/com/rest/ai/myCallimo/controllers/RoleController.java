@@ -5,6 +5,7 @@ import com.rest.ai.myCallimo.exception.role.RoleAlreadyExistsException;
 import com.rest.ai.myCallimo.exception.role.RoleNotFoundException;
 import com.rest.ai.myCallimo.response.RoleResponse;
 import com.rest.ai.myCallimo.services.facade.RoleService;
+import com.sun.xml.bind.v2.TODO;
 import javassist.NotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +17,9 @@ import org.springframework.web.bind.annotation.*;
 @RestController()
 public class RoleController {
     private final RoleService roleService;
-    // TODO Spring Batch Tutorial
 
+    // TODO  offre Type Batch
+    // TODO City batch
     @Autowired
     public RoleController(RoleService roleService) {
         this.roleService = roleService;

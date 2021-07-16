@@ -2,7 +2,7 @@ package com.rest.ai.myCallimo.services.impl;
 
 import com.rest.ai.myCallimo.dao.RoleDao;
 import com.rest.ai.myCallimo.dto.RoleDto;
-import com.rest.ai.myCallimo.entities.Role;
+import com.rest.ai.myCallimo.entities.RoleEntity;
 import com.rest.ai.myCallimo.services.facade.RoleService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public RoleDto findByName(String name) {
         ModelMapper modelMapper = new ModelMapper();
-        Role role = roleDao.findByName(name);
+        RoleEntity role = roleDao.findByName(name);
         if (role == null)
             return null;
         return modelMapper.map(role, RoleDto.class);
@@ -29,10 +29,10 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public RoleDto save(RoleDto role) {
-        Role roleF = roleDao.findByName(role.getName());
+        RoleEntity roleF = roleDao.findByName(role.getName());
         if (roleF != null) return null;
         ModelMapper modelMapper = new ModelMapper();
-        Role role_to_save = modelMapper.map(role, Role.class);
+        RoleEntity role_to_save = modelMapper.map(role, RoleEntity.class);
         roleDao.save(role_to_save);
         return role;
     }

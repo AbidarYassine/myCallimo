@@ -13,7 +13,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Role implements Serializable {
+public class RoleEntity implements Serializable {
     @Id
     @GeneratedValue()
     private Long id;
