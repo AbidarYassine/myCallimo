@@ -18,8 +18,7 @@ public class RoleEntity implements Serializable {
     @GeneratedValue()
     private Long id;
     private String name;
-    @OneToMany(mappedBy = "role", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private List<UserEntity> users;
+
 
 
 }

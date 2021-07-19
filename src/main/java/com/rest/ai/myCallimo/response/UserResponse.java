@@ -12,8 +12,7 @@ import lombok.ToString;
 @ToString
 public class UserResponse {
     private String firstName;
-    private String userId;
     private String lastName;
     private String email;
-    private RoleResponse role;
+    private String role;
 }

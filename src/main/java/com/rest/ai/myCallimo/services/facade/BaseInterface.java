@@ -10,4 +10,5 @@ public interface BaseInterface<T> {
     List<T> findAll();
 
     T findById(Integer id);
+
 }

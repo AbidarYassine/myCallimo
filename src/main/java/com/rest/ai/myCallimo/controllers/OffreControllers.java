@@ -4,6 +4,7 @@ package com.rest.ai.myCallimo.controllers;
 import com.rest.ai.myCallimo.entities.OffreEntity;
 import com.rest.ai.myCallimo.entities.base.AnnonceurBase;
 import com.rest.ai.myCallimo.entities.base.CityBase;
+import com.rest.ai.myCallimo.entities.base.OffreBase;
 import com.rest.ai.myCallimo.entities.base.OffreTypeBase;
 import com.rest.ai.myCallimo.services.facade.OffreService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,5 +60,15 @@ public class OffreControllers {
         );
         CityBase[] annonceurBasetData = response.getBody();
         return Arrays.asList(annonceurBasetData);
+    }
+
+    @GetMapping("offre")
+    public List<OffreBase> getOffre() {
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<OffreBase[]> response = restTemplate.getForEntity("https://myspace.espaceo.net/api/get-pap-offers",
+                OffreBase[].class
+        );
+        OffreBase[] offreBasetData = response.getBody();
+        return Arrays.asList(offreBasetData);
     }
 }

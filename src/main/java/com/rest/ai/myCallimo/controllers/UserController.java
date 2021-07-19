@@ -29,7 +29,7 @@ public class UserController {
 
     @PostMapping()
     public ResponseEntity<UserResponse> save(@RequestBody() UserDto userDto) {
-        UserDto userDto1 = userService.save(userDto, "CALLER");
+        UserDto userDto1 = null;
         if (userDto1 == null)
             throw new UserAlreadyExist("User with email " + userDto.getEmail() + " exists !!");
         ModelMapper modelMapper = new ModelMapper();

@@ -9,22 +9,17 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 
-@Entity(name = "users")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class UserEntity implements Serializable {
+@MappedSuperclass
+public class UserEntity extends AbstractEntity {
     private static final long serialVersionUID = -1100455345047414888L;
-    @Id
-    @GeneratedValue
-    private long id;
+
 
     @Column(nullable = false, length = 50)
     private String firstName;
-
-    @Column(nullable = false, length = 60, unique = true)
-    private String userId;
 
     @Column(nullable = false, length = 50)
     private String lastName;
@@ -36,10 +31,8 @@ public class UserEntity implements Serializable {
     private String encryptedPassword;
 
     private boolean passwordChanged = false;
-
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "roles_id")
-    private RoleEntity role;
+    private String avatar;
+    private String role;
 
 
 }

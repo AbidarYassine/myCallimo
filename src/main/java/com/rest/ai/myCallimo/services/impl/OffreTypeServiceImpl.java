@@ -28,4 +28,6 @@ public class OffreTypeServiceImpl implements OffreTypeService {
     public OffreTypeEntity findById(Integer id) {
         return offreTypeDao.getById(id);
     }
+
+
 }

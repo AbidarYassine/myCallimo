@@ -23,5 +23,5 @@ public class UserDto implements Serializable {
     private String password;
     private String encryptedPassword;
     private Boolean emailVerficationStatus = false;
-    private RoleDto role;
+    private String role;
 }

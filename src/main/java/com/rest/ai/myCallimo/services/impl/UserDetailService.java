@@ -1,10 +1,11 @@
 package com.rest.ai.myCallimo.services.impl;
 
-import com.rest.ai.myCallimo.dao.RoleDao;
-import com.rest.ai.myCallimo.dao.UserDao;
+
+import com.rest.ai.myCallimo.dto.UserDto;
 import com.rest.ai.myCallimo.entities.RoleEntity;
 import com.rest.ai.myCallimo.entities.UserEntity;
 import com.rest.ai.myCallimo.exception.user.UserNotFoundException;
+import com.rest.ai.myCallimo.services.facade.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -20,15 +21,15 @@ import java.util.List;
 
 @Service
 public class UserDetailService implements UserDetailsService {
-    private final UserDao userDao;
-    private final RoleDao roleDao;
+    private final UserService userService;
 
     @Autowired
-    public UserDetailService(UserDao userDao, RoleDao roleDao) {
-        this.userDao = userDao;
-        this.roleDao = roleDao;
+    public UserDetailService(UserService userService) {
+        this.userService = userService;
     }
-//    @Override
+
+
+    //    @Override
 //    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 //        UserEntity userEntity = userDao.findByEmail(email);
 //        if (userEntity == null) throw new UsernameNotFoundException(email);
@@ -37,25 +38,17 @@ public class UserDetailService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-//
-//        UserEntity user = userDao.findByEmail(email);
-//        if (user == null) {
-//            throw new UserNotFoundException("Email Or password incorrect");
-//        } else {
-//            return new org.springframework.security.core.userdetails.User(
-//                    user.getEmail(), user.getEncryptedPassword(), true, true, true,
-//                    true, getAuthorities(user));
-//        }
-        UserEntity userEntity = userDao.findByEmail(email);
-        if (userEntity == null) throw new UserNotFoundException("Email Or password incorrect");
-        return new User(userEntity.getEmail(), userEntity.getEncryptedPassword(), new ArrayList<>());
+
+        UserDto userDto = userService.findByEmail(email);
+        if (userDto == null) throw new UserNotFoundException("Email Or password incorrect");
+        return new User(userDto.getEmail(), userDto.getEncryptedPassword(), new ArrayList<>());
 
     }
 
     public Collection<? extends GrantedAuthority> getAuthorities(UserEntity user) {
         List<GrantedAuthority> grantedAuthorities = new ArrayList<GrantedAuthority>();
-        grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_" + user.getRole().getName().toUpperCase()));
-        System.out.println("inside details impl " + user.getRole().getName().toUpperCase());
+        grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_" + user.getRole().toUpperCase()));
+        System.out.println("inside details impl " + user.getRole().toUpperCase());
         return grantedAuthorities;
     }
 

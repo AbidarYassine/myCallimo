@@ -1,6 +1,7 @@
 package com.rest.ai.myCallimo.config.security;
 
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.access.expression.SecurityExpressionHandler;
@@ -23,10 +24,12 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     private final UserDetailsService userDetailService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
+    @Autowired
     public WebSecurity(UserDetailsService userDetailsService, BCryptPasswordEncoder cryptPasswordEncoder) {
         this.bCryptPasswordEncoder = cryptPasswordEncoder;
         this.userDetailService = userDetailsService;
     }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http

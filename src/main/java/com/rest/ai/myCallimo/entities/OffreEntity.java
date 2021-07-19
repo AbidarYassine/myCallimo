@@ -68,4 +68,8 @@ public class OffreEntity implements Serializable {
     @ManyToOne
     @JoinColumn(name = "city_id")
     private CityEntity city;
+
+    @OneToOne
+    @JoinColumn(name = "appel_id")
+    private AppelEntity appel;
 }

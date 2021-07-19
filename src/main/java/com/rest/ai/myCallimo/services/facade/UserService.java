@@ -7,7 +7,9 @@ import java.util.List;
 
 public interface UserService {
 
-    UserDto save(UserDto userDto, String role);
+    UserDto addUser(UserDto userDto, int role, UserDto authUser);
+
+//    role 0==> callers, 1==> Supervisor  ,2==>Admin
 
     List<UserDto> findAll();
 
