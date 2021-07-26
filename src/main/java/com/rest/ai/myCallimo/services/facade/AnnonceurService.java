@@ -1,10 +1,10 @@
 package com.rest.ai.myCallimo.services.facade;
 
-import com.rest.ai.myCallimo.entities.AnnonceurEntity;
+import com.rest.ai.myCallimo.dto.AnnonceurDto;
 
 
-public interface AnnonceurService extends BaseInterface<AnnonceurEntity> {
+public interface AnnonceurService extends BaseInterface<AnnonceurDto> {
 
-    AnnonceurEntity findByTelephone(String telephone);
+    AnnonceurDto findByTelephone(String telephone);
 
 }

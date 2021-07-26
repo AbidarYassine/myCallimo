@@ -7,4 +7,6 @@ public interface AuthRoleService {
     boolean isAuthorized(String role);
 
     UserDto getUserAuth();
+
+    String getRole();
 }

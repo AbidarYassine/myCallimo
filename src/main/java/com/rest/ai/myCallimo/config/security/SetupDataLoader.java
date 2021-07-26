@@ -16,7 +16,6 @@ import org.springframework.stereotype.Component;
 import javax.transaction.Transactional;
 
 
-
 @Component
 public class SetupDataLoader implements ApplicationListener<ContextRefreshedEvent> {
 
@@ -48,12 +47,15 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 
         if (alreadySetup)
             return;
+        if (adminDao.findByEmail("admin@gmail.com") != null) {
+            return;
+        }
         AdminEntity admin = new AdminEntity();
         admin.setFirstName("Admin");
         admin.setLastName("Admin");
         admin.setEncryptedPassword(bCryptPasswordEncoder.encode("admin1234"));
         admin.setEmail("admin@gmail.com");
-//        adminDao.save(admin);
+        adminDao.save(admin);
         alreadySetup = true;
     }
 

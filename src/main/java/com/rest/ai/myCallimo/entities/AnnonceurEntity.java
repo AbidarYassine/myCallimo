@@ -5,10 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 
 import java.io.Serializable;
 import java.util.List;
@@ -23,6 +20,7 @@ public class AnnonceurEntity implements Serializable {
     private Integer id;
     private String annonceur_id;
     private String name;
+    @Column(unique = true)
     private String telephone;
     private String email;
     private String address;

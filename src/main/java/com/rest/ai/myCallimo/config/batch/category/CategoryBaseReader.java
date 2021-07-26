@@ -57,6 +57,6 @@ public class CategoryBaseReader implements ItemReader<CategoryBase> {
                 CategoryBase[].class
         );
         CategoryBase[] categoryEntities = response.getBody();
-        return Arrays.stream(categoryEntities).filter(utils.distinctByKey(CategoryBase::getOffer_category)).collect(Collectors.toList());
+        return Arrays.stream(categoryEntities).filter(x -> x.getOffer_category() != null).filter(utils.distinctByKey(CategoryBase::getOffer_category)).collect(Collectors.toList());
     }
 }

@@ -9,13 +9,18 @@ import com.rest.ai.myCallimo.entities.SupervisorEntity;
 import com.rest.ai.myCallimo.exception.user.UserAlreadyExist;
 import com.rest.ai.myCallimo.services.facade.SupervisorService;
 import com.rest.ai.myCallimo.services.facade.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.ModelMap;
 
 
 @Service
+@Slf4j
 public class SupervisorServiceImpl implements SupervisorService {
 
 
@@ -40,6 +45,54 @@ public class SupervisorServiceImpl implements SupervisorService {
         SupervisorEntity supervisorEntity = supervisorDao.findByEmail(email);
         return modelMapper.map(supervisorEntity, SupervisorDto.class);
     }
+
+    @Transactional
+    @Override
+    public int delete(Integer id) {
+        SupervisorEntity supervisorEntity = supervisorDao.findById(id).get();
+        supervisorDao.delete(supervisorEntity);
+        log.info("wsal hna ...");
+        return 1;
+
+    }
+
+    @Override
+    public SupervisorDto findById(Integer id) {
+        SupervisorEntity supervisorEntity = supervisorDao.findById(id).orElse(null);
+        if (supervisorEntity == null) return null;
+        ModelMapper modelMapper = new ModelMapper();
+        return modelMapper.map(supervisorEntity, SupervisorDto.class);
+    }
+
+    @Override
+    public int update(SupervisorDto supervisorDto, Integer id) {
+        SupervisorEntity supervisorEntity = supervisorDao.findById(id).orElse(null);
+        if (supervisorEntity == null) return -1;
+        if (userService.findByEmail(supervisorDto.getEmail()) != null && !supervisorEntity.getEmail().equals(supervisorDto.getEmail()))
+            return -2;
+        ModelMapper modelMapper = new ModelMapper();
+        String password;
+        if (supervisorDto.getPassword() == null || supervisorDto.getPassword().isEmpty()) {
+            password = supervisorEntity.getEncryptedPassword();
+        } else {
+            password = bCryptPasswordEncoder.encode(supervisorDto.getPassword());
+        }
+        supervisorDto.setId(supervisorEntity.getId());
+        supervisorEntity = modelMapper.map(supervisorDto, SupervisorEntity.class);
+        supervisorEntity.setEncryptedPassword(password);
+        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+        AdminEntity adminEntity = modelMapper.map(userService.findByEmail(userName), AdminEntity.class);
+        supervisorEntity.setAdmin(adminEntity);
+        supervisorDao.save(supervisorEntity);
+        return 1;
+    }
+
+    @Override
+    public void deleteAllByEmail(String email) {
+//        SupervisorEntity supervisorEntity = supervisorDao.findByEmail(email);
+        supervisorDao.deleteAllByEmail(email);
+    }
+
 
     @Override
     public SupervisorDto save(SupervisorDto t, AdminDto admin) {

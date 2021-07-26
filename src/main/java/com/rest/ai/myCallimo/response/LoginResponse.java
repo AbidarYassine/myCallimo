@@ -5,15 +5,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class UserResponse {
-    private Integer id;
-    private String firstName;
-    private String lastName;
-    private String email;
-    private String role;
+public class LoginResponse {
+    private String token;
+    private String message;
 }

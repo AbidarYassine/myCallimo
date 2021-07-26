@@ -1,7 +1,7 @@
 package com.rest.ai.myCallimo.services.facade;
 
-import com.rest.ai.myCallimo.entities.CityEntity;
+import com.rest.ai.myCallimo.dto.CityDto;
 
-public interface CityService extends BaseInterface<CityEntity> {
-    CityEntity findByName(String name);
+public interface CityService extends BaseInterface<CityDto> {
+    CityDto findByName(String name);
 }

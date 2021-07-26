@@ -17,12 +17,13 @@ public class CityEntity implements Serializable {
     @Id
     @GeneratedValue
     private Integer id;
+    @Column(unique = true)
     private String name;
+
     @OneToMany(mappedBy = "city")
     private List<OffreEntity> offres;
 
-    @OneToOne
-    @JoinColumn(name = "caller_id")
+    @OneToOne(mappedBy = "city", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private CallerEntity caller;
 
 }

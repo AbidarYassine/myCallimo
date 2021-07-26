@@ -19,7 +19,7 @@ import java.util.List;
 public class AdminEntity extends UserEntity {
     private String role = "ADMIN";
 
-    @OneToMany(mappedBy = "admin", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "admin", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SupervisorEntity> supervisors;
 
 }

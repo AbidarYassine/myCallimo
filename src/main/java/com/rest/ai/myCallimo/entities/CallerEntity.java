@@ -20,7 +20,9 @@ public class CallerEntity extends UserEntity {
     @ManyToOne
     private SupervisorEntity supervisor;
 
-    @OneToOne(mappedBy = "caller", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+
+    @OneToOne
+    @JoinColumn(name = "city_id")
     private CityEntity city;
 
     @OneToMany(mappedBy = "caller", fetch = FetchType.EAGER, cascade = CascadeType.ALL)

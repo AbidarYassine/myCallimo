@@ -62,6 +62,16 @@ public class OffreControllers {
         return Arrays.asList(annonceurBasetData);
     }
 
+    @GetMapping("offres")
+    public List<OffreBase> getOffres() {
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<OffreBase[]> response = restTemplate.getForEntity("https://myspace.espaceo.net/api/get-pap-offers",
+                OffreBase[].class
+        );
+        OffreBase[] annonceurBasetData = response.getBody();
+        return Arrays.asList(annonceurBasetData);
+    }
+
     @GetMapping("offre")
     public List<OffreBase> getOffre() {
         RestTemplate restTemplate = new RestTemplate();

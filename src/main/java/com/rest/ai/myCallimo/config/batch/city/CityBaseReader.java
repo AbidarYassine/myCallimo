@@ -58,7 +58,7 @@ public class CityBaseReader implements ItemReader<CityBase> {
         );
         CityBase[] cityBasetData = response.getBody();
         log.info("cityBasetData size " + cityBasetData.length);
-            return Arrays.stream(cityBasetData).filter(utils.distinctByKey(CityBase::getOffer_city)).collect(Collectors.toList());
+            return Arrays.stream(cityBasetData).filter(x -> x.getOffer_city() != null).filter(utils.distinctByKey(CityBase::getOffer_city)).collect(Collectors.toList());
 //        return Arrays.asList(cityBasetData);
     }
 }

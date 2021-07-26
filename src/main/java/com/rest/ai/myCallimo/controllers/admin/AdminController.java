@@ -5,6 +5,7 @@ import com.rest.ai.myCallimo.dto.AdminDto;
 import com.rest.ai.myCallimo.dto.SupervisorDto;
 import com.rest.ai.myCallimo.dto.UserDto;
 import com.rest.ai.myCallimo.exception.user.UnAuthorizationUser;
+import com.rest.ai.myCallimo.exception.user.UserAlreadyExist;
 import com.rest.ai.myCallimo.exception.user.UserNotFoundException;
 import com.rest.ai.myCallimo.response.UserResponse;
 import com.rest.ai.myCallimo.services.facade.AdminService;
@@ -23,12 +24,14 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/admin/supervisors")
+@CrossOrigin("*")
 @Slf4j
 public class AdminController {
     private final AuthRoleService authRoleService;
     private final SupervisorService supervisorService;
     private final AdminService adminService;
+
 
     @Autowired
     public AdminController(AuthRoleService authRoleService, SupervisorService supervisorService, AdminService adminService) {
@@ -46,7 +49,7 @@ public class AdminController {
         return new ResponseEntity<>(modelMapper.map(result, UserResponse.class), HttpStatus.CREATED);
     }
 
-    @GetMapping("supervisors")
+    @GetMapping("")
     public ResponseEntity<List<UserResponse>> getSupervisor() {
         isAuthorized();
         UserDto authUser = authRoleService.getUserAuth();
@@ -61,6 +64,32 @@ public class AdminController {
         });
         log.info("supervisors {}", adminDto.getSupervisors());
         return new ResponseEntity<>(userResponses, HttpStatus.OK);
+    }
+
+    @GetMapping("/id/{id}")
+    public ResponseEntity<UserResponse> findById(@PathVariable() Integer id) {
+        isAuthorized();
+        SupervisorDto supervisorDto = supervisorService.findById(id);
+        ModelMapper modelMapper = new ModelMapper();
+        return new ResponseEntity<>(modelMapper.map(supervisorDto, UserResponse.class), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/delete-supervisor/{id}")
+    public int deleteSupervisor(@PathVariable() Integer id) {
+        isAuthorized();
+        supervisorService.delete(id);
+        return 1;
+    }
+
+
+    @PutMapping("/update-supervisor/{id}")
+    public ResponseEntity<UserResponse> updateSupervisor(@RequestBody() SupervisorDto supervisorDto, @PathVariable() Integer id) {
+        isAuthorized();
+        int res = supervisorService.update(supervisorDto, id);
+        if (res == -1) throw new UserNotFoundException("supervisor not found");
+        if (res == -2) throw new UserAlreadyExist("User with email " + supervisorDto.getEmail() + " already exists");
+        ModelMapper modelMapper = new ModelMapper();
+        return new ResponseEntity<>(modelMapper.map(supervisorDto, UserResponse.class), HttpStatus.CREATED);
     }
 
     private void isAuthorized() {

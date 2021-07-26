@@ -47,6 +47,7 @@ public class BatchConfig {
     private static final String STEP_NAME_2 = "processingStep2";
     private static final String STEP_NAME_3 = "processingStep3";
     private static final String STEP_NAME_4 = "processingStep4";
+    private static final String STEP_NAME_5 = "processingStep5";
     private static final String READER_NAME = "annonceBaseJobItemReader";
 
 
@@ -69,7 +70,7 @@ public class BatchConfig {
 
     @Bean
     public Step offreBaseStep() {
-        return stepBuilderFactory.get(STEP_NAME_2)
+        return stepBuilderFactory.get(STEP_NAME_5)
                 .<OffreBase, OffreEntity>chunk(5)
                 .reader(itemReaderOffre(restTemplate()))
                 .processor(offreBaseItemProcessor())
@@ -79,7 +80,7 @@ public class BatchConfig {
 
     @Bean
     public Step cityBaseStep() {
-        return stepBuilderFactory.get(STEP_NAME_3)
+        return stepBuilderFactory.get(STEP_NAME_4)
                 .<CityBase, CityEntity>chunk(5)
                 .reader(itemReaderCity(restTemplate()))
                 .processor(cityBaseItemProcessor())
@@ -90,7 +91,7 @@ public class BatchConfig {
     //    offre Type step
     @Bean
     public Step offreTypeBaseStep() {
-        return stepBuilderFactory.get(STEP_NAME_3)
+        return stepBuilderFactory.get(STEP_NAME_2)
                 .<OffreTypeBase, OffreTypeEntity>chunk(5)
                 .reader(itemReaderOffreType(restTemplate()))
                 .processor(offreTypeItemProcessor())
@@ -101,13 +102,14 @@ public class BatchConfig {
 
     @Bean
     public Step categoryBaseStep() {
-        return stepBuilderFactory.get(STEP_NAME_4)
+        return stepBuilderFactory.get(STEP_NAME_3)
                 .<CategoryBase, CategoryEntity>chunk(5)
                 .reader(itemReaderCategory(restTemplate()))
                 .processor(catergoryBaseItemProcessor())
                 .writer(categoryItemWriter())
                 .build();
     }
+
 
     //    defin job execute step
     @Bean
@@ -117,6 +119,7 @@ public class BatchConfig {
                 .next(offreTypeBaseStep())
                 .next(categoryBaseStep())
                 .next(cityBaseStep())
+                .next(offreBaseStep())
                 .build();
     }
 

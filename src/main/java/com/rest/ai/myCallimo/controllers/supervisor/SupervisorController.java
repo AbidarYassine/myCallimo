@@ -21,6 +21,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/supervisor")
+@CrossOrigin("*")
 public class SupervisorController {
 
 

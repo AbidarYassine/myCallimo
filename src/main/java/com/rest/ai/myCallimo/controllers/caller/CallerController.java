@@ -3,6 +3,7 @@ package com.rest.ai.myCallimo.controllers.caller;
 import com.rest.ai.myCallimo.exception.user.UnAuthorizationUser;
 import com.rest.ai.myCallimo.services.facade.AuthRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/caller")
+@CrossOrigin("*")
 public class CallerController {
 
     private final AuthRoleService authRoleService;

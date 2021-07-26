@@ -18,40 +18,41 @@ public class OffreEntity implements Serializable {
     private static final long serialVersionUID = 6659221496655031009L;
     @Id
     @GeneratedValue
-    private Integer id;
-    private String url;
-    private String title;
+    private Integer id; //
+    private String url; //
+    private String title;//
     private String reference;
-    private String description;
-    private String address;
-    private String piscine;
-    private String pices;
-    private String is_active;
-    private String is_processed;
-    private String area;
-    private String area_units;
-    private String currency;
-    private String price;
-    private String last_price;
-    private String first_price;
-    private String chamber;
-    private String last_check_date;
-    private String is_new;
-    private String offer_status;
-    private String offer_code_status;
-    private String offer_latitude;
-    private String offer_longitude;
-    private String offer_rank_obtained;
-    private String offer_rank_max;
-    private String is_update_price;
-    private String is_update_area;
-    private String is_url_exist;
-    private String new_price_date;
-    private String department;
-    private String bathroom;
-    private String surface_land;
-    private String offer_dpe;
-    private String offer_ges;
+    @Column(length = 5000)
+    private String description;//
+    private String address; //
+    private String piscine; //
+    private String pices; //
+    private String is_active; //
+    private String is_processed; //
+    private String area; //
+    private String area_units; //
+    private String currency; //
+    private String price; //
+    private String last_price; //
+    private String first_price; //
+    private String chamber; //
+    private String last_check_date; //
+    private String is_new; //
+    private String offer_status; //
+    private String offer_code_status; //
+    private String offer_latitude; //
+    private String offer_longitude; //
+    private String offer_rank_obtained; //
+    private String offer_rank_max; //
+    private String is_update_price; //
+    private String is_update_area; //
+    private String is_url_exist; //
+    private String new_price_date; //
+    private String department; //
+    private String bathroom;//
+    private String surface_land; //
+    private String offer_dpe; //
+    private String offer_ges;//
 
     @ManyToOne
     @JoinColumn(name = "annonceur_id")
