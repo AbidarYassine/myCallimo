@@ -7,11 +7,9 @@ import com.rest.ai.myCallimo.dto.UserDto;
 import com.rest.ai.myCallimo.exception.user.UnAuthorizationUser;
 import com.rest.ai.myCallimo.exception.user.UserAlreadyExist;
 import com.rest.ai.myCallimo.exception.user.UserNotFoundException;
+import com.rest.ai.myCallimo.response.SupervisorResponse;
 import com.rest.ai.myCallimo.response.UserResponse;
-import com.rest.ai.myCallimo.services.facade.AdminService;
-import com.rest.ai.myCallimo.services.facade.AuthRoleService;
-import com.rest.ai.myCallimo.services.facade.SupervisorService;
-import javassist.NotFoundException;
+import com.rest.ai.myCallimo.services.facade.*;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,13 +29,15 @@ public class AdminController {
     private final AuthRoleService authRoleService;
     private final SupervisorService supervisorService;
     private final AdminService adminService;
+    private final CityService cityService;
 
 
     @Autowired
-    public AdminController(AuthRoleService authRoleService, SupervisorService supervisorService, AdminService adminService) {
+    public AdminController(AuthRoleService authRoleService, SupervisorService supervisorService, AdminService adminService, CityService cityService) {
         this.authRoleService = authRoleService;
         this.supervisorService = supervisorService;
         this.adminService = adminService;
+        this.cityService = cityService;
     }
 
     @PostMapping("/add-supervisor")
@@ -50,7 +50,7 @@ public class AdminController {
     }
 
     @GetMapping("")
-    public ResponseEntity<List<UserResponse>> getSupervisor() {
+    public ResponseEntity<List<SupervisorResponse>> getSupervisor() {
         isAuthorized();
         UserDto authUser = authRoleService.getUserAuth();
         AdminDto adminDto = adminService.findByEmail(authUser.getEmail());
@@ -58,20 +58,20 @@ public class AdminController {
         if (adminDto == null)
             throw new UserNotFoundException("Admin not found ");
         log.info("admin entity {}", adminDto);
-        List<UserResponse> userResponses = new ArrayList<>();
+        List<SupervisorResponse> userResponses = new ArrayList<>();
         adminDto.getSupervisors().forEach(el -> {
-            userResponses.add(modelMapper.map(el, UserResponse.class));
+            userResponses.add(modelMapper.map(el, SupervisorResponse.class));
         });
         log.info("supervisors {}", adminDto.getSupervisors());
         return new ResponseEntity<>(userResponses, HttpStatus.OK);
     }
 
     @GetMapping("/id/{id}")
-    public ResponseEntity<UserResponse> findById(@PathVariable() Integer id) {
+    public ResponseEntity<SupervisorResponse> findById(@PathVariable() Integer id) {
         isAuthorized();
         SupervisorDto supervisorDto = supervisorService.findById(id);
         ModelMapper modelMapper = new ModelMapper();
-        return new ResponseEntity<>(modelMapper.map(supervisorDto, UserResponse.class), HttpStatus.OK);
+        return new ResponseEntity<>(modelMapper.map(supervisorDto, SupervisorResponse.class), HttpStatus.OK);
     }
 
     @DeleteMapping("/delete-supervisor/{id}")
@@ -91,6 +91,9 @@ public class AdminController {
         ModelMapper modelMapper = new ModelMapper();
         return new ResponseEntity<>(modelMapper.map(supervisorDto, UserResponse.class), HttpStatus.CREATED);
     }
+
+
+
 
     private void isAuthorized() {
         if (!authRoleService.isAuthorized("ADMIN"))

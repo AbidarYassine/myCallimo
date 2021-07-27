@@ -7,6 +7,7 @@ import com.rest.ai.myCallimo.services.facade.CityService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -51,5 +52,14 @@ public class CityServiceImpl implements CityService {
         if (cityEntity == null) return null;
         ModelMapper modelMapper = new ModelMapper();
         return modelMapper.map(cityEntity, CityDto.class);
+    }
+
+    @Override
+    @Transactional
+    public int delete(Integer id) {
+        CityEntity cityEntity = cityDao.findById(id).orElse(null);
+        if (cityEntity == null) return -1;
+        cityDao.delete(cityEntity);
+        return 1;
     }
 }

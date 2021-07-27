@@ -1,5 +1,6 @@
 package com.rest.ai.myCallimo.exception;
 
+import com.rest.ai.myCallimo.exception.city.CityNotFoundException;
 import com.rest.ai.myCallimo.exception.role.RoleAlreadyExistsException;
 import com.rest.ai.myCallimo.exception.role.RoleNotFoundException;
 import com.rest.ai.myCallimo.exception.user.UnAuthorizationUser;
@@ -54,8 +55,14 @@ public class AppExceptionHandler {
         return new ResponseEntity<>(errorMessage, new HttpHeaders(), HttpStatus.CONFLICT);
     }
 
-//    Role Exception fin
-
+    //    Role Exception fin
+    // start city
+    @ExceptionHandler(value = {CityNotFoundException.class})
+    public ResponseEntity<Object> handlerCityException(CityNotFoundException ex, WebRequest req) {
+        ErrorMessage errorMessage = new ErrorMessage(new Date(), ex.getMessage());
+        return new ResponseEntity<>(errorMessage, new HttpHeaders(), HttpStatus.NOT_FOUND);
+    }
+    // end    city
 
     //    global Exception
     @ExceptionHandler(value = Exception.class)

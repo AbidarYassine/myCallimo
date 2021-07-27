@@ -1,12 +1,13 @@
 package com.rest.ai.myCallimo.controllers.caller;
 
-import com.rest.ai.myCallimo.exception.user.UnAuthorizationUser;
-import com.rest.ai.myCallimo.services.facade.AuthRoleService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+
+import com.rest.ai.myCallimo.dto.CallerDto;
+import com.rest.ai.myCallimo.dto.SupervisorDto;
+import com.rest.ai.myCallimo.exception.user.UserNotFoundException;
+import com.rest.ai.myCallimo.services.facade.CallerService;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @RestController
@@ -14,17 +15,25 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin("*")
 public class CallerController {
 
-    private final AuthRoleService authRoleService;
+    private final CallerService callerService;
 
-    @Autowired
-    public CallerController(AuthRoleService authRoleService) {
-        this.authRoleService = authRoleService;
+    public CallerController(CallerService callerService) {
+        this.callerService = callerService;
     }
 
-    @GetMapping()
-    public String getRes() {
-        if (!authRoleService.isAuthorized("CALLER"))
-            throw new UnAuthorizationUser("Access Denied");
-        return "for Callers";
+    public CallerDto findByEmail(String email) {
+        return callerService.findByEmail(email);
     }
+
+    public CallerDto save(CallerDto callerDto, SupervisorDto supervisorDto) {
+        return callerService.save(callerDto, supervisorDto);
+    }
+
+    @GetMapping("/supervisor-id/{id}")
+    public List<CallerDto> getBySupervisorId(@PathVariable("id") Integer id) {
+        List<CallerDto> callerDtos = callerService.getBySupervisorId(id);
+        if (callerDtos == null) throw new UserNotFoundException("superviseur non trouver par id " + id);
+        return callerDtos;
+    }
+// TODO   Complete This
 }

@@ -7,11 +7,14 @@ import com.rest.ai.myCallimo.entities.CallerEntity;
 import com.rest.ai.myCallimo.entities.SupervisorEntity;
 import com.rest.ai.myCallimo.exception.user.UserAlreadyExist;
 import com.rest.ai.myCallimo.services.facade.CallerService;
+import com.rest.ai.myCallimo.services.facade.SupervisorService;
 import com.rest.ai.myCallimo.services.facade.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 
 @Service
@@ -21,13 +24,15 @@ public class CallerServiceImpl implements CallerService {
     private final CallerDao callerDao;
 
     private final UserService userService;
+    private final SupervisorService supervisorService;
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
-    public CallerServiceImpl(CallerDao callerDao, UserService userService, BCryptPasswordEncoder bCryptPasswordEncoder) {
+    public CallerServiceImpl(CallerDao callerDao, UserService userService, SupervisorService supervisorService, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.callerDao = callerDao;
         this.userService = userService;
+        this.supervisorService = supervisorService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
@@ -53,6 +58,13 @@ public class CallerServiceImpl implements CallerService {
         callerEntity.setEncryptedPassword(bCryptPasswordEncoder.encode(callerDto.getPassword()));
         CallerEntity saved = callerDao.save(callerEntity);
         return modelMapper.map(saved, CallerDto.class);
+    }
+
+    @Override
+    public List<CallerDto> getBySupervisorId(Integer id) {
+        SupervisorDto supervisorDto = supervisorService.findById(id);
+        if (supervisorDto == null) return null;
+        return supervisorDto.getCallers();
     }
 
 
