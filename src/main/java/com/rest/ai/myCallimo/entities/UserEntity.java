@@ -27,11 +27,15 @@ public class UserEntity extends AbstractEntity {
     @Column(nullable = false, length = 120, unique = true)
     private String email;
 
+
+    private String telephone;
+
     @Column(nullable = false)
     private String encryptedPassword;
 
     private boolean passwordChanged = false;
-    private String avatar;
+    @Column()
+    private String avatar = "https://cdn.pixabay.com/photo/2020/07/14/13/07/icon-5404125_960_720.png";
     private String role;
 
 

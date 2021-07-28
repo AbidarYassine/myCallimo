@@ -41,7 +41,7 @@ public class SupervisorController {
         isAuthorized();
         ModelMapper modelMapper = new ModelMapper();
         UserDto authUser = authRoleService.getUserAuth();
-        CallerDto result = callerService.save(callerDto, modelMapper.map(authUser, SupervisorDto.class));
+        CallerDto result = callerService.save(callerDto, authUser.getId());
         return new ResponseEntity<>(modelMapper.map(result, UserResponse.class), HttpStatus.CREATED);
     }
 

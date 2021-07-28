@@ -18,6 +18,10 @@ public interface SupervisorDao extends JpaRepository<SupervisorEntity, Integer> 
     public void deleteAllByEmail(String email);
 
 
+    //    JPQL
+    @Modifying
+    @Query("DELETE FROM SupervisorEntity c WHERE c.id = ?1")
+    void deleteById(int id);
 
 
 }

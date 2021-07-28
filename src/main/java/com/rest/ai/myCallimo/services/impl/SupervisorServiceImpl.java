@@ -7,6 +7,7 @@ import com.rest.ai.myCallimo.dto.UserDto;
 import com.rest.ai.myCallimo.entities.AdminEntity;
 import com.rest.ai.myCallimo.entities.SupervisorEntity;
 import com.rest.ai.myCallimo.exception.user.UserAlreadyExist;
+import com.rest.ai.myCallimo.exception.user.UserNotFoundException;
 import com.rest.ai.myCallimo.services.facade.SupervisorService;
 import com.rest.ai.myCallimo.services.facade.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +18,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
+
+import java.util.ArrayList;
 
 
 @Service
@@ -91,6 +94,17 @@ public class SupervisorServiceImpl implements SupervisorService {
     public void deleteAllByEmail(String email) {
 //        SupervisorEntity supervisorEntity = supervisorDao.findByEmail(email);
         supervisorDao.deleteAllByEmail(email);
+    }
+
+    @Transactional
+    @Override
+    public int deleteById(int id) {
+        SupervisorEntity supervisorEntity = supervisorDao.findById(id).orElse(null);
+        if (supervisorEntity == null) throw new UserNotFoundException("Superviseur non trouver par l'id " + id);
+        supervisorEntity.setCallers(new ArrayList<>());
+        supervisorDao.save(supervisorEntity);
+        supervisorDao.deleteById(id);
+        return 1;
     }
 
 

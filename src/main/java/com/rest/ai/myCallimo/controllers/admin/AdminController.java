@@ -77,7 +77,7 @@ public class AdminController {
     @DeleteMapping("/delete-supervisor/{id}")
     public int deleteSupervisor(@PathVariable() Integer id) {
         isAuthorized();
-        supervisorService.delete(id);
+        supervisorService.deleteById(id);
         return 1;
     }
 
@@ -91,8 +91,6 @@ public class AdminController {
         ModelMapper modelMapper = new ModelMapper();
         return new ResponseEntity<>(modelMapper.map(supervisorDto, UserResponse.class), HttpStatus.CREATED);
     }
-
-
 
 
     private void isAuthorized() {

@@ -9,7 +9,8 @@ import lombok.ToString;
 import javax.persistence.*;
 import java.util.List;
 
-@Entity(name = "callers")
+@Entity()
+@Table(name = "callers")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

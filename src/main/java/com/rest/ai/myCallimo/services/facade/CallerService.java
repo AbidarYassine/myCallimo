@@ -8,7 +8,11 @@ import java.util.List;
 public interface CallerService {
     CallerDto findByEmail(String email);
 
-    CallerDto save(CallerDto callerDto, SupervisorDto supervisorDto);
+    CallerDto save(CallerDto callerDto, Integer supervisor_id);
 
     List<CallerDto> getBySupervisorId(Integer id);
+
+    int deleteById(int id);
+
+    int retireCaller(Integer id);
 }

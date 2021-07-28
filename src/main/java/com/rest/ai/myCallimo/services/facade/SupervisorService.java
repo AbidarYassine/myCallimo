@@ -20,4 +20,6 @@ public interface SupervisorService {
 
     public void deleteAllByEmail(String email);
 
+    int deleteById(int id);
+
 }

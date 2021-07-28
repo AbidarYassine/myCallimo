@@ -9,4 +9,5 @@ import lombok.NoArgsConstructor;
 @Data
 public class CallerDto extends UserDto {
     private String role = "CALLER";
+    private Integer city_id;
 }
