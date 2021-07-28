@@ -1,6 +1,7 @@
-package com.rest.ai.myCallimo.services.impl;
+package com.rest.ai.myCallimo.config.security;
 
 
+import com.rest.ai.myCallimo.config.security.CustomUserDetails;
 import com.rest.ai.myCallimo.dto.UserDto;
 import com.rest.ai.myCallimo.entities.RoleEntity;
 import com.rest.ai.myCallimo.entities.UserEntity;
@@ -37,11 +38,11 @@ public class UserDetailService implements UserDetailsService {
 //    }
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    public CustomUserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
         UserDto userDto = userService.findByEmail(email);
         if (userDto == null) throw new UserNotFoundException("Email Or password incorrect");
-        return new User(userDto.getEmail(), userDto.getEncryptedPassword(), new ArrayList<>());
+        return CustomUserDetails.build(userDto);
 
     }
 

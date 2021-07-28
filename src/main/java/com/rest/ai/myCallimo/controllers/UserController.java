@@ -1,8 +1,11 @@
 package com.rest.ai.myCallimo.controllers;
 
+import com.rest.ai.myCallimo.config.security.CustomUserDetails;
+import com.rest.ai.myCallimo.config.security.jwt.JwtUtils;
 import com.rest.ai.myCallimo.dto.UserDto;
-import com.rest.ai.myCallimo.exception.user.UserAlreadyExist;
 import com.rest.ai.myCallimo.exception.user.UserNotFoundException;
+import com.rest.ai.myCallimo.request.UserLoginRequest;
+import com.rest.ai.myCallimo.response.JwtResponse;
 import com.rest.ai.myCallimo.response.UserResponse;
 import com.rest.ai.myCallimo.services.facade.AuthRoleService;
 import com.rest.ai.myCallimo.services.facade.UserService;
@@ -10,52 +13,53 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-
 
 import java.util.ArrayList;
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "*")
 @RequestMapping("/users")
 @RestController()
 public class UserController {
 
     private final UserService userService;
     private final AuthRoleService roleService;
+    private final AuthenticationManager authenticationManager;
+    private final JwtUtils jwtUtils;
 
 
     @Autowired
-    public UserController(UserService userService, AuthRoleService roleService) {
+    public UserController(UserService userService, AuthRoleService roleService, AuthenticationManager authenticationManager, JwtUtils jwtUtils) {
         this.userService = userService;
         this.roleService = roleService;
+        this.authenticationManager = authenticationManager;
+        this.jwtUtils = jwtUtils;
     }
 
-    @PostMapping()
-    public ResponseEntity<UserResponse> save(@RequestBody() UserDto userDto) {
-        UserDto userDto1 = userService.findByEmail(userDto.getEmail());
-        if (userDto1 == null)
-            throw new UserAlreadyExist("User with email " + userDto.getEmail() + " exists !!");
-        ModelMapper modelMapper = new ModelMapper();
-        UserResponse userResponse = modelMapper.map(userDto1, UserResponse.class);
-        return new ResponseEntity<UserResponse>(userResponse, HttpStatus.CREATED);
-    }
+    @PostMapping("/login")
+    public ResponseEntity<JwtResponse> save(@RequestBody() UserLoginRequest userLoginRequest) {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(userLoginRequest.getEmail(), userLoginRequest.getPassword()));
 
-//    @PostMapping()
-//    public ResponseEntity<UserResponse> login(@RequestBody() UserLoginRequest userLoginRequest) {
-//        Authentication authentication = authenticationManager.authenticate(
-//                new UsernamePasswordAuthenticationToken(userLoginRequest.getEmail(), userLoginRequest.getPassword(), new ArrayList<>()));
-//        String userName = ((User) authentication.getPrincipal()).getUsername();
-//        String token = Jwts.builder()
-//                .setSubject(userName)
-//                .setExpiration(new Date(System.currentTimeMillis() + SecurityConstant.EXPIRATION_TIME))
-//                .signWith(SignatureAlgorithm.HS512, SecurityConstant.TOKEN_SECRET)
-//                .compact();
-//
-//
-//        res.addHeader(SecurityConstant.HEADER_STRING, SecurityConstant.TOKEN_PREFIX + token);
-//
-//    }
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String jwt = jwtUtils.generateJwtToken(authentication);
+
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        UserDto userDto = userService.findByEmail(userDetails.getEmail());
+        String role = userDto.getRole();
+        JwtResponse jwtResponse = JwtResponse.builder()
+                .token(jwt)
+                .id(userDto.getId())
+                .type("Bearer")
+                .role(role).build();
+        return new ResponseEntity<>(jwtResponse, HttpStatus.OK);
+
+    }
 
     @GetMapping()
     public ResponseEntity<List<UserResponse>> findAll() {

@@ -1,6 +1,7 @@
 package com.rest.ai.myCallimo.exception;
 
 import com.rest.ai.myCallimo.exception.city.CityNotFoundException;
+import com.rest.ai.myCallimo.exception.jwt.InvalidJwtException;
 import com.rest.ai.myCallimo.exception.role.RoleAlreadyExistsException;
 import com.rest.ai.myCallimo.exception.role.RoleNotFoundException;
 import com.rest.ai.myCallimo.exception.user.UnAuthorizationUser;
@@ -64,6 +65,15 @@ public class AppExceptionHandler {
     }
     // end    city
 
+
+//    JWT
+
+    @ExceptionHandler(value = {InvalidJwtException.class})
+    public ResponseEntity<Object> invalidJwtException(InvalidJwtException ex, WebRequest req) {
+        ErrorMessage errorMessage = new ErrorMessage(new Date(), ex.getMessage());
+        return new ResponseEntity<>(errorMessage, new HttpHeaders(), HttpStatus.CONFLICT);
+    }
+//    JWT
     //    global Exception
     @ExceptionHandler(value = Exception.class)
     public ResponseEntity<Object> HandleOtherExceptions(Exception ex, WebRequest request) {
@@ -71,6 +81,7 @@ public class AppExceptionHandler {
 
         return new ResponseEntity<>(errorMessage, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
 
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
     public ResponseEntity<Object> HandleMethodArgumentNotValid(MethodArgumentNotValidException ex, WebRequest request) {
