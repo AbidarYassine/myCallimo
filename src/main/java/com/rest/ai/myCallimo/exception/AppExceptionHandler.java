@@ -1,12 +1,11 @@
 package com.rest.ai.myCallimo.exception;
 
 import com.rest.ai.myCallimo.exception.city.CityNotFoundException;
-import com.rest.ai.myCallimo.exception.jwt.InvalidJwtException;
 import com.rest.ai.myCallimo.exception.role.RoleAlreadyExistsException;
 import com.rest.ai.myCallimo.exception.role.RoleNotFoundException;
 import com.rest.ai.myCallimo.exception.user.UnAuthorizationUser;
-import com.rest.ai.myCallimo.exception.user.UserNotFoundException;
 import com.rest.ai.myCallimo.exception.user.UserAlreadyExist;
+import com.rest.ai.myCallimo.exception.user.UserNotFoundException;
 import com.rest.ai.myCallimo.shared.ErrorMessage;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -66,14 +65,15 @@ public class AppExceptionHandler {
     // end    city
 
 
-//    JWT
+//    InvalidOperationException
 
-    @ExceptionHandler(value = {InvalidJwtException.class})
-    public ResponseEntity<Object> invalidJwtException(InvalidJwtException ex, WebRequest req) {
+    @ExceptionHandler(value = {InvalidOperationException.class})
+    public ResponseEntity<Object> invalidOperationException(InvalidOperationException ex, WebRequest req) {
         ErrorMessage errorMessage = new ErrorMessage(new Date(), ex.getMessage());
         return new ResponseEntity<>(errorMessage, new HttpHeaders(), HttpStatus.CONFLICT);
     }
-//    JWT
+
+    //    InvalidOperationException
     //    global Exception
     @ExceptionHandler(value = Exception.class)
     public ResponseEntity<Object> HandleOtherExceptions(Exception ex, WebRequest request) {

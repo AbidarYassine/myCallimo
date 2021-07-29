@@ -2,7 +2,6 @@ package com.rest.ai.myCallimo.config.security;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.rest.ai.myCallimo.dto.UserDto;
-import com.rest.ai.myCallimo.entities.UserEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,7 +13,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -42,7 +40,7 @@ public class CustomUserDetails implements UserDetails {
                 user.getFirstName(),
                 user.getLastName(),
                 user.getEmail(),
-                user.getEncryptedPassword(),
+                user.getPassword(),
                 authorities);
     }
 

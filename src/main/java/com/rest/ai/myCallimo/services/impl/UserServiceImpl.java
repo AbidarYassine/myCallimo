@@ -7,9 +7,14 @@ import com.rest.ai.myCallimo.dto.UserDto;
 import com.rest.ai.myCallimo.entities.AdminEntity;
 import com.rest.ai.myCallimo.entities.CallerEntity;
 import com.rest.ai.myCallimo.entities.SupervisorEntity;
+import com.rest.ai.myCallimo.exception.InvalidOperationException;
 import com.rest.ai.myCallimo.exception.role.RoleNotFoundException;
+import com.rest.ai.myCallimo.exception.user.UserNotFoundException;
+import com.rest.ai.myCallimo.request.ChangePasswordRequest;
 import com.rest.ai.myCallimo.services.facade.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -17,16 +22,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Slf4j
 public class UserServiceImpl implements UserService {
 
     private final AdminDao adminDao;
-
     private final SupervisorDao supervisorDao;
     private final CallerDao callerDao;
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
 
+    @Autowired
     public UserServiceImpl(AdminDao adminDao, SupervisorDao supervisorDao, CallerDao callerDao, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.adminDao = adminDao;
         this.supervisorDao = supervisorDao;
@@ -57,7 +63,7 @@ public class UserServiceImpl implements UserService {
         UserDto user = findByEmail(userDto.getEmail());
         ModelMapper modelMapper = new ModelMapper();
         if (user != null) return null;
-        userDto.setEncryptedPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
+        userDto.setPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
         switch (role) {
             case 0:
                 userDto.setRole("CALLER");
@@ -108,5 +114,41 @@ public class UserServiceImpl implements UserService {
             return modelMapper.map(supervisorEntity, UserDto.class);
         }
         return null;
+    }
+
+
+    @Override
+    public UserDto changePassword(ChangePasswordRequest changePasswordRequest) {
+        UserDto userDto = this.findByEmail(changePasswordRequest.getEmail());
+        if (userDto == null)
+            throw new UserNotFoundException("Utilisateur non trouver par l'email " + changePasswordRequest.getEmail());
+        if (!changePasswordRequest.getPassword().equals(changePasswordRequest.getConfirmPassword()))
+            throw new InvalidOperationException("le mot de passe et la confirmation sont different !!");
+        String role = userDto.getRole();
+        ModelMapper modelMapper = new ModelMapper();
+        switch (role) {
+            case "ADMIN":
+                AdminEntity adminEntity = adminDao.findByEmail(changePasswordRequest.getEmail());
+                log.info("admin entity {}", adminEntity);
+                adminEntity.setEncryptedPassword(bCryptPasswordEncoder.encode(changePasswordRequest.getPassword()));
+                log.info("admin entity {}", adminEntity);
+                adminEntity.setPasswordChanged(true);
+                AdminEntity adminSaved = adminDao.save(adminEntity);
+                return modelMapper.map(adminSaved, UserDto.class);
+            case "SUPERVISOR":
+                SupervisorEntity supervisorEntity = supervisorDao.findByEmail(changePasswordRequest.getEmail());
+                supervisorEntity.setEncryptedPassword(bCryptPasswordEncoder.encode(changePasswordRequest.getPassword()));
+                supervisorEntity.setPasswordChanged(true);
+                SupervisorEntity saved = supervisorDao.save(supervisorEntity);
+                return modelMapper.map(saved, UserDto.class);
+            case "CALLER":
+                CallerEntity callerEntity = callerDao.findByEmail(changePasswordRequest.getEmail());
+                callerEntity.setEncryptedPassword(bCryptPasswordEncoder.encode(changePasswordRequest.getPassword()));
+                callerEntity.setPasswordChanged(true);
+                CallerEntity callerSaved = callerDao.save(callerEntity);
+                return modelMapper.map(callerSaved, UserDto.class);
+            default:
+                return null;
+        }
     }
 }

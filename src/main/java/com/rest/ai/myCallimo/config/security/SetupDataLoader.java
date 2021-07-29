@@ -3,9 +3,7 @@ package com.rest.ai.myCallimo.config.security;
 
 import com.rest.ai.myCallimo.dao.AdminDao;
 import com.rest.ai.myCallimo.dao.RoleDao;
-
 import com.rest.ai.myCallimo.entities.AdminEntity;
-
 import com.rest.ai.myCallimo.shared.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;

@@ -3,7 +3,6 @@ package com.rest.ai.myCallimo.services.impl;
 import com.rest.ai.myCallimo.dao.SupervisorDao;
 import com.rest.ai.myCallimo.dto.AdminDto;
 import com.rest.ai.myCallimo.dto.SupervisorDto;
-import com.rest.ai.myCallimo.dto.UserDto;
 import com.rest.ai.myCallimo.entities.AdminEntity;
 import com.rest.ai.myCallimo.entities.SupervisorEntity;
 import com.rest.ai.myCallimo.exception.user.UserAlreadyExist;
@@ -17,7 +16,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.ui.ModelMap;
 
 import java.util.ArrayList;
 
