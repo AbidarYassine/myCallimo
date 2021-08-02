@@ -25,6 +25,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +54,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<JwtResponse> save(@RequestBody() UserLoginRequest userLoginRequest) throws Exception {
+    public ResponseEntity<JwtResponse> save(@Valid @RequestBody() UserLoginRequest userLoginRequest) throws Exception {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(userLoginRequest.getEmail(), userLoginRequest.getPassword()));
 
@@ -102,7 +103,7 @@ public class UserController {
     }
 
     @PostMapping("/modifer-mot-passe")
-    public UserResponse changePassword(@RequestBody() ChangePasswordRequest changePasswordRequest) {
+    public UserResponse changePassword(@Valid @RequestBody() ChangePasswordRequest changePasswordRequest) {
         UserDto userDto = userService.changePassword(changePasswordRequest);
         ModelMapper modelMapper = new ModelMapper();
         return modelMapper.map(userDto, UserResponse.class);

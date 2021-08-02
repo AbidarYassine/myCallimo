@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,7 +47,7 @@ public class AdminController {
 
     // add supervisor by admin connected
     @PostMapping("/add-supervisor")
-    public ResponseEntity<UserResponse> addSupervisor(@RequestBody() SupervisorDto supervisorDto) {
+    public ResponseEntity<UserResponse> addSupervisor(@Valid @RequestBody() SupervisorDto supervisorDto) {
         ModelMapper modelMapper = new ModelMapper();
         UserDto authUser = authRoleService.getUserAuth();
         SupervisorDto result = supervisorService.save(supervisorDto, modelMapper.map(authUser, AdminDto.class));
@@ -77,6 +78,7 @@ public class AdminController {
     }
 
     //    TODO NOT WORK delete supervisor
+//    TODO ADD RELATION OFFRE TO USERENTITY
     @DeleteMapping("/delete-supervisor/{id}")
     public int deleteSupervisor(@PathVariable() Integer id) {
         supervisorService.deleteById(id);
@@ -85,7 +87,7 @@ public class AdminController {
 
     //    update supervisor done 80% add update city
     @PutMapping("/update-supervisor/{id}")
-    public ResponseEntity<UserResponse> updateSupervisor(@RequestBody() SupervisorDto supervisorDto, @PathVariable() Integer id) {
+    public ResponseEntity<UserResponse> updateSupervisor(@Valid @RequestBody() SupervisorDto supervisorDto, @PathVariable() Integer id) {
         int res = supervisorService.update(supervisorDto, id);
         if (res == -1) throw new UserNotFoundException("supervisor not found");
         if (res == -2) throw new UserAlreadyExist("User with email " + supervisorDto.getEmail() + " already exists");

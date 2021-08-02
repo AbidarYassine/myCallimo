@@ -5,7 +5,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.List;
 
@@ -18,14 +20,16 @@ public class UserDto implements Serializable {
     // class for shared info between couch (presentation,service,data layer)
     private static final long serialVersionUID = -8613411897657339469L;
     private Integer id;
-    @NotBlank()
+    @NotBlank(message = "prénom est obligatoire !!")
     private String firstName;
-    @NotBlank()
+    @NotBlank(message = "nom est obligatoire !!")
     private String lastName;
     private List<CallerDto> callers;
     @NotBlank()
+    @Email(message = "mot de passe invalid !!")
     private String email;
     @NotBlank()
+    @Size(min = 8, max = 16)
     private String password;
     private Boolean emailVerficationStatus = false;
     private String role;

@@ -24,18 +24,17 @@ import java.util.stream.Collectors;
 public class OffreControllers {
     private final OffreService offreService;
 
+    @Autowired
+    public OffreControllers(OffreService offreService) {
+        this.offreService = offreService;
+    }
+
     @PostMapping("/affectation")
     public ResponseEntity<SupervisorResponse> affecterOffreToSupervisor(@Valid @RequestBody() AffectationOffreRequest affectationOffreRequest) {
         SupervisorDto supervisorDto = offreService.affecterOffreToSupervisor(affectationOffreRequest);
         ModelMapper modelMapper = new ModelMapper();
         return new ResponseEntity<>(modelMapper.map(supervisorDto, SupervisorResponse.class), HttpStatus.OK);
     }
-
-    @Autowired
-    public OffreControllers(OffreService offreService) {
-        this.offreService = offreService;
-    }
-
     @PostMapping()
     public OffreDto save(OffreDto offreDto) {
         return offreService.save(offreDto);

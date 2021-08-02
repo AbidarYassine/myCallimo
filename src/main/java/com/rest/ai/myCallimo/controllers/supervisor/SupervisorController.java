@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,7 +42,7 @@ public class SupervisorController {
 
     //    supervisor can add caller
     @PostMapping("/add-callers")
-    public ResponseEntity<CallerResponse> addCaller(@RequestBody() CallerDto callerDto) {
+    public ResponseEntity<CallerResponse> addCaller(@Valid @RequestBody() CallerDto callerDto) {
         ModelMapper modelMapper = new ModelMapper();
         UserDto authUser = authRoleService.getUserAuth();
         CallerDto result = callerService.save(callerDto, authUser.getId());
