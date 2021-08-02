@@ -1,30 +1,77 @@
 package com.rest.ai.myCallimo.services.impl;
 
 import com.rest.ai.myCallimo.dao.OffreDao;
+import com.rest.ai.myCallimo.dto.OffreDto;
+import com.rest.ai.myCallimo.dto.SupervisorDto;
 import com.rest.ai.myCallimo.entities.OffreEntity;
+import com.rest.ai.myCallimo.entities.SupervisorEntity;
+import com.rest.ai.myCallimo.exception.offre.AlreadyAffectedException;
+import com.rest.ai.myCallimo.exception.user.UserNotFoundException;
+import com.rest.ai.myCallimo.request.AffectationOffreRequest;
 import com.rest.ai.myCallimo.services.facade.OffreService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.rest.ai.myCallimo.services.facade.SupervisorService;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class OffreServiceImpl implements OffreService {
-    @Autowired
+
     private OffreDao offreDao;
+    private SupervisorService supervisorService;
 
-    @Override
-    public OffreEntity save(OffreEntity offreEntity) {
-        return offreDao.save(offreEntity);
+    public OffreServiceImpl(OffreDao offreDao, SupervisorService supervisorService) {
+        this.offreDao = offreDao;
+        this.supervisorService = supervisorService;
     }
 
     @Override
-    public List<OffreEntity> findAll() {
-        return offreDao.findAll();
+    public OffreDto save(OffreDto offreDto) {
+        ModelMapper modelMapper = new ModelMapper();
+        OffreEntity offreEntity = offreDao.save(modelMapper.map(offreDto, OffreEntity.class));
+        OffreEntity saved = offreDao.save(offreEntity);
+        return modelMapper.map(saved, OffreDto.class);
     }
 
     @Override
-    public OffreEntity findById(Integer id) {
-        return offreDao.findById(id).get();
+    public List<OffreDto> findAll() {
+        ModelMapper modelMapper = new ModelMapper();
+        return offreDao.findAll().stream().map(el -> modelMapper.map(el, OffreDto.class)).collect(Collectors.toList());
+    }
+
+    @Override
+    public OffreDto findById(Integer id) {
+        OffreEntity offreEntity = offreDao.findById(id).orElse(null);
+        ModelMapper modelMapper = new ModelMapper();
+        return modelMapper.map(offreEntity, OffreDto.class);
+    }
+
+
+    //    affectation des offres aux supervisor
+    @Override
+    public SupervisorDto affecterOffreToSupervisor(AffectationOffreRequest affectationOffreRequest) {
+        List<OffreEntity> offres = affectationOffreRequest.getOffres_ids().stream().map(el -> offreDao.findById(el).orElse(null)).collect(Collectors.toList());
+        offres.forEach(el -> {
+            if (el.is_affected_to_supervisor())
+                throw new AlreadyAffectedException("offre avec l'id " + el.getId() + " est deja afecter");
+        });
+        SupervisorDto supervisorDto = supervisorService.findById(affectationOffreRequest.getSupervisor_id());
+        if (supervisorDto == null)
+            throw new UserNotFoundException("superviseur non trouver par l'id " + affectationOffreRequest.getSupervisor_id());
+        ModelMapper modelMapper = new ModelMapper();
+        SupervisorEntity supervisorEntity = modelMapper.map(supervisorDto, SupervisorEntity.class);
+        //        set offre is afected
+        offres.forEach(el -> {
+            el.set_affected_to_supervisor(true);
+//            offreDao.save(el);
+        });
+        supervisorEntity.setOffres(offres);
+        SupervisorDto supervisor = modelMapper.map(supervisorEntity, SupervisorDto.class);
+
+
+        return supervisorService.save(supervisor);
+
     }
 }

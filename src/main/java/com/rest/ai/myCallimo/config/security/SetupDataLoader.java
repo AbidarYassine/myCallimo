@@ -51,7 +51,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         AdminEntity admin = new AdminEntity();
         admin.setFirstName("Admin");
         admin.setLastName("Admin");
-        admin.setEncryptedPassword(bCryptPasswordEncoder.encode("admin1234"));
+        admin.setPassword(bCryptPasswordEncoder.encode("admin1234"));
         admin.setEmail("admin@gmail.com");
         adminDao.save(admin);
         alreadySetup = true;

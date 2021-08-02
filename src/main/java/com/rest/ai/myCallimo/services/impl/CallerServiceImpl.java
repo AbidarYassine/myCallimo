@@ -2,12 +2,16 @@ package com.rest.ai.myCallimo.services.impl;
 
 import com.rest.ai.myCallimo.dao.CallerDao;
 import com.rest.ai.myCallimo.dto.CallerDto;
+import com.rest.ai.myCallimo.dto.CityDto;
 import com.rest.ai.myCallimo.dto.SupervisorDto;
 import com.rest.ai.myCallimo.entities.CallerEntity;
+import com.rest.ai.myCallimo.entities.CityEntity;
 import com.rest.ai.myCallimo.entities.SupervisorEntity;
+import com.rest.ai.myCallimo.exception.city.CityNotFoundException;
 import com.rest.ai.myCallimo.exception.user.UserAlreadyExist;
 import com.rest.ai.myCallimo.exception.user.UserNotFoundException;
 import com.rest.ai.myCallimo.services.facade.CallerService;
+import com.rest.ai.myCallimo.services.facade.CityService;
 import com.rest.ai.myCallimo.services.facade.SupervisorService;
 import com.rest.ai.myCallimo.services.facade.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -30,14 +34,16 @@ public class CallerServiceImpl implements CallerService {
 
     private final UserService userService;
     private final SupervisorService supervisorService;
+    private final CityService cityService;
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
-    public CallerServiceImpl(CallerDao callerDao, UserService userService, SupervisorService supervisorService, BCryptPasswordEncoder bCryptPasswordEncoder) {
+    public CallerServiceImpl(CallerDao callerDao, UserService userService, SupervisorService supervisorService, CityService cityService, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.callerDao = callerDao;
         this.userService = userService;
         this.supervisorService = supervisorService;
+        this.cityService = cityService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
@@ -54,20 +60,24 @@ public class CallerServiceImpl implements CallerService {
         if (supervisorDto == null) {
             throw new UserNotFoundException("supervisor  non trouver par  id " + supervisor_id);
         }
+        CityDto cityDto = cityService.findById(callerDto.getCity_id());
+        if (cityDto == null) throw new CityNotFoundException("City no trouver !!");
         ModelMapper modelMapper = new ModelMapper();
         SupervisorEntity supervisorEntity = modelMapper.map(supervisorDto, SupervisorEntity.class);
-        System.out.println(supervisorEntity);
-
         if (userService.findByEmail(callerDto.getEmail()) != null) {
             throw new UserAlreadyExist("Utilisaeur avec l'email  " + callerDto.getEmail() + " déjà existe ");
         }
+
 //        get caller entity fro dto
-        log.info("supervisor entity {} ", supervisorEntity);
         CallerEntity callerEntity = modelMapper.map(callerDto, CallerEntity.class);
 //        set Supervisor
         callerEntity.setSupervisor(supervisorEntity);
+        //        get city entity from city dto
+        CityEntity cityEntity = modelMapper.map(cityDto, CityEntity.class);
+//        set city
+        callerEntity.setCity(cityEntity);
         callerEntity.setAvatar("https://cdn.pixabay.com/photo/2020/07/14/13/07/icon-5404125_960_720.png");
-        callerEntity.setEncryptedPassword(bCryptPasswordEncoder.encode(callerDto.getPassword()));
+        callerEntity.setPassword(bCryptPasswordEncoder.encode(callerDto.getPassword()));
         CallerEntity saved = callerDao.save(callerEntity);
         return modelMapper.map(saved, CallerDto.class);
     }

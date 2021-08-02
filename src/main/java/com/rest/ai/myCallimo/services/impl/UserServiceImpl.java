@@ -130,20 +130,20 @@ public class UserServiceImpl implements UserService {
             case "ADMIN":
                 AdminEntity adminEntity = adminDao.findByEmail(changePasswordRequest.getEmail());
                 log.info("admin entity {}", adminEntity);
-                adminEntity.setEncryptedPassword(bCryptPasswordEncoder.encode(changePasswordRequest.getPassword()));
+                adminEntity.setPassword(bCryptPasswordEncoder.encode(changePasswordRequest.getPassword()));
                 log.info("admin entity {}", adminEntity);
                 adminEntity.setPasswordChanged(true);
                 AdminEntity adminSaved = adminDao.save(adminEntity);
                 return modelMapper.map(adminSaved, UserDto.class);
             case "SUPERVISOR":
                 SupervisorEntity supervisorEntity = supervisorDao.findByEmail(changePasswordRequest.getEmail());
-                supervisorEntity.setEncryptedPassword(bCryptPasswordEncoder.encode(changePasswordRequest.getPassword()));
+                supervisorEntity.setPassword(bCryptPasswordEncoder.encode(changePasswordRequest.getPassword()));
                 supervisorEntity.setPasswordChanged(true);
                 SupervisorEntity saved = supervisorDao.save(supervisorEntity);
                 return modelMapper.map(saved, UserDto.class);
             case "CALLER":
                 CallerEntity callerEntity = callerDao.findByEmail(changePasswordRequest.getEmail());
-                callerEntity.setEncryptedPassword(bCryptPasswordEncoder.encode(changePasswordRequest.getPassword()));
+                callerEntity.setPassword(bCryptPasswordEncoder.encode(changePasswordRequest.getPassword()));
                 callerEntity.setPasswordChanged(true);
                 CallerEntity callerSaved = callerDao.save(callerEntity);
                 return modelMapper.map(callerSaved, UserDto.class);

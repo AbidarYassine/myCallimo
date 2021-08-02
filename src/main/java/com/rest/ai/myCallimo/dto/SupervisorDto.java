@@ -11,6 +11,8 @@ import java.util.List;
 @NoArgsConstructor
 public class SupervisorDto extends UserDto {
     private String role = "SUPERVISOR";
-    private List<CallerDto> callers;
+    private List<OffreDto> offres;
     private AdminDto admin;
+    private Integer city_id;
+    private CityDto city;
 }

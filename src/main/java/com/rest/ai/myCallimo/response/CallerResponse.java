@@ -7,12 +7,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import java.util.List;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
 public class CallerResponse extends UserResponse {
-    private List<CityDto> city;
+    private CityDto city;
 }

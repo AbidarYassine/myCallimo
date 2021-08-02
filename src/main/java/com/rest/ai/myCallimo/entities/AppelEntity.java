@@ -1,6 +1,5 @@
 package com.rest.ai.myCallimo.entities;
 
-import com.rest.ai.myCallimo.controllers.caller.CallerController;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

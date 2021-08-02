@@ -1,12 +1,12 @@
 package com.rest.ai.myCallimo.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-
 import java.io.Serializable;
 import java.util.List;
 
@@ -25,6 +25,7 @@ public class AnnonceurEntity implements Serializable {
     private String email;
     private String address;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "annonceur")
     private List<OffreEntity> offres;
 }

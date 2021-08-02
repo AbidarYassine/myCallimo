@@ -1,29 +1,19 @@
-package com.rest.ai.myCallimo.entities;
+package com.rest.ai.myCallimo.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
-import javax.persistence.*;
 import java.io.Serializable;
 
-@Entity(name = "offers")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
-public class OffreEntity implements Serializable {
-
-    private static final long serialVersionUID = 6659221496655031009L;
-    @Id
-    @GeneratedValue
+public class OffreDto implements Serializable {
     private Integer id; //
     private String url; //
     private String title;//
     private String reference;
-    @Column(length = 5000)
     private String description;//
     private String address; //
     private String piscine; //
@@ -57,33 +47,15 @@ public class OffreEntity implements Serializable {
     private boolean is_affected_to_supervisor;
     private boolean is_affected_to_caller;
 
-//    public boolean isIs_affected() {
-//        return is_affected;
-//    }
 
-    @JsonIgnore
-    @ManyToOne
-    @JoinColumn(name = "annonceur_id")
-    private AnnonceurEntity annonceur;
+    private AnnonceurDto annonceur;
 
-    @ManyToOne
-    @JoinColumn(name = "category_id")
-    private CategoryEntity category;
+    private CategoryDto category;
 
-    @ManyToOne
-    @JoinColumn(name = "offre_type_id")
-    private OffreTypeEntity offre_type;
+    private OffreTypeDto offre_type;
 
-    @ManyToOne
-    @JoinColumn(name = "city_id")
-    private CityEntity city;
 
-    @JsonIgnore
-    @OneToOne
-    @JoinColumn(name = "appel_id")
-    private AppelEntity appel;
+    private CityDto city;
 
-    @ManyToOne
-    @JoinColumn(name = "supervisor_id")
-    private SupervisorEntity supervisor;
+    private AppelDto appel;
 }

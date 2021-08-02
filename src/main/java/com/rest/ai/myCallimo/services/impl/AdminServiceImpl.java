@@ -35,7 +35,7 @@ public class AdminServiceImpl implements AdminService {
             throw new UserAlreadyExist("User already exists ");
         ModelMapper modelMapper = new ModelMapper();
         AdminEntity adminEntity = modelMapper.map(adminDto, AdminEntity.class);
-        adminEntity.setEncryptedPassword(bCryptPasswordEncoder.encode(adminDto.getPassword()));
+        adminEntity.setPassword(bCryptPasswordEncoder.encode(adminDto.getPassword()));
         AdminEntity saved = adminDao.save(adminEntity);
         return modelMapper.map(saved, AdminDto.class);
     }

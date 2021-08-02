@@ -5,8 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import javax.persistence.*;
-import java.io.Serializable;
+import javax.persistence.Column;
+import javax.persistence.MappedSuperclass;
 
 
 @Data
@@ -31,10 +31,10 @@ public class UserEntity extends AbstractEntity {
     private String telephone;
 
     @Column(nullable = false)
-    private String encryptedPassword;
+    private String password;
 
     private boolean passwordChanged = false;
-    @Column()
+
     private String avatar = "https://cdn.pixabay.com/photo/2020/07/14/13/07/icon-5404125_960_720.png";
     private String role;
 

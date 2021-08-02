@@ -1,5 +1,6 @@
 package com.rest.ai.myCallimo.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.rest.ai.myCallimo.entities.OffreEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,5 +14,6 @@ import java.util.List;
 public class OffreTypeDto {
     private Integer id;
     private String type;
+    @JsonIgnore
     private List<OffreEntity> offres;
 }

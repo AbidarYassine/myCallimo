@@ -7,6 +7,7 @@ import com.rest.ai.myCallimo.entities.AdminEntity;
 import com.rest.ai.myCallimo.entities.SupervisorEntity;
 import com.rest.ai.myCallimo.exception.user.UserAlreadyExist;
 import com.rest.ai.myCallimo.exception.user.UserNotFoundException;
+import com.rest.ai.myCallimo.services.facade.CityService;
 import com.rest.ai.myCallimo.services.facade.SupervisorService;
 import com.rest.ai.myCallimo.services.facade.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -28,12 +29,14 @@ public class SupervisorServiceImpl implements SupervisorService {
     private final SupervisorDao supervisorDao;
     private final UserService userService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final CityService cityService;
 
     @Autowired
-    public SupervisorServiceImpl(SupervisorDao supervisorDao, UserService userService, BCryptPasswordEncoder bCryptPasswordEncoder) {
+    public SupervisorServiceImpl(SupervisorDao supervisorDao, UserService userService, BCryptPasswordEncoder bCryptPasswordEncoder, CityService cityService) {
         this.supervisorDao = supervisorDao;
         this.userService = userService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.cityService = cityService;
     }
 
 
@@ -74,13 +77,13 @@ public class SupervisorServiceImpl implements SupervisorService {
         ModelMapper modelMapper = new ModelMapper();
         String password;
         if (supervisorDto.getPassword() == null || supervisorDto.getPassword().isEmpty()) {
-            password = supervisorEntity.getEncryptedPassword();
+            password = supervisorEntity.getPassword();
         } else {
             password = bCryptPasswordEncoder.encode(supervisorDto.getPassword());
         }
         supervisorDto.setId(supervisorEntity.getId());
         supervisorEntity = modelMapper.map(supervisorDto, SupervisorEntity.class);
-        supervisorEntity.setEncryptedPassword(password);
+        supervisorEntity.setPassword(password);
         String userName = SecurityContextHolder.getContext().getAuthentication().getName();
         AdminEntity adminEntity = modelMapper.map(userService.findByEmail(userName), AdminEntity.class);
         supervisorEntity.setAdmin(adminEntity);
@@ -116,8 +119,16 @@ public class SupervisorServiceImpl implements SupervisorService {
         supervisorEntity.setRole("SUPERVISOR");
         AdminEntity adminEntity = modelMapper.map(admin, AdminEntity.class);
         supervisorEntity.setAdmin(adminEntity);
-        supervisorEntity.setEncryptedPassword(bCryptPasswordEncoder.encode(t.getPassword()));
+        supervisorEntity.setPassword(bCryptPasswordEncoder.encode(t.getPassword()));
         SupervisorEntity supervisor = supervisorDao.save(supervisorEntity);
         return modelMapper.map(supervisor, SupervisorDto.class);
+    }
+
+    @Override
+    public SupervisorDto save(SupervisorDto t) {
+        ModelMapper modelMapper = new ModelMapper();
+        SupervisorEntity supervisorEntity = modelMapper.map(t, SupervisorEntity.class);
+        SupervisorEntity saved = supervisorDao.save(supervisorEntity);
+        return modelMapper.map(saved, SupervisorDto.class);
     }
 }

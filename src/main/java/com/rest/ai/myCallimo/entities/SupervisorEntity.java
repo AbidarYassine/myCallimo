@@ -7,7 +7,10 @@ import lombok.ToString;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.util.List;
 
 @Entity()
@@ -29,4 +32,9 @@ public class SupervisorEntity extends UserEntity {
     @OneToMany(mappedBy = "supervisor")
     @LazyCollection(LazyCollectionOption.FALSE) // fetch = FetchType.EAGER.
     private List<CallerEntity> callers;
+
+
+    @OneToMany(mappedBy = "supervisor")
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private List<OffreEntity> offres;
 }
