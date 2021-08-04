@@ -30,11 +30,11 @@ public class SupervisorEntity extends UserEntity {
     //    LAZY = fetch when needed  getCallers()
 //    EAGER = fetch immediately
     @OneToMany(mappedBy = "supervisor")
-    @LazyCollection(LazyCollectionOption.FALSE) // fetch = FetchType.EAGER.
+    @LazyCollection(LazyCollectionOption.TRUE) // fetch = FetchType.EAGER.
     private List<CallerEntity> callers;
-
-
     @OneToMany(mappedBy = "supervisor")
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<OffreEntity> offres;
+
+
 }

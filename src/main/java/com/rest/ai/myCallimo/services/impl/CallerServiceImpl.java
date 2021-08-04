@@ -55,6 +55,14 @@ public class CallerServiceImpl implements CallerService {
     }
 
     @Override
+    public CallerDto findById(Integer id) {
+        CallerEntity callerEntity = callerDao.findById(id).orElse(null);
+        if (callerEntity == null) throw new UserNotFoundException("agent non trouver par l'id " + id);
+        ModelMapper modelMapper = new ModelMapper();
+        return modelMapper.map(callerEntity, CallerDto.class);
+    }
+
+    @Override
     public CallerDto save(CallerDto callerDto, Integer supervisor_id) {
         SupervisorDto supervisorDto = supervisorService.findById(supervisor_id);
         if (supervisorDto == null) {
@@ -83,10 +91,24 @@ public class CallerServiceImpl implements CallerService {
     }
 
     @Override
+    public CallerDto save(CallerDto callerDto) {
+        ModelMapper modelMapper = new ModelMapper();
+        CallerEntity callerEntity = modelMapper.map(callerDto, CallerEntity.class);
+        CallerEntity saved = callerDao.save(callerEntity);
+        return modelMapper.map(saved, CallerDto.class);
+    }
+
+    @Override
     public List<CallerDto> getBySupervisorId(Integer id) {
         SupervisorDto supervisorDto = supervisorService.findById(id);
         if (supervisorDto == null) return null;
         return supervisorDto.getCallers();
+    }
+
+    @Override
+    public List<CallerDto> getAll() {
+        ModelMapper modelMapper = new ModelMapper();
+        return callerDao.findAll().stream().map(el -> modelMapper.map(el, CallerDto.class)).collect(Collectors.toList());
     }
 
     @Transactional

@@ -13,6 +13,7 @@ import java.util.List;
 public class SupervisorDto extends UserDto {
     private String role = "SUPERVISOR";
     private List<OffreDto> offres;
+    private List<CallerDto> callers;
     private AdminDto admin;
     @NotNull(message = "ce champ est obligatoire !!")
     private Integer city_id;

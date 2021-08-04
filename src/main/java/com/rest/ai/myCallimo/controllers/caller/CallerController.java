@@ -30,11 +30,20 @@ public class CallerController {
         this.callerService = callerService;
     }
 
+
     @GetMapping("email/{email}")
     public ResponseEntity<UserResponse> findByEmail(@PathVariable() String email) {
         CallerDto callerDto = callerService.findByEmail(email);
         ModelMapper modelMapper = new ModelMapper();
         return new ResponseEntity<>(modelMapper.map(callerDto, CallerResponse.class), HttpStatus.OK);
+    }
+
+    @GetMapping("")
+    public ResponseEntity<List<UserResponse>> getAllCallers() {
+        ModelMapper modelMapper = new ModelMapper();
+        List<CallerDto> callerDtos = callerService.getAll();
+        List<UserResponse> userResponses = callerDtos.stream().map(el -> modelMapper.map(el, UserResponse.class)).collect(Collectors.toList());
+        return new ResponseEntity<>(userResponses, HttpStatus.OK);
     }
 
     @PostMapping("/supervisor-id/{supervisor_id}")

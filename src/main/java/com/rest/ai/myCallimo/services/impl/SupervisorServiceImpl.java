@@ -63,7 +63,7 @@ public class SupervisorServiceImpl implements SupervisorService {
     @Override
     public SupervisorDto findById(Integer id) {
         SupervisorEntity supervisorEntity = supervisorDao.findById(id).orElse(null);
-        if (supervisorEntity == null) return null;
+        if (supervisorEntity == null) throw new UserNotFoundException("Superviseur non trouver par l'id " + id);
         ModelMapper modelMapper = new ModelMapper();
         return modelMapper.map(supervisorEntity, SupervisorDto.class);
     }

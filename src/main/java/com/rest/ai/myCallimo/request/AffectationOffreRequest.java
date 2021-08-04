@@ -16,5 +16,5 @@ public class AffectationOffreRequest {
     @ValidationListInteger
     private List<Integer> offres_ids;
     @NotNull(message = "superviseur id est obligatoire")
-    private Integer supervisor_id;
+    private Integer id;
 }

@@ -86,4 +86,7 @@ public class OffreEntity implements Serializable {
     @ManyToOne
     @JoinColumn(name = "supervisor_id")
     private SupervisorEntity supervisor;
+    @ManyToOne
+    @JoinColumn(name = "caller_id")
+    private CallerEntity caller;
 }

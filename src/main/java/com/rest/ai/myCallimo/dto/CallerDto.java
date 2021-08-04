@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,4 +16,5 @@ public class CallerDto extends UserDto {
     private Integer city_id;
     private CityDto city;
     private SupervisorDto supervisor;
+    private List<OffreDto> offres;
 }

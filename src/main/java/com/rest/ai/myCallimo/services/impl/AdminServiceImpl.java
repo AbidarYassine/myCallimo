@@ -5,8 +5,10 @@ import com.rest.ai.myCallimo.dao.AdminDao;
 import com.rest.ai.myCallimo.dto.AdminDto;
 import com.rest.ai.myCallimo.entities.AdminEntity;
 import com.rest.ai.myCallimo.exception.user.UserAlreadyExist;
+import com.rest.ai.myCallimo.exception.user.UserNotFoundException;
 import com.rest.ai.myCallimo.services.facade.AdminService;
 import com.rest.ai.myCallimo.services.facade.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
+@Slf4j
 public class AdminServiceImpl implements AdminService {
 
 
@@ -53,8 +56,8 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public AdminDto findByEmail(String email) {
         AdminEntity adminEntity = adminDao.findByEmail(email);
+        if (adminEntity == null) throw new UserNotFoundException("admin non trouver !!");
         ModelMapper modelMapper = new ModelMapper();
-        if (adminEntity == null) return null;
         return modelMapper.map(adminEntity, AdminDto.class);
     }
 }

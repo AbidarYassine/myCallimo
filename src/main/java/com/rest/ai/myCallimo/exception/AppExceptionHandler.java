@@ -2,6 +2,7 @@ package com.rest.ai.myCallimo.exception;
 
 import com.rest.ai.myCallimo.exception.city.CityNotFoundException;
 import com.rest.ai.myCallimo.exception.offre.AlreadyAffectedException;
+import com.rest.ai.myCallimo.exception.offre.OffreNotFoundException;
 import com.rest.ai.myCallimo.exception.role.RoleAlreadyExistsException;
 import com.rest.ai.myCallimo.exception.role.RoleNotFoundException;
 import com.rest.ai.myCallimo.exception.user.UnAuthorizationUser;
@@ -65,12 +66,20 @@ public class AppExceptionHandler {
     }
     // end    city
 
+
+
     // start offre
     @ExceptionHandler(value = {AlreadyAffectedException.class})
     public ResponseEntity<Object> handlerOffreException(AlreadyAffectedException ex, WebRequest req) {
         ErrorMessage errorMessage = new ErrorMessage(new Date(), ex.getMessage());
         return new ResponseEntity<>(errorMessage, new HttpHeaders(), HttpStatus.CONFLICT);
     }
+    @ExceptionHandler(value = {OffreNotFoundException.class})
+    public ResponseEntity<Object> handlerOffreException(OffreNotFoundException ex, WebRequest req) {
+        ErrorMessage errorMessage = new ErrorMessage(new Date(), ex.getMessage());
+        return new ResponseEntity<>(errorMessage, new HttpHeaders(), HttpStatus.CONFLICT);
+    }
+
     // end    offre
 
 
