@@ -120,28 +120,22 @@ public class CallerServiceImpl implements CallerService {
         return 1;
     }
 
-//
-//    List<Customer> customersWithMoreThan100Points = customers
-//            .stream()
-//            .filter(c -> c.getPoints() > 100)
-//            .collect(Collectors.toList());
 
-
-    @Transactional
-    @Override
-    public int retireCaller(Integer id) {
-        CallerEntity callerEntity = callerDao.findById(id).orElse(null);
-        if (callerEntity == null) throw new UserNotFoundException("Agent not found par l'id " + id);
-        SupervisorEntity supervisorEntity = callerEntity.getSupervisor();
-        if (supervisorEntity != null) {
-            supervisorEntity.setCallers(supervisorEntity.getCallers().stream().filter(el -> !el.getId().equals(id)).collect(Collectors.toList()));
-            callerEntity.setSupervisor(supervisorEntity);
-            callerDao.save(callerEntity);
-        } else {
-            callerDao.delete(callerEntity);
-        }
-        return 1;
-    }
+//    @Transactional
+//    @Override
+//    public int retireCaller(Integer id) {
+//        CallerEntity callerEntity = callerDao.findById(id).orElse(null);
+//        if (callerEntity == null) throw new UserNotFoundException("Agent not found par l'id " + id);
+//        SupervisorEntity supervisorEntity = callerEntity.getSupervisor();
+//        if (supervisorEntity != null) {
+//            supervisorEntity.setCallers(supervisorEntity.getCallers().stream().filter(el -> !el.getId().equals(id)).collect(Collectors.toList()));
+//            callerEntity.setSupervisor(supervisorEntity);
+//            callerDao.save(callerEntity);
+//        } else {
+//            callerDao.delete(callerEntity);
+//        }
+//        return 1;
+//    }
 
 
 }

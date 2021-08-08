@@ -62,9 +62,5 @@ public class CallerController {
         return new ResponseEntity<>(callerDtos.stream().map(el -> modelMapper.map(el, CallerResponse.class)).collect(Collectors.toList()), HttpStatus.OK);
     }
 
-    @DeleteMapping("/id/{id}")
-    public int retireCaller(@PathVariable("id") Integer id) {
-        return callerService.deleteById(id);
-    }
 
 }

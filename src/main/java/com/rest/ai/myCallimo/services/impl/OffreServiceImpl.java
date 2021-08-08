@@ -43,6 +43,23 @@ public class OffreServiceImpl implements OffreService {
     }
 
     @Override
+    public int deleteCaller(Integer id) {
+        ModelMapper modelMapper = new ModelMapper();
+        CallerEntity callerEntity = modelMapper.map(callerService.findById(id), CallerEntity.class);
+        if (callerEntity.getOffres().size() > 0) {
+            callerEntity.getOffres().forEach(el -> {
+//                no affectation to caller
+                el.set_affected_to_caller(false);
+//                assure no afectation to supervisor a verifier
+                el.set_affected_to_supervisor(false);
+                el.setCaller(null);
+                offreDao.save(el);
+            });
+        }
+        return callerService.deleteById(id);
+    }
+
+    @Override
     public List<OffreDto> findAll() {
         ModelMapper modelMapper = new ModelMapper();
         return offreDao.findAll().stream().map(el -> modelMapper.map(el, OffreDto.class)).collect(Collectors.toList());
@@ -121,6 +138,14 @@ public class OffreServiceImpl implements OffreService {
         CallerDto callerDto = callerService.findById(id);
         return callerDto.getOffres();
     }
+
+//    @Override
+//    public OffreDto save(OffreDto offreDto) {
+//        ModelMapper modelMapper = new ModelMapper();
+//        OffreEntity saved = offreDao.save(modelMapper.map(offreDto, OffreEntity.class));
+//        return modelMapper.map(saved, OffreDto.class);
+//
+//    }
 
     List<OffreEntity> validateOffreRequest(List<Integer> ids, boolean to_supervisor) {
         List<OffreEntity> offres = ids.stream().map(el -> offreDao.findById(el).orElse(null)).collect(Collectors.toList());

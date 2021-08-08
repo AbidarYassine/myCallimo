@@ -19,5 +19,9 @@ public interface OffreService extends BaseInterface<OffreDto> {
 
     List<OffreDto> getByCaller(Integer id);
 
+    OffreDto save(OffreDto offreDto);
+
+    int deleteCaller(Integer id);
+
 
 }

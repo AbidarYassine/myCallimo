@@ -5,8 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.util.List;
@@ -31,8 +29,7 @@ public class CallerEntity extends UserEntity {
     @OneToMany(mappedBy = "caller", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<AppelEntity> appeles;
 
-    @OneToMany(mappedBy = "caller")
-    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany(mappedBy = "caller", cascade = CascadeType.ALL)
     private List<OffreEntity> offres;
 
 

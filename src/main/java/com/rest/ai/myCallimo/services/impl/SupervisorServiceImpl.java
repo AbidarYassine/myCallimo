@@ -1,5 +1,7 @@
 package com.rest.ai.myCallimo.services.impl;
 
+import com.rest.ai.myCallimo.dao.CallerDao;
+import com.rest.ai.myCallimo.dao.OffreDao;
 import com.rest.ai.myCallimo.dao.SupervisorDao;
 import com.rest.ai.myCallimo.dto.AdminDto;
 import com.rest.ai.myCallimo.dto.SupervisorDto;
@@ -7,7 +9,6 @@ import com.rest.ai.myCallimo.entities.AdminEntity;
 import com.rest.ai.myCallimo.entities.SupervisorEntity;
 import com.rest.ai.myCallimo.exception.user.UserAlreadyExist;
 import com.rest.ai.myCallimo.exception.user.UserNotFoundException;
-import com.rest.ai.myCallimo.services.facade.CityService;
 import com.rest.ai.myCallimo.services.facade.SupervisorService;
 import com.rest.ai.myCallimo.services.facade.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -18,8 +19,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-
 
 @Service
 @Slf4j
@@ -29,14 +28,16 @@ public class SupervisorServiceImpl implements SupervisorService {
     private final SupervisorDao supervisorDao;
     private final UserService userService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-    private final CityService cityService;
+    private final CallerDao callerDao;
+    private final OffreDao offreDao;
 
     @Autowired
-    public SupervisorServiceImpl(SupervisorDao supervisorDao, UserService userService, BCryptPasswordEncoder bCryptPasswordEncoder, CityService cityService) {
+    public SupervisorServiceImpl(SupervisorDao supervisorDao, UserService userService, BCryptPasswordEncoder bCryptPasswordEncoder, CallerDao callerDao, OffreDao offreDao) {
         this.supervisorDao = supervisorDao;
         this.userService = userService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-        this.cityService = cityService;
+        this.callerDao = callerDao;
+        this.offreDao = offreDao;
     }
 
 
@@ -100,10 +101,26 @@ public class SupervisorServiceImpl implements SupervisorService {
     @Transactional
     @Override
     public int deleteById(int id) {
+//        set callers null
+//        set offres null
+//        delete supervisor
         SupervisorEntity supervisorEntity = supervisorDao.findById(id).orElse(null);
         if (supervisorEntity == null) throw new UserNotFoundException("Superviseur non trouver par l'id " + id);
-        supervisorEntity.setCallers(new ArrayList<>());
-        supervisorDao.save(supervisorEntity);
+        ModelMapper modelMapper = new ModelMapper();
+        if (supervisorEntity.getCallers().size() > 0) {
+            supervisorEntity.getCallers().forEach(el -> {
+                el.setSupervisor(null);
+                callerDao.save(el);
+            });
+        }
+        if (supervisorEntity.getOffres().size() > 0) {
+            supervisorEntity.getOffres().forEach(el -> {
+                el.setSupervisor(null);
+                el.set_affected_to_supervisor(false);
+                el.set_affected_to_caller(false);
+                offreDao.save(el);
+            });
+        }
         supervisorDao.deleteById(id);
         return 1;
     }

@@ -73,12 +73,10 @@ public class AdminController {
         return new ResponseEntity<>(modelMapper.map(supervisorDto, SupervisorResponse.class), HttpStatus.OK);
     }
 
-    //    TODO NOT WORK delete supervisor
-//    TODO ADD RELATION OFFRE TO USERENTITY
+    //TODO NOT WORK delete supervisor
     @DeleteMapping("/delete-supervisor/{id}")
     public int deleteSupervisor(@PathVariable() Integer id) {
-        supervisorService.deleteById(id);
-        return 1;
+        return supervisorService.deleteById(id);
     }
 
     //    update supervisor done 80% add update city

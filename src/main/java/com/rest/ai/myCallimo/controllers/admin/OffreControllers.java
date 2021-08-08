@@ -105,4 +105,9 @@ public class OffreControllers {
         ModelMapper modelMapper = new ModelMapper();
         return new ResponseEntity<>(modelMapper.map(userDto, UserResponse.class), HttpStatus.OK);
     }
+
+    @DeleteMapping("/delete-caller/{id}")
+    public int deleteCaller(@PathVariable("id") Integer id) {
+        return offreService.deleteCaller(id);
+    }
 }

@@ -19,5 +19,5 @@ public interface CallerService {
 
     int deleteById(int id);
 
-    int retireCaller(Integer id);
+//    int retireCaller(Integer id);
 }

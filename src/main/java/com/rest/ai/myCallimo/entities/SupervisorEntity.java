@@ -7,10 +7,7 @@ import lombok.ToString;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.List;
 
 @Entity()
@@ -29,7 +26,7 @@ public class SupervisorEntity extends UserEntity {
 
     //    LAZY = fetch when needed  getCallers()
 //    EAGER = fetch immediately
-    @OneToMany(mappedBy = "supervisor")
+    @OneToMany(mappedBy = "supervisor", cascade = CascadeType.ALL)
     @LazyCollection(LazyCollectionOption.TRUE) // fetch = FetchType.EAGER.
     private List<CallerEntity> callers;
     @OneToMany(mappedBy = "supervisor")
