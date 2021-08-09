@@ -19,7 +19,6 @@ import java.util.stream.Collectors;
 @RequestMapping("/admin/cities")
 @CrossOrigin("*")
 @Slf4j
-@PreAuthorize("hasRole('ADMIN')")
 public class CityControllers {
     private final CityService cityService;
 
@@ -27,11 +26,13 @@ public class CityControllers {
         this.cityService = cityService;
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/")
     public CityDto save(@Valid @RequestBody() CityDto cityDto) {
         return cityService.save(cityDto);
     }
 
+    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERVISOR') or hasRole('CALLER')")
     @GetMapping("/")
     public ResponseEntity<List<CityResponse>> findAll() {
         ModelMapper modelMapper = new ModelMapper();
@@ -42,6 +43,7 @@ public class CityControllers {
         return new ResponseEntity<>(cities, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERVISOR') or hasRole('CALLER')")
     @GetMapping("/id/{id}")
     public CityDto findById(@PathVariable("id") Integer id) {
         CityDto cityDto = cityService.findById(id);
@@ -49,6 +51,7 @@ public class CityControllers {
         return cityDto;
     }
 
+    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERVISOR') or hasRole('CALLER')")
     @GetMapping("/name/{name}")
     public CityDto findByName(@PathVariable("name") String name) {
         CityDto cityDto = cityService.findByName(name);
@@ -56,6 +59,7 @@ public class CityControllers {
         return cityDto;
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/id/{id}")
     public int delete(@PathVariable("id") Integer id) {
         return cityService.delete(id);

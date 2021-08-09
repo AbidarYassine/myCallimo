@@ -19,4 +19,5 @@ public class UserResponse {
     private boolean passwordChanged;
     private String telephone;
     private String avatar;
+    private Boolean emailVerficationStatus;
 }

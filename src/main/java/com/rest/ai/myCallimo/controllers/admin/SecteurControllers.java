@@ -9,6 +9,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -17,11 +18,13 @@ import java.util.stream.Collectors;
 
 @RestController
 @Slf4j
+
 @RequestMapping("/admin/secteurs")
 public class SecteurControllers {
     @Autowired
     private SecteurService secteurService;
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping()
     public ResponseEntity<SecteurResponse> save(@Valid @RequestBody() SecteurDto secteurDto) {
         SecteurDto dto = secteurService.save(secteurDto);
@@ -29,6 +32,7 @@ public class SecteurControllers {
         return new ResponseEntity<>(modelMapper.map(dto, SecteurResponse.class), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERVISOR') or hasRole('CALLER')")
     @GetMapping("")
     public ResponseEntity<List<SecteurResponse>> findAll() {
         ModelMapper modelMapper = new ModelMapper();
@@ -39,6 +43,7 @@ public class SecteurControllers {
         return new ResponseEntity<>(secteurResponses, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERVISOR') or hasRole('CALLER')")
     @GetMapping("/id/{id}")
     public ResponseEntity<SecteurResponse> findById(@PathVariable() Integer id) {
         SecteurDto dto = secteurService.findById(id);
@@ -46,6 +51,7 @@ public class SecteurControllers {
         return new ResponseEntity<>(modelMapper.map(dto, SecteurResponse.class), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERVISOR') or hasRole('CALLER')")
     @GetMapping("/libelle/{libelle}")
     public ResponseEntity<SecteurResponse> findByLibelle(@PathVariable() String libelle) {
         SecteurDto dto = secteurService.findByLibelle(libelle);
@@ -53,6 +59,7 @@ public class SecteurControllers {
         return new ResponseEntity<>(modelMapper.map(dto, SecteurResponse.class), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERVISOR') or hasRole('CALLER')")
     @GetMapping("/code/{code}")
     public ResponseEntity<SecteurResponse> findByCode(@PathVariable() String code) {
         SecteurDto dto = secteurService.findByCode(code);
@@ -60,6 +67,7 @@ public class SecteurControllers {
         return new ResponseEntity<>(modelMapper.map(dto, SecteurResponse.class), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERVISOR') or hasRole('CALLER')")
     @GetMapping("/cities/secteur/{id}")
     public ResponseEntity<List<CityDto>> getBySecteurId(@PathVariable() Integer id) {
         List<CityDto> list = secteurService.getBySecteurId(id);
