@@ -5,9 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-
 import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.io.Serializable;
@@ -76,6 +74,12 @@ public class OffreBase implements Serializable {
     private String surface_land;
     private String offer_dpe;
     private String offer_ges;
+
+    /* SECTEUR */
+    private String lib_sector;
+    private String zip_sector;
+
+
 //    private String sites_sources;
 //    private String selogger_site;
 //    private String boncoin_site;

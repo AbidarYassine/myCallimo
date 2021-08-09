@@ -9,6 +9,7 @@ import com.rest.ai.myCallimo.entities.AdminEntity;
 import com.rest.ai.myCallimo.entities.SupervisorEntity;
 import com.rest.ai.myCallimo.exception.user.UserAlreadyExist;
 import com.rest.ai.myCallimo.exception.user.UserNotFoundException;
+import com.rest.ai.myCallimo.services.facade.CityService;
 import com.rest.ai.myCallimo.services.facade.SupervisorService;
 import com.rest.ai.myCallimo.services.facade.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -30,14 +31,16 @@ public class SupervisorServiceImpl implements SupervisorService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final CallerDao callerDao;
     private final OffreDao offreDao;
+    private final CityService cityService;
 
     @Autowired
-    public SupervisorServiceImpl(SupervisorDao supervisorDao, UserService userService, BCryptPasswordEncoder bCryptPasswordEncoder, CallerDao callerDao, OffreDao offreDao) {
+    public SupervisorServiceImpl(SupervisorDao supervisorDao, UserService userService, BCryptPasswordEncoder bCryptPasswordEncoder, CallerDao callerDao, OffreDao offreDao, CityService cityService) {
         this.supervisorDao = supervisorDao;
         this.userService = userService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.callerDao = callerDao;
         this.offreDao = offreDao;
+        this.cityService = cityService;
     }
 
 

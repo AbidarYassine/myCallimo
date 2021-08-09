@@ -20,10 +20,18 @@ public class CityEntity implements Serializable {
     @Column(unique = true)
     private String name;
 
+
+    @Column()
+    private String code_postal;
+
     @OneToMany(mappedBy = "city")
     private List<OffreEntity> offres;
 
-    @OneToOne(mappedBy = "city", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "city", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private CallerEntity caller;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "secteur_id")
+    private Secteur secteur;
 
 }

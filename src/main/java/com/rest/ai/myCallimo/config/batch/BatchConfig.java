@@ -16,6 +16,9 @@ import com.rest.ai.myCallimo.config.batch.offre.OffreBaseWriter;
 import com.rest.ai.myCallimo.config.batch.offreType.OffreTypeBaseProcessor;
 import com.rest.ai.myCallimo.config.batch.offreType.OffreTypeBaseReader;
 import com.rest.ai.myCallimo.config.batch.offreType.OffreTypeBaseWriter;
+import com.rest.ai.myCallimo.config.batch.secteur.SecteurProcess;
+import com.rest.ai.myCallimo.config.batch.secteur.SecteurReader;
+import com.rest.ai.myCallimo.config.batch.secteur.SecteurWriter;
 import com.rest.ai.myCallimo.entities.*;
 import com.rest.ai.myCallimo.entities.base.*;
 import org.springframework.batch.core.Job;
@@ -42,12 +45,13 @@ public class BatchConfig {
         return new RestTemplate();
     }
 
-    private static final String JOB_NAME = "annonceBaseJob";
-    private static final String STEP_NAME_1 = "processingStep1";
-    private static final String STEP_NAME_2 = "processingStep2";
-    private static final String STEP_NAME_3 = "processingStep3";
-    private static final String STEP_NAME_4 = "processingStep4";
-    private static final String STEP_NAME_5 = "processingStep5";
+    private static final String JOB_NAME = "Job";
+    private static final String STEP_NAME_1 = "Step1";
+    private static final String STEP_NAME_2 = "Step2";
+    private static final String STEP_NAME_3 = "Step3";
+    private static final String STEP_NAME_4 = "Step4";
+    private static final String STEP_NAME_5 = "Step5";
+    private static final String STEP_NAME_6 = "Step6";
     private static final String READER_NAME = "annonceBaseJobItemReader";
 
 
@@ -70,7 +74,7 @@ public class BatchConfig {
 
     @Bean
     public Step offreBaseStep() {
-        return stepBuilderFactory.get(STEP_NAME_5)
+        return stepBuilderFactory.get(STEP_NAME_6)
                 .<OffreBase, OffreEntity>chunk(5)
                 .reader(itemReaderOffre(restTemplate()))
                 .processor(offreBaseItemProcessor())
@@ -110,6 +114,16 @@ public class BatchConfig {
                 .build();
     }
 
+    @Bean
+    public Step secteurBaseStep() {
+        return stepBuilderFactory.get(STEP_NAME_5)
+                .<SecteurBase, Secteur>chunk(5)
+                .reader(itemReaderSecteur(restTemplate()))
+                .processor(secteurBaseItemProcessor())
+                .writer(secteurItemWriter())
+                .build();
+    }
+
 
     //    defin job execute step
     @Bean
@@ -119,9 +133,27 @@ public class BatchConfig {
                 .next(offreTypeBaseStep())
                 .next(categoryBaseStep())
                 .next(cityBaseStep())
+                .next(secteurBaseStep())
                 .next(offreBaseStep())
                 .build();
     }
+
+    /* start secteur job */
+    @Bean
+    public ItemWriter<Secteur> secteurItemWriter() {
+        return new SecteurWriter();
+    }
+
+    @Bean
+    public ItemProcessor<SecteurBase, Secteur> secteurBaseItemProcessor() {
+        return new SecteurProcess();
+    }
+
+    @Bean
+    public ItemReader<SecteurBase> itemReaderSecteur(RestTemplate restTemplate) {
+        return new SecteurReader("https://myspace.espaceo.net/api/get-pap-offers", restTemplate);
+    }
+    /* end secteur job*/
 
 
 //    annonce

@@ -46,11 +46,11 @@ public class AdminController {
 
     // add supervisor by admin connected
     @PostMapping("/add-supervisor")
-    public ResponseEntity<UserResponse> addSupervisor(@Valid @RequestBody() SupervisorDto supervisorDto) {
+    public ResponseEntity<SupervisorResponse> addSupervisor(@Valid @RequestBody() SupervisorDto supervisorDto) {
         ModelMapper modelMapper = new ModelMapper();
         UserDto authUser = authRoleService.getUserAuth();
         SupervisorDto result = supervisorService.save(supervisorDto, modelMapper.map(authUser, AdminDto.class));
-        return new ResponseEntity<>(modelMapper.map(result, UserResponse.class), HttpStatus.CREATED);
+        return new ResponseEntity<>(modelMapper.map(result, SupervisorResponse.class), HttpStatus.CREATED);
     }
 
     //    all supervisor  of admin connected
@@ -74,6 +74,7 @@ public class AdminController {
     }
 
     //TODO NOT WORK delete supervisor
+    // TODO SECURITY AND ERROR MANY ROWS
     @DeleteMapping("/delete-supervisor/{id}")
     public int deleteSupervisor(@PathVariable() Integer id) {
         return supervisorService.deleteById(id);

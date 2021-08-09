@@ -3,14 +3,11 @@ package com.rest.ai.myCallimo.config.batch.offre;
 
 import com.rest.ai.myCallimo.dto.AnnonceurDto;
 import com.rest.ai.myCallimo.dto.CategoryDto;
+import com.rest.ai.myCallimo.dto.CityDto;
 import com.rest.ai.myCallimo.dto.OffreTypeDto;
 import com.rest.ai.myCallimo.entities.*;
 import com.rest.ai.myCallimo.entities.base.OffreBase;
-import com.rest.ai.myCallimo.services.facade.AnnonceurService;
-import com.rest.ai.myCallimo.services.facade.CategoryService;
-import com.rest.ai.myCallimo.services.facade.CityService;
-import com.rest.ai.myCallimo.services.facade.OffreTypeService;
-import lombok.extern.slf4j.Slf4j;
+import com.rest.ai.myCallimo.services.facade.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,13 +27,23 @@ public class OffreBaseProcessor implements ItemProcessor<OffreBase, OffreEntity>
     private AnnonceurService annonceurService;
     @Autowired
     private OffreTypeService offreTypeService;
+    @Autowired
+    private SecteurService secteurService;
 
     @Override
     public OffreEntity process(OffreBase offreBase) throws Exception {
         ModelMapper modelMapper = new ModelMapper();
-
-//        get Entities
+        /* get Entities */
         CityEntity cityEntity = modelMapper.map(cityService.findByName(offreBase.getOffer_city()), CityEntity.class);
+
+        /* manage secteur and cities */
+        Secteur secteur = modelMapper.map(secteurService.findByCode(offreBase.getZip_sector()), Secteur.class);
+        cityEntity.setSecteur(secteur);
+
+        cityService.save(modelMapper.map(cityEntity, CityDto.class));
+        /*secteurService.save(modelMapper.map(secteur, SecteurDto.class));*/
+        /* end */
+
 
         CategoryDto categoryDto = categoryService.findByName(offreBase.getOffer_category());
         CategoryEntity categoryEntity = null;

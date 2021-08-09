@@ -2,13 +2,18 @@ package com.rest.ai.myCallimo.controllers.admin;
 
 import com.rest.ai.myCallimo.dto.CityDto;
 import com.rest.ai.myCallimo.exception.city.CityNotFoundException;
+import com.rest.ai.myCallimo.response.CityResponse;
 import com.rest.ai.myCallimo.services.facade.CityService;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/admin/cities")
@@ -28,8 +33,13 @@ public class CityControllers {
     }
 
     @GetMapping("/")
-    public List<CityDto> findAll() {
-        return cityService.findAll();
+    public ResponseEntity<List<CityResponse>> findAll() {
+        ModelMapper modelMapper = new ModelMapper();
+        List<CityResponse> cities = cityService.findAll()
+                .stream()
+                .map(el -> modelMapper.map(el, CityResponse.class))
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(cities, HttpStatus.OK);
     }
 
     @GetMapping("/id/{id}")

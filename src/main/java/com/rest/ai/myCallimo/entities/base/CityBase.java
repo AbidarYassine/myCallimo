@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -12,4 +13,6 @@ import java.io.Serializable;
 public class CityBase implements Serializable {
 
     private String offer_city;
+    private List<CityApi> cities;
+    private String input;
 }

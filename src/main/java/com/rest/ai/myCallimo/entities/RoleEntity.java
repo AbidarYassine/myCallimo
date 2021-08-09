@@ -3,11 +3,11 @@ package com.rest.ai.myCallimo.entities;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import java.io.Serializable;
-import java.util.List;
 
 @Entity(name = "roles")
 @Data
@@ -18,7 +18,4 @@ public class RoleEntity implements Serializable {
     @GeneratedValue()
     private Long id;
     private String name;
-
-
-
 }

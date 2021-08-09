@@ -3,7 +3,6 @@ package com.rest.ai.myCallimo.config.batch.city;
 
 import com.rest.ai.myCallimo.dto.CityDto;
 import com.rest.ai.myCallimo.entities.CityEntity;
-import com.rest.ai.myCallimo.entities.OffreEntity;
 import com.rest.ai.myCallimo.services.facade.CityService;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;

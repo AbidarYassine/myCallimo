@@ -111,7 +111,15 @@ public class UserServiceImpl implements UserService {
         }
         SupervisorEntity supervisorEntity = supervisorDao.findByEmail(email);
         if (supervisorEntity != null) {
-            return modelMapper.map(supervisorEntity, UserDto.class);
+            UserDto userDto = new UserDto();
+            userDto.setFirstName(supervisorEntity.getFirstName());
+            userDto.setLastName(supervisorEntity.getLastName());
+            userDto.setEmail(supervisorEntity.getEmail());
+            userDto.setPasswordChanged(supervisorEntity.isPasswordChanged());
+            userDto.setPassword(supervisorEntity.getPassword());
+            userDto.setRole(supervisorEntity.getRole());
+            userDto.setTelephone(supervisorEntity.getTelephone());
+            return userDto;
         }
         return null;
     }

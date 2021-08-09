@@ -4,8 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.util.List;
@@ -17,21 +15,20 @@ import java.util.List;
 @NoArgsConstructor
 @ToString
 public class SupervisorEntity extends UserEntity {
-    private String role = "SUPERVISOR";
-
     @ManyToOne
     private AdminEntity admin;
 
-//    https://stackoverflow.com/questions/2990799/difference-between-fetchtype-lazy-and-eager-in-java-persistence-api
+    /*https://stackoverflow.com/questions/2990799/difference-between-fetchtype-lazy-and-eager-in-java-persistence-api/*
 
-    //    LAZY = fetch when needed  getCallers()
-//    EAGER = fetch immediately
-    @OneToMany(mappedBy = "supervisor", cascade = CascadeType.ALL)
-    @LazyCollection(LazyCollectionOption.TRUE) // fetch = FetchType.EAGER.
+    /* LAZY = fetch when needed  getCallers() */
+    /*   EAGER = fetch immediately */
+    @OneToMany(mappedBy = "supervisor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<CallerEntity> callers;
-    @OneToMany(mappedBy = "supervisor")
-    @LazyCollection(LazyCollectionOption.FALSE)
+
+
+    @OneToMany(mappedBy = "supervisor", fetch = FetchType.LAZY)
     private List<OffreEntity> offres;
+    private String role = "SUPERVISOR";
 
 
 }

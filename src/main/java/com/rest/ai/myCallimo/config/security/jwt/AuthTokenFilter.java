@@ -1,7 +1,6 @@
 package com.rest.ai.myCallimo.config.security.jwt;
 
 
-import com.rest.ai.myCallimo.exception.jwt.InvalidJwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
