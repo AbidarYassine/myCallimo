@@ -1,9 +1,11 @@
 package com.rest.ai.myCallimo.controllers.supervisor;
 
 import com.rest.ai.myCallimo.dto.CallerDto;
+import com.rest.ai.myCallimo.dto.SecteurDto;
 import com.rest.ai.myCallimo.dto.SupervisorDto;
 import com.rest.ai.myCallimo.dto.UserDto;
 import com.rest.ai.myCallimo.response.CallerResponse;
+import com.rest.ai.myCallimo.response.SecteurResponse;
 import com.rest.ai.myCallimo.response.UserResponse;
 import com.rest.ai.myCallimo.services.facade.AuthRoleService;
 import com.rest.ai.myCallimo.services.facade.CallerService;
@@ -23,7 +25,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/supervisor")
-@PreAuthorize("hasRole('SUPERVISOR')")
 @CrossOrigin("*")
 @Slf4j
 public class SupervisorController {
@@ -32,6 +33,15 @@ public class SupervisorController {
     private final AuthRoleService authRoleService;
     private final CallerService callerService;
     private final SupervisorService supervisorService;
+
+
+    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERVISOR')")
+    @GetMapping("/affecter/{sup_id}/{secteur_id}")
+    public ResponseEntity<SecteurResponse> affecterSupToSecteur(@PathVariable() Integer sup_id, @PathVariable() Integer secteur_id) {
+        SecteurDto dto = supervisorService.affecterSupToSecteur(sup_id, secteur_id);
+        ModelMapper modelMapper = new ModelMapper();
+        return new ResponseEntity<>(modelMapper.map(dto, SecteurResponse.class), HttpStatus.OK);
+    }
 
     @Autowired
     public SupervisorController(AuthRoleService authRoleService, CallerService callerService, SupervisorService supervisorService) {
@@ -62,5 +72,6 @@ public class SupervisorController {
         });
         return new ResponseEntity<>(userResponses, HttpStatus.OK);
     }
+
 
 }

@@ -13,5 +13,6 @@ public class SecteurResponse {
 
     private String libelle;
     private String code;
+    private SupervisorResponse supervisor;
 //    private List<CityDto> cities;
 }

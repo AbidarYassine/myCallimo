@@ -14,5 +14,6 @@ public class SupervisorDto extends UserDto {
     private List<OffreDto> offres;
     private List<CallerDto> callers;
     private AdminDto admin;
+    private List<SecteurDto> secteurs;
 
 }

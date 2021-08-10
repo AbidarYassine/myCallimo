@@ -17,4 +17,5 @@ public class SecteurDto {
     @NotBlank
     private String code;
     private List<CityDto> cities;
+    private SupervisorDto supervisor;
 }

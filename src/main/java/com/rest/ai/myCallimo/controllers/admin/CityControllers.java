@@ -1,8 +1,10 @@
 package com.rest.ai.myCallimo.controllers.admin;
 
 import com.rest.ai.myCallimo.dto.CityDto;
+import com.rest.ai.myCallimo.dto.SupervisorDto;
 import com.rest.ai.myCallimo.exception.city.CityNotFoundException;
 import com.rest.ai.myCallimo.response.CityResponse;
+import com.rest.ai.myCallimo.response.SupervisorResponse;
 import com.rest.ai.myCallimo.services.facade.CityService;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -65,6 +67,14 @@ public class CityControllers {
         return cityService.delete(id);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/supervisor/city/{id}")
+    public ResponseEntity<SupervisorResponse> getByCity(@PathVariable() Integer id) {
+        SupervisorDto res = cityService.getByCity(id);
+        if (res == null) return new ResponseEntity<>(new SupervisorResponse(), HttpStatus.OK);
+        ModelMapper modelMapper = new ModelMapper();
+        return new ResponseEntity<>(modelMapper.map(res, SupervisorResponse.class), HttpStatus.OK);
+    }
 }
 
 

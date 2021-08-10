@@ -2,6 +2,7 @@ package com.rest.ai.myCallimo.services.facade;
 
 
 import com.rest.ai.myCallimo.dto.AdminDto;
+import com.rest.ai.myCallimo.dto.SecteurDto;
 import com.rest.ai.myCallimo.dto.SupervisorDto;
 
 
@@ -21,5 +22,9 @@ public interface SupervisorService {
     public void deleteAllByEmail(String email);
 
     int deleteById(int id);
+
+    SecteurDto affecterSupToSecteur(Integer sup_id, Integer secteur_id);
+
+
 
 }

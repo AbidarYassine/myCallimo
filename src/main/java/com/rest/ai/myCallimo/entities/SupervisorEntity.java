@@ -30,5 +30,8 @@ public class SupervisorEntity extends UserEntity {
     private List<OffreEntity> offres;
     private String role = "SUPERVISOR";
 
+    @OneToMany(mappedBy = "supervisor", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Secteur> secteurs;
+
 
 }

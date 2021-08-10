@@ -91,6 +91,13 @@ public class AppExceptionHandler {
         return new ResponseEntity<>(errorMessage, new HttpHeaders(), HttpStatus.CONFLICT);
     }
 
+    @ExceptionHandler(value = {NotFoundException.class})
+    public ResponseEntity<Object> invalidNotFoundException(NotFoundException ex, WebRequest req) {
+        ErrorMessage errorMessage = new ErrorMessage(new Date(), ex.getMessage());
+        return new ResponseEntity<>(errorMessage, new HttpHeaders(), HttpStatus.NOT_FOUND);
+    }
+
+
     //    InvalidOperationException
     //    global Exception
     @ExceptionHandler(value = Exception.class)
@@ -108,4 +115,5 @@ public class AppExceptionHandler {
                 errors.put(error.getField(), error.getDefaultMessage()));
         return new ResponseEntity<>(errors, new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }
+
 }

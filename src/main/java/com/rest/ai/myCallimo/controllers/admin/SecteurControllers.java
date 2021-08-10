@@ -73,4 +73,26 @@ public class SecteurControllers {
         List<CityDto> list = secteurService.getBySecteurId(id);
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
+
+    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERVISOR') or hasRole('CALLER')")
+    @GetMapping("/non-afected")
+    public ResponseEntity<List<SecteurResponse>> getSecteurNonAfecter() {
+        ModelMapper modelMapper = new ModelMapper();
+        List<SecteurResponse> secteurResponses =
+                secteurService.getSecteurNonAfecter().stream()
+                        .map(el -> modelMapper.map(el, SecteurResponse.class))
+                        .collect(Collectors.toList());
+        return new ResponseEntity<>(secteurResponses, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERVISOR') or hasRole('CALLER')")
+    @GetMapping("/afected")
+    public ResponseEntity<List<SecteurResponse>> getSecteurAfected() {
+        ModelMapper modelMapper = new ModelMapper();
+        List<SecteurResponse> secteurResponses =
+                secteurService.getSecteurAfected().stream()
+                        .map(el -> modelMapper.map(el, SecteurResponse.class))
+                        .collect(Collectors.toList());
+        return new ResponseEntity<>(secteurResponses, HttpStatus.OK);
+    }
 }

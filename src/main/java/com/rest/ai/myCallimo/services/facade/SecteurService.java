@@ -12,5 +12,10 @@ public interface SecteurService extends BaseInterface<SecteurDto> {
     SecteurDto findByCode(String code);
 
 
+
     List<CityDto> getBySecteurId(Integer id);
+
+    List<SecteurDto> getSecteurNonAfecter();
+
+    List<SecteurDto> getSecteurAfected();
 }

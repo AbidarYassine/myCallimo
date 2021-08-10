@@ -2,7 +2,12 @@ package com.rest.ai.myCallimo.services.impl;
 
 import com.rest.ai.myCallimo.dao.CityDao;
 import com.rest.ai.myCallimo.dto.CityDto;
+import com.rest.ai.myCallimo.dto.SupervisorDto;
 import com.rest.ai.myCallimo.entities.CityEntity;
+import com.rest.ai.myCallimo.entities.Secteur;
+import com.rest.ai.myCallimo.exception.NotFoundException;
+import com.rest.ai.myCallimo.exception.city.CityNotFoundException;
+import com.rest.ai.myCallimo.exception.user.UserNotFoundException;
 import com.rest.ai.myCallimo.services.facade.CityService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -40,7 +45,7 @@ public class CityServiceImpl implements CityService {
     @Override
     public CityDto findById(Integer id) {
         CityEntity cityEntity = cityDao.findById(id).orElse(null);
-        if (cityEntity == null) return null;
+        if (cityEntity == null) throw new UserNotFoundException("ville non trouver par id " + id + " !!");
         ModelMapper modelMapper = new ModelMapper();
         return modelMapper.map(cityEntity, CityDto.class);
     }
@@ -48,7 +53,7 @@ public class CityServiceImpl implements CityService {
     @Override
     public CityDto findByName(String name) {
         CityEntity cityEntity = cityDao.findByName(name);
-        if (cityEntity == null) return null;
+        if (cityEntity == null) throw new UserNotFoundException("ville non trouver par " + name + " !!");
         ModelMapper modelMapper = new ModelMapper();
         return modelMapper.map(cityEntity, CityDto.class);
     }
@@ -60,5 +65,16 @@ public class CityServiceImpl implements CityService {
         if (cityEntity == null) return -1;
         cityDao.delete(cityEntity);
         return 1;
+    }
+
+    @Override
+    public SupervisorDto getByCity(Integer id) {
+        CityEntity cityEntity = cityDao.findById(id).orElse(null);
+        if (cityEntity == null) throw new CityNotFoundException("ville not trouver !!");
+        Secteur secteur = cityEntity.getSecteur();
+        if (secteur == null) throw new NotFoundException("secteur non trouver !!");
+        if (secteur.getSupervisor() == null) return null;
+        ModelMapper modelMapper = new ModelMapper();
+        return modelMapper.map(secteur.getSupervisor(), SupervisorDto.class);
     }
 }

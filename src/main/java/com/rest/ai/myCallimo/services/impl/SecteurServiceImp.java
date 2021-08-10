@@ -38,11 +38,10 @@ public class SecteurServiceImp implements SecteurService {
 
     @Override
     public SecteurDto findById(Integer id) {
-        if (secteurDao.existsById(id)) {
-            ModelMapper modelMapper = new ModelMapper();
-            return modelMapper.map(secteurDao.findById(id), SecteurDto.class);
-        }
-        throw new UserNotFoundException("Secteur non trouver ");
+        Secteur secteur = secteurDao.findById(id).orElse(null);
+        if (secteur == null) throw new UserNotFoundException("Secteur non trouver ");
+        ModelMapper modelMapper = new ModelMapper();
+        return modelMapper.map(secteur, SecteurDto.class);
     }
 
     @Override
@@ -69,5 +68,15 @@ public class SecteurServiceImp implements SecteurService {
         return secteur.getCities().stream().map(el -> modelMapper.map(el, CityDto.class))
                 .collect(Collectors.toList());
 
+    }
+
+    @Override
+    public List<SecteurDto> getSecteurNonAfecter() {
+        return this.findAll().stream().filter(el -> el.getSupervisor() == null).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<SecteurDto> getSecteurAfected() {
+        return this.findAll().stream().filter(el -> el.getSupervisor() != null).collect(Collectors.toList());
     }
 }
