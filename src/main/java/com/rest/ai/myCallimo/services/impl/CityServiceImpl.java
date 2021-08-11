@@ -9,6 +9,7 @@ import com.rest.ai.myCallimo.exception.NotFoundException;
 import com.rest.ai.myCallimo.exception.city.CityNotFoundException;
 import com.rest.ai.myCallimo.exception.user.UserNotFoundException;
 import com.rest.ai.myCallimo.services.facade.CityService;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class CityServiceImpl implements CityService {
 
     private CityDao cityDao;
@@ -35,6 +37,7 @@ public class CityServiceImpl implements CityService {
     @Override
     public List<CityDto> findAll() {
         List<CityEntity> cities = cityDao.findAll();
+        log.info("Size is {}", cities.size());
         ModelMapper modelMapper = new ModelMapper();
         return cities
                 .stream()

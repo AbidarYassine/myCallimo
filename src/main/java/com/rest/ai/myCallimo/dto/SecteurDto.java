@@ -16,6 +16,7 @@ public class SecteurDto {
     private String libelle;
     @NotBlank
     private String code;
+    private boolean afected;
     private List<CityDto> cities;
-    private SupervisorDto supervisor;
+//    private SupervisorDto supervisor;
 }

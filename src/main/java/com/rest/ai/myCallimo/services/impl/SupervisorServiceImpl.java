@@ -4,7 +4,6 @@ import com.rest.ai.myCallimo.dao.CallerDao;
 import com.rest.ai.myCallimo.dao.OffreDao;
 import com.rest.ai.myCallimo.dao.SupervisorDao;
 import com.rest.ai.myCallimo.dto.AdminDto;
-import com.rest.ai.myCallimo.dto.CityDto;
 import com.rest.ai.myCallimo.dto.SecteurDto;
 import com.rest.ai.myCallimo.dto.SupervisorDto;
 import com.rest.ai.myCallimo.entities.AdminEntity;
@@ -12,7 +11,6 @@ import com.rest.ai.myCallimo.entities.Secteur;
 import com.rest.ai.myCallimo.entities.SupervisorEntity;
 import com.rest.ai.myCallimo.exception.user.UserAlreadyExist;
 import com.rest.ai.myCallimo.exception.user.UserNotFoundException;
-import com.rest.ai.myCallimo.services.facade.CityService;
 import com.rest.ai.myCallimo.services.facade.SecteurService;
 import com.rest.ai.myCallimo.services.facade.SupervisorService;
 import com.rest.ai.myCallimo.services.facade.UserService;
@@ -138,7 +136,7 @@ public class SupervisorServiceImpl implements SupervisorService {
         SupervisorDto supervisorDto = findById(sup_id);
         SecteurDto dto = secteurService.findById(secteur_id);
         /* secteur belong to one supervisor */
-        if (dto.getSupervisor() != null)
+        if (dto.isAfected())
             throw new UserAlreadyExist("ce secteur " + dto.getLibelle() + " est deja affecté");
         /* get entities from dto*/
         ModelMapper modelMapper = new ModelMapper();
@@ -146,6 +144,7 @@ public class SupervisorServiceImpl implements SupervisorService {
         Secteur secteur = modelMapper.map(dto, Secteur.class);
         /* associate secteur with supervisor */
         secteur.setSupervisor(supervisorEntity);
+        secteur.setAfected(true);
         /* get dto to save */
         SecteurDto toSave = modelMapper.map(secteur, SecteurDto.class);
         SecteurDto saved = secteurService.save(toSave);

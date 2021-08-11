@@ -95,4 +95,10 @@ public class SecteurControllers {
                         .collect(Collectors.toList());
         return new ResponseEntity<>(secteurResponses, HttpStatus.OK);
     }
+
+    @GetMapping("/update")
+    public int update() {
+        secteurService.updateSecteur();
+        return 1;
+    }
 }

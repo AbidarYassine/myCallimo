@@ -71,12 +71,25 @@ public class SecteurServiceImp implements SecteurService {
     }
 
     @Override
+    public void updateSecteur() {
+        secteurDao.findAll().forEach(el -> {
+            if (el.getSupervisor() == null) {
+                el.setAfected(false);
+                secteurDao.save(el);
+            } else {
+                el.setAfected(true);
+                secteurDao.save(el);
+            }
+        });
+    }
+
+    @Override
     public List<SecteurDto> getSecteurNonAfecter() {
-        return this.findAll().stream().filter(el -> el.getSupervisor() == null).collect(Collectors.toList());
+        return this.findAll().stream().filter(el -> !el.isAfected()).collect(Collectors.toList());
     }
 
     @Override
     public List<SecteurDto> getSecteurAfected() {
-        return this.findAll().stream().filter(el -> el.getSupervisor() != null).collect(Collectors.toList());
+        return this.findAll().stream().filter(SecteurDto::isAfected).collect(Collectors.toList());
     }
 }

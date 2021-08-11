@@ -23,5 +23,7 @@ public interface OffreService extends BaseInterface<OffreDto> {
 
     int deleteCaller(Integer id);
 
+    List<OffreDto> findByIds(List<Integer> ids);
+
 
 }

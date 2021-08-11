@@ -8,11 +8,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class SecteurResponse {
-
     private Integer id;
-
     private String libelle;
     private String code;
-    private SupervisorResponse supervisor;
-//    private List<CityDto> cities;
+    private boolean afected;
+
 }

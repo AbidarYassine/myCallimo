@@ -18,4 +18,6 @@ public interface SecteurService extends BaseInterface<SecteurDto> {
     List<SecteurDto> getSecteurNonAfecter();
 
     List<SecteurDto> getSecteurAfected();
+
+    public void updateSecteur();
 }

@@ -6,10 +6,12 @@ import com.rest.ai.myCallimo.dto.OffreDto;
 import com.rest.ai.myCallimo.dto.SupervisorDto;
 import com.rest.ai.myCallimo.dto.UserDto;
 import com.rest.ai.myCallimo.request.AffectationOffreRequest;
+import com.rest.ai.myCallimo.request.GetByIdsRequest;
 import com.rest.ai.myCallimo.response.CallerResponse;
 import com.rest.ai.myCallimo.response.SupervisorResponse;
 import com.rest.ai.myCallimo.response.UserResponse;
 import com.rest.ai.myCallimo.services.facade.OffreService;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,6 +27,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/admin/offres")
 @PreAuthorize("hasRole('ADMIN')")
 @RestController
+@Slf4j
 public class OffreControllers {
     private final OffreService offreService;
 
@@ -35,6 +38,7 @@ public class OffreControllers {
 
     @PostMapping("/affectation-supervisor")
     public ResponseEntity<SupervisorResponse> affecterOffreToSupervisor(@Valid @RequestBody() AffectationOffreRequest affectationOffreRequest) {
+        log.info("request {}", affectationOffreRequest);
         SupervisorDto supervisorDto = offreService.affecterOffreToSupervisor(affectationOffreRequest);
         ModelMapper modelMapper = new ModelMapper();
         return new ResponseEntity<>(modelMapper.map(supervisorDto, SupervisorResponse.class), HttpStatus.OK);
@@ -110,4 +114,12 @@ public class OffreControllers {
     public int deleteCaller(@PathVariable("id") Integer id) {
         return offreService.deleteCaller(id);
     }
+
+
+    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERVISOR') or hasRole('CALLER')")
+    @PostMapping("/ids")
+    public List<OffreDto> findByIds(@RequestBody() GetByIdsRequest getByIdsRequest) {
+        return offreService.findByIds(getByIdsRequest.getIds());
+    }
 }
+

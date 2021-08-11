@@ -23,6 +23,8 @@ public class Secteur extends AbstractEntity implements Serializable {
     @Column(nullable = false)
     private String code;
 
+    private boolean afected = false;
+
     @OneToMany(mappedBy = "secteur", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<CityEntity> cities;
 

@@ -71,7 +71,7 @@ public class CityControllers {
     @GetMapping("/supervisor/city/{id}")
     public ResponseEntity<SupervisorResponse> getByCity(@PathVariable() Integer id) {
         SupervisorDto res = cityService.getByCity(id);
-        if (res == null) return new ResponseEntity<>(new SupervisorResponse(), HttpStatus.OK);
+        if (res == null) return null;
         ModelMapper modelMapper = new ModelMapper();
         return new ResponseEntity<>(modelMapper.map(res, SupervisorResponse.class), HttpStatus.OK);
     }

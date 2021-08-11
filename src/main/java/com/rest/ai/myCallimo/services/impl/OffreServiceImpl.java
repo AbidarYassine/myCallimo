@@ -60,6 +60,14 @@ public class OffreServiceImpl implements OffreService {
     }
 
     @Override
+    public List<OffreDto> findByIds(List<Integer> ids) {
+        List<OffreEntity> offreEntities = offreDao.findAllById(ids);
+        ModelMapper modelMapper = new ModelMapper();
+        return offreEntities.stream().map(el -> modelMapper.map(el, OffreDto.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public List<OffreDto> findAll() {
         ModelMapper modelMapper = new ModelMapper();
         return offreDao.findAll().stream().map(el -> modelMapper.map(el, OffreDto.class)).collect(Collectors.toList());
