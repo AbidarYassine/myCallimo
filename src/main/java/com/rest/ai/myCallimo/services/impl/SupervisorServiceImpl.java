@@ -9,6 +9,7 @@ import com.rest.ai.myCallimo.dto.SupervisorDto;
 import com.rest.ai.myCallimo.entities.AdminEntity;
 import com.rest.ai.myCallimo.entities.Secteur;
 import com.rest.ai.myCallimo.entities.SupervisorEntity;
+import com.rest.ai.myCallimo.exception.NotFoundException;
 import com.rest.ai.myCallimo.exception.user.UserAlreadyExist;
 import com.rest.ai.myCallimo.exception.user.UserNotFoundException;
 import com.rest.ai.myCallimo.services.facade.SecteurService;
@@ -110,10 +111,10 @@ public class SupervisorServiceImpl implements SupervisorService {
 //        set offres null
 //        delete supervisor
         SupervisorEntity supervisorEntity = supervisorDao.findById(id).orElse(null);
-        if (supervisorEntity == null) throw new UserNotFoundException("Superviseur non trouver par l'id " + id);
-        ModelMapper modelMapper = new ModelMapper();
+        if (supervisorEntity == null) throw new NotFoundException("Superviseur non trouver par l'id " + id);
         if (supervisorEntity.getCallers().size() > 0) {
             supervisorEntity.getCallers().forEach(el -> {
+                log.info("element caller  {}", el);
                 el.setSupervisor(null);
                 callerDao.save(el);
             });
@@ -124,6 +125,7 @@ public class SupervisorServiceImpl implements SupervisorService {
                 el.set_affected_to_supervisor(false);
                 el.set_affected_to_caller(false);
                 offreDao.save(el);
+                log.info("element offre {}", el.getId());
             });
         }
         supervisorDao.deleteById(id);

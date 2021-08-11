@@ -74,7 +74,6 @@ public class AdminController {
     }
 
     //TODO NOT WORK delete supervisor
-    // TODO SECURITY AND ERROR MANY ROWS
     @DeleteMapping("/delete-supervisor/{id}")
     public int deleteSupervisor(@PathVariable() Integer id) {
         return supervisorService.deleteById(id);

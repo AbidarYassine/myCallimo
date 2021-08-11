@@ -2,7 +2,6 @@ package com.rest.ai.myCallimo.services.impl;
 
 
 import com.rest.ai.myCallimo.dto.UserDto;
-
 import com.rest.ai.myCallimo.services.facade.AuthRoleService;
 import com.rest.ai.myCallimo.services.facade.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -33,7 +32,9 @@ public class AuthRoleServiceImpl implements AuthRoleService {
     @Override
     public UserDto getUserAuth() {
         String userName = SecurityContextHolder.getContext().getAuthentication().getName();
-        return userService.findByEmail(userName);
+        UserDto userDto = userService.findByEmail(userName);
+        log.info("user dto {}", userDto);
+        return userDto;
     }
 
     @Override

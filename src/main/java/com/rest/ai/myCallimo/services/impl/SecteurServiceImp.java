@@ -83,6 +83,7 @@ public class SecteurServiceImp implements SecteurService {
         });
     }
 
+
     @Override
     public List<SecteurDto> getSecteurNonAfecter() {
         return this.findAll().stream().filter(el -> !el.isAfected()).collect(Collectors.toList());

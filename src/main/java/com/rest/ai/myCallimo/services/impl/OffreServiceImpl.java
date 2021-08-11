@@ -27,11 +27,13 @@ public class OffreServiceImpl implements OffreService {
     private OffreDao offreDao;
     private SupervisorService supervisorService;
     private CallerService callerService;
+    private EmailSenderService emailService;
 
-    public OffreServiceImpl(OffreDao offreDao, SupervisorService supervisorService, CallerService callerService) {
+    public OffreServiceImpl(OffreDao offreDao, SupervisorService supervisorService, CallerService callerService, EmailSenderService service) {
         this.offreDao = offreDao;
         this.supervisorService = supervisorService;
         this.callerService = callerService;
+        this.emailService = service;
     }
 
     @Override
@@ -84,16 +86,22 @@ public class OffreServiceImpl implements OffreService {
     //    affectation des offres aux supervisor
     @Override
     public SupervisorDto affecterOffreToSupervisor(AffectationOffreRequest affectationOffreRequest) {
+        /*validate offres == serach by id test if offre already affected */
         List<OffreEntity> offres = validateOffreRequest(affectationOffreRequest.getOffres_ids(), true);
+        /* get supervisor */
         SupervisorDto supervisorDto = supervisorService.findById(affectationOffreRequest.getId());
         ModelMapper modelMapper = new ModelMapper();
+        /*get entities */
         SupervisorEntity supervisorEntity = modelMapper.map(supervisorDto, SupervisorEntity.class);
         //        set offre is afected
         offres.forEach(el -> {
             el.set_affected_to_supervisor(true);
+            el.set_affected_to_caller(false);
             el.setSupervisor(supervisorEntity);
             offreDao.save(el);
         });
+        String body = "Nouvelle offre a ete affecte a vous !! ";
+        emailService.sendSimpleEmail(supervisorEntity.getEmail(), body, "Nouvelle offre");
         return modelMapper.map(supervisorEntity, SupervisorDto.class);
     }
 
@@ -106,6 +114,7 @@ public class OffreServiceImpl implements OffreService {
         //        set offre is afected
         offres.forEach(el -> {
             el.set_affected_to_caller(true);
+            el.set_affected_to_supervisor(false);
             el.setCaller(callerEntity);
             offreDao.save(el);
         });

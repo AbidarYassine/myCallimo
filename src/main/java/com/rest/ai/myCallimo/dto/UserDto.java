@@ -9,7 +9,6 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.List;
 
 
 @Data
@@ -24,7 +23,7 @@ public class UserDto implements Serializable {
     private String firstName;
     @NotBlank(message = "nom est obligatoire !!")
     private String lastName;
-    private List<CallerDto> callers;
+//    private List<CallerDto> callers;
     @NotBlank()
     @Email(message = "mot de passe invalid !!")
     private String email;

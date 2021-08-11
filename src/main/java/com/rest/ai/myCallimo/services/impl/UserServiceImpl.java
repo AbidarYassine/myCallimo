@@ -112,14 +112,19 @@ public class UserServiceImpl implements UserService {
         SupervisorEntity supervisorEntity = supervisorDao.findByEmail(email);
         if (supervisorEntity != null) {
             UserDto userDto = new UserDto();
+            userDto.setId(supervisorEntity.getId());
             userDto.setFirstName(supervisorEntity.getFirstName());
             userDto.setLastName(supervisorEntity.getLastName());
             userDto.setEmail(supervisorEntity.getEmail());
             userDto.setPasswordChanged(supervisorEntity.isPasswordChanged());
             userDto.setPassword(supervisorEntity.getPassword());
             userDto.setRole(supervisorEntity.getRole());
+            userDto.setRole("SUPERVISOR");
+            userDto.setAvatar(supervisorEntity.getAvatar());
+//            userDto.setCallers(supervisorEntity.getCallers().stream().map(el -> modelMapper.map(el, CallerDto.class)).collect(Collectors.toList()));
             userDto.setTelephone(supervisorEntity.getTelephone());
             return userDto;
+//            return modelMapper.map(supervisorEntity, UserDto.class);
         }
         return null;
     }
@@ -132,14 +137,13 @@ public class UserServiceImpl implements UserService {
             throw new UserNotFoundException("Utilisateur non trouver par l'email " + changePasswordRequest.getEmail());
         if (!changePasswordRequest.getPassword().equals(changePasswordRequest.getConfirmPassword()))
             throw new InvalidOperationException("le mot de passe et la confirmation sont different !!");
+        log.info("user dto {}", userDto);
         String role = userDto.getRole();
         ModelMapper modelMapper = new ModelMapper();
         switch (role) {
             case "ADMIN":
                 AdminEntity adminEntity = adminDao.findByEmail(changePasswordRequest.getEmail());
-                log.info("admin entity {}", adminEntity);
                 adminEntity.setPassword(bCryptPasswordEncoder.encode(changePasswordRequest.getPassword()));
-                log.info("admin entity {}", adminEntity);
                 adminEntity.setPasswordChanged(true);
                 AdminEntity adminSaved = adminDao.save(adminEntity);
                 return modelMapper.map(adminSaved, UserDto.class);

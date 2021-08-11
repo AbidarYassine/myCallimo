@@ -2,6 +2,7 @@ package com.rest.ai.myCallimo.services.impl;
 
 import com.rest.ai.myCallimo.dao.CityDao;
 import com.rest.ai.myCallimo.dto.CityDto;
+import com.rest.ai.myCallimo.dto.SecteurDto;
 import com.rest.ai.myCallimo.dto.SupervisorDto;
 import com.rest.ai.myCallimo.entities.CityEntity;
 import com.rest.ai.myCallimo.entities.Secteur;
@@ -79,5 +80,11 @@ public class CityServiceImpl implements CityService {
         if (secteur.getSupervisor() == null) return null;
         ModelMapper modelMapper = new ModelMapper();
         return modelMapper.map(secteur.getSupervisor(), SupervisorDto.class);
+    }
+
+    @Override
+    public SecteurDto findByCityId(Integer id) {
+        CityDto cityDto = findById(id);
+        return cityDto.getSecteur();
     }
 }

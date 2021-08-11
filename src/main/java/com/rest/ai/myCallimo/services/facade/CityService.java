@@ -1,6 +1,7 @@
 package com.rest.ai.myCallimo.services.facade;
 
 import com.rest.ai.myCallimo.dto.CityDto;
+import com.rest.ai.myCallimo.dto.SecteurDto;
 import com.rest.ai.myCallimo.dto.SupervisorDto;
 
 public interface CityService extends BaseInterface<CityDto> {
@@ -9,4 +10,7 @@ public interface CityService extends BaseInterface<CityDto> {
     int delete(Integer id);
 
     SupervisorDto getByCity(Integer id);
+
+
+    SecteurDto findByCityId(Integer id);
 }

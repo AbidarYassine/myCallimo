@@ -98,6 +98,7 @@ public class UserController {
     @GetMapping("/info")
     public ResponseEntity<UserResponse> getAuthUser() {
         UserDto userDto = roleService.getUserAuth();
+        log.info("user dto {}", userDto);
         ModelMapper modelMapper = new ModelMapper();
         return new ResponseEntity<UserResponse>(modelMapper.map(userDto, UserResponse.class), HttpStatus.OK);
     }
