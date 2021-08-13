@@ -57,6 +57,9 @@ public class OffreEntity implements Serializable {
     private boolean is_affected_to_supervisor;
     private boolean is_affected_to_caller;
 
+    private String lib_sector;
+    private String zip_sector;
+
 //    public boolean isIs_affected() {
 //        return is_affected;
 //    }

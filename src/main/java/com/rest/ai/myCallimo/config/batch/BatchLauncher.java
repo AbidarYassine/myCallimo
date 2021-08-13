@@ -31,13 +31,14 @@ public class BatchLauncher {
 
     public BatchStatus run() throws JobParametersInvalidException, JobExecutionAlreadyRunningException, JobRestartException, JobInstanceAlreadyCompleteException {
         JobParameters parameters = new JobParametersBuilder().addLong("time", System.currentTimeMillis()).toJobParameters();
-        if (jobRepository.getLastJobExecution("annonceBaseJob", parameters) == null || !jobRepository.getLastJobExecution("annonceBaseJob", parameters).getStatus().name().equalsIgnoreCase("COMPLETED")) {
-            JobExecution jobExecution = jobLauncher.run(job, parameters);
-            BatchStatus batchStatus = jobExecution.getStatus();
-            log.info("le status du batch du job " + batchStatus.name());
-            return batchStatus;
-        }
-        return jobRepository.getLastJobExecution("annonceBaseJob", parameters).getStatus();
+//        if (jobRepository.getLastJobExecution("Job", parameters) == null || !jobRepository.getLastJobExecution("Job", parameters).getStatus().name().equalsIgnoreCase("COMPLETED")) {
+//            JobExecution jobExecution = jobLauncher.run(job, parameters);
+//            BatchStatus batchStatus = jobExecution.getStatus();
+//            log.info("le status du batch du job " + batchStatus.name());
+//            return batchStatus;
+//        }
+        JobExecution jobExecution = jobLauncher.run(job, parameters);
+        return jobExecution.getStatus();
     }
 
 //    @SneakyThrows

@@ -73,7 +73,7 @@ public class CityServiceImpl implements CityService {
 
     @Override
     public SupervisorDto getByCity(Integer id) {
-        CityEntity cityEntity = cityDao.findById(id).orElse(null);
+        CityEntity cityEntity = cityDao.findById(id).orElseThrow(null);
         if (cityEntity == null) throw new CityNotFoundException("ville not trouver !!");
         Secteur secteur = cityEntity.getSecteur();
         if (secteur == null) throw new NotFoundException("secteur non trouver !!");
@@ -83,8 +83,20 @@ public class CityServiceImpl implements CityService {
     }
 
     @Override
+    public List<SupervisorDto> getByCityIds(List<Integer> ids) {
+        List<CityEntity> cities = cityDao.findAllById(ids);
+        if (cities.size() == 0) throw new NotFoundException("vile non trouver !!");
+        ModelMapper modelMapper = new ModelMapper();
+        return cities
+                .stream()
+                .filter(el -> el.getSecteur().getSupervisor() != null)
+                .map(el -> modelMapper.map(el.getSecteur().getSupervisor(), SupervisorDto.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public SecteurDto findByCityId(Integer id) {
         CityDto cityDto = findById(id);
-        return cityDto.getSecteur();
+        return null; // TODO ici
     }
 }

@@ -46,6 +46,8 @@ public class OffreDto implements Serializable {
     private String offer_ges;//
     private boolean is_affected_to_supervisor;
     private boolean is_affected_to_caller;
+    private String lib_sector;
+    private String zip_sector;
 
 
     private AnnonceurDto annonceur;

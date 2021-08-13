@@ -12,6 +12,7 @@ import java.util.List;
 public class SupervisorDto extends UserDto {
     private String role = "SUPERVISOR";
     private List<OffreDto> offres;
+//    get supervisor if hi have offre ==> boucle
     private List<CallerDto> callers;
     private AdminDto admin;
     private List<SecteurDto> secteurs;

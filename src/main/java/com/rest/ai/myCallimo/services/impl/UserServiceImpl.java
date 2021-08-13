@@ -3,6 +3,8 @@ package com.rest.ai.myCallimo.services.impl;
 import com.rest.ai.myCallimo.dao.AdminDao;
 import com.rest.ai.myCallimo.dao.CallerDao;
 import com.rest.ai.myCallimo.dao.SupervisorDao;
+import com.rest.ai.myCallimo.dto.CallerDto;
+import com.rest.ai.myCallimo.dto.OffreDto;
 import com.rest.ai.myCallimo.dto.UserDto;
 import com.rest.ai.myCallimo.entities.AdminEntity;
 import com.rest.ai.myCallimo.entities.CallerEntity;
@@ -20,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -125,6 +128,24 @@ public class UserServiceImpl implements UserService {
             userDto.setTelephone(supervisorEntity.getTelephone());
             return userDto;
 //            return modelMapper.map(supervisorEntity, UserDto.class);
+        }
+        return null;
+    }
+
+    @Override
+    public List<OffreDto> findByUserId(Integer id) {
+        ModelMapper modelMapper = new ModelMapper();
+        CallerEntity callerEntity = callerDao.findById(id).orElse(null);
+        if (callerEntity != null) {
+            CallerDto callerDto = modelMapper.map(callerEntity, CallerDto.class);
+            return callerDto.getOffres();
+        }
+        SupervisorEntity supervisorEntity = supervisorDao.findById(id).orElse(null);
+        if (supervisorEntity != null) {
+            return supervisorEntity.getOffres()
+                    .stream()
+                    .map(el -> modelMapper.map(el, OffreDto.class))
+                    .collect(Collectors.toList());
         }
         return null;
     }

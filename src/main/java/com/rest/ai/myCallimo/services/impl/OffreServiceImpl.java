@@ -11,13 +11,18 @@ import com.rest.ai.myCallimo.entities.SupervisorEntity;
 import com.rest.ai.myCallimo.exception.offre.AlreadyAffectedException;
 import com.rest.ai.myCallimo.exception.offre.OffreNotFoundException;
 import com.rest.ai.myCallimo.exception.user.UserNotFoundException;
-import com.rest.ai.myCallimo.request.AffectationOffreRequest;
+import com.rest.ai.myCallimo.request.AffectationRequest;
+import com.rest.ai.myCallimo.request.search.PagedResponse;
+import com.rest.ai.myCallimo.request.search.SearchRequest;
+import com.rest.ai.myCallimo.request.search.SearchRequestUtil;
 import com.rest.ai.myCallimo.services.facade.CallerService;
 import com.rest.ai.myCallimo.services.facade.OffreService;
 import com.rest.ai.myCallimo.services.facade.SupervisorService;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -69,10 +74,29 @@ public class OffreServiceImpl implements OffreService {
                 .collect(Collectors.toList());
     }
 
+
     @Override
     public List<OffreDto> findAll() {
         ModelMapper modelMapper = new ModelMapper();
         return offreDao.findAll().stream().map(el -> modelMapper.map(el, OffreDto.class)).collect(Collectors.toList());
+    }
+
+    @Override
+    public PagedResponse<OffreDto> list(final SearchRequest request) {
+        final Page<OffreEntity> response = offreDao.findAll(SearchRequestUtil.toPageRequest(request));
+        if (response.isEmpty()) {
+            return new PagedResponse<>(Collections.emptyList(), 0, response.getTotalElements());
+        }
+        ModelMapper modelMapper = new ModelMapper();
+        List<OffreDto> dtos = response.getContent().stream()
+                .filter(el -> el.getAnnonceur() != null
+                        && el.getAnnonceur().getTelephone() != null
+                        && !el.getAnnonceur().getTelephone().equals("")
+                        && !el.is_affected_to_caller()
+                        && !el.is_affected_to_supervisor())
+                .map(el -> modelMapper.map(el, OffreDto.class))
+                .collect(Collectors.toList());
+        return new PagedResponse<>(dtos, dtos.size(), response.getTotalElements());
     }
 
     @Override
@@ -85,11 +109,11 @@ public class OffreServiceImpl implements OffreService {
 
     //    affectation des offres aux supervisor
     @Override
-    public SupervisorDto affecterOffreToSupervisor(AffectationOffreRequest affectationOffreRequest) {
+    public SupervisorDto affecterOffreToSupervisor(AffectationRequest affectationRequest) {
         /*validate offres == serach by id test if offre already affected */
-        List<OffreEntity> offres = validateOffreRequest(affectationOffreRequest.getOffres_ids(), true);
+        List<OffreEntity> offres = validateOffreRequest(affectationRequest.getIds(), true);
         /* get supervisor */
-        SupervisorDto supervisorDto = supervisorService.findById(affectationOffreRequest.getId());
+        SupervisorDto supervisorDto = supervisorService.findById(affectationRequest.getId());
         ModelMapper modelMapper = new ModelMapper();
         /*get entities */
         SupervisorEntity supervisorEntity = modelMapper.map(supervisorDto, SupervisorEntity.class);
@@ -106,9 +130,9 @@ public class OffreServiceImpl implements OffreService {
     }
 
     @Override
-    public CallerDto affecterOffreToCaller(AffectationOffreRequest affectationOffreRequest) {
-        List<OffreEntity> offres = validateOffreRequest(affectationOffreRequest.getOffres_ids(), false);
-        CallerDto callerDto = callerService.findById(affectationOffreRequest.getId());
+    public CallerDto affecterOffreToCaller(AffectationRequest affectationRequest) {
+        List<OffreEntity> offres = validateOffreRequest(affectationRequest.getIds(), false);
+        CallerDto callerDto = callerService.findById(affectationRequest.getId());
         ModelMapper modelMapper = new ModelMapper();
         CallerEntity callerEntity = modelMapper.map(callerDto, CallerEntity.class);
         //        set offre is afected

@@ -71,8 +71,8 @@ public class OffreBaseProcessor implements ItemProcessor<OffreBase, OffreEntity>
 
 
 //        set Attribute;
-
-
+        offreEntity.setLib_sector(offreBase.getLib_sector());
+        offreEntity.setZip_sector(offreBase.getZip_sector());
         offreEntity.setAddress(offreBase.getOffer_address());
         offreEntity.setArea(offreBase.getOffer_area());
         offreEntity.setBathroom(offreBase.getBathroom());

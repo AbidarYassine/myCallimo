@@ -3,12 +3,16 @@ package com.rest.ai.myCallimo.services.impl;
 import com.rest.ai.myCallimo.dao.SecteurDao;
 import com.rest.ai.myCallimo.dto.CityDto;
 import com.rest.ai.myCallimo.dto.SecteurDto;
+import com.rest.ai.myCallimo.dto.SupervisorDto;
 import com.rest.ai.myCallimo.entities.Secteur;
 import com.rest.ai.myCallimo.exception.user.UserNotFoundException;
+import com.rest.ai.myCallimo.response.SupervisorResponse;
+import com.rest.ai.myCallimo.response.SupervisorSecteurResponse;
 import com.rest.ai.myCallimo.services.facade.SecteurService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -70,17 +74,44 @@ public class SecteurServiceImp implements SecteurService {
 
     }
 
+    public SupervisorDto getBySecteurCode(String code) {
+        Secteur secteur = secteurDao.findByCode(code);
+        if (secteur == null) throw new UserNotFoundException("Secteur non trouver par le code  " + code);
+        ModelMapper modelMapper = new ModelMapper();
+        if (secteur.isAfected() && secteur.getSupervisor() != null) {
+            return modelMapper.map(secteur.getSupervisor(), SupervisorDto.class);
+        } else {
+            return null;
+        }
+
+    }
+
     @Override
     public void updateSecteur() {
         secteurDao.findAll().forEach(el -> {
             if (el.getSupervisor() == null) {
                 el.setAfected(false);
-                secteurDao.save(el);
-            } else {
-                el.setAfected(true);
+                el.setSupervisor(null);
                 secteurDao.save(el);
             }
         });
+    }
+
+    @Override
+    public List<SupervisorSecteurResponse> getBySecteurCodes(List<String> codes) {
+        List<SupervisorSecteurResponse> supervisorSecteurResponses = new ArrayList<>();
+        ModelMapper modelMapper = new ModelMapper();
+        for (String c : codes) {
+            SupervisorDto supervisorDto = getBySecteurCode(c);
+            if (supervisorDto != null) {
+                SupervisorSecteurResponse supervisorSecteurResponse = new SupervisorSecteurResponse();
+                supervisorSecteurResponse.setSupervisor(modelMapper.map(supervisorDto, SupervisorResponse.class));
+                supervisorSecteurResponse.setCode(c);
+                supervisorSecteurResponses.add(supervisorSecteurResponse);
+            }
+        }
+        return supervisorSecteurResponses;
+
     }
 
 

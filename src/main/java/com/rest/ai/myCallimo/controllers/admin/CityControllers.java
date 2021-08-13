@@ -4,6 +4,7 @@ import com.rest.ai.myCallimo.dto.CityDto;
 import com.rest.ai.myCallimo.dto.SecteurDto;
 import com.rest.ai.myCallimo.dto.SupervisorDto;
 import com.rest.ai.myCallimo.exception.city.CityNotFoundException;
+import com.rest.ai.myCallimo.request.GetByIdsRequest;
 import com.rest.ai.myCallimo.response.CityResponse;
 import com.rest.ai.myCallimo.response.SecteurResponse;
 import com.rest.ai.myCallimo.response.SupervisorResponse;
@@ -83,6 +84,16 @@ public class CityControllers {
         SecteurDto dto = cityService.findByCityId(id);
         ModelMapper modelMapper = new ModelMapper();
         return new ResponseEntity<>(modelMapper.map(dto, SecteurResponse.class), HttpStatus.OK);
+    }
+
+    @PostMapping("/supervisors")
+    public ResponseEntity<List<SupervisorResponse>> getByCityIds(@RequestBody GetByIdsRequest getByIdsRequest) {
+        ModelMapper modelMapper = new ModelMapper();
+        List<SupervisorResponse> supervisorResponses = cityService.getByCityIds(getByIdsRequest.getIds())
+                .stream()
+                .map(el -> modelMapper.map(el, SupervisorResponse.class))
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(supervisorResponses, HttpStatus.OK);
     }
 }
 

@@ -4,6 +4,9 @@ package com.rest.ai.myCallimo.services.facade;
 import com.rest.ai.myCallimo.dto.AdminDto;
 import com.rest.ai.myCallimo.dto.SecteurDto;
 import com.rest.ai.myCallimo.dto.SupervisorDto;
+import com.rest.ai.myCallimo.request.AffectationRequest;
+
+import java.util.List;
 
 
 public interface SupervisorService {
@@ -25,6 +28,7 @@ public interface SupervisorService {
 
     SecteurDto affecterSupToSecteur(Integer sup_id, Integer secteur_id);
 
+    List<SecteurDto> affecterSupToSecteur(AffectationRequest affectationRequest);
 
 
 }

@@ -2,7 +2,9 @@ package com.rest.ai.myCallimo.controllers.admin;
 
 import com.rest.ai.myCallimo.dto.CityDto;
 import com.rest.ai.myCallimo.dto.SecteurDto;
+import com.rest.ai.myCallimo.request.GetSupervisorByCodesRequest;
 import com.rest.ai.myCallimo.response.SecteurResponse;
+import com.rest.ai.myCallimo.response.SupervisorSecteurResponse;
 import com.rest.ai.myCallimo.services.facade.SecteurService;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -13,6 +15,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -100,5 +103,15 @@ public class SecteurControllers {
     public int update() {
         secteurService.updateSecteur();
         return 1;
+    }
+
+    @PostMapping("/supervisors/codes")
+    public ResponseEntity<List<SupervisorSecteurResponse>> getBySecteurCodes(@RequestBody() GetSupervisorByCodesRequest getSupervisorByCodesRequest) {
+        List<SupervisorSecteurResponse> supervisorResponses = new ArrayList<>();
+        ModelMapper modelMapper = new ModelMapper();
+        supervisorResponses = secteurService.getBySecteurCodes(getSupervisorByCodesRequest.getCodes())
+                .stream().map(el -> modelMapper.map(el, SupervisorSecteurResponse.class))
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(supervisorResponses, HttpStatus.OK);
     }
 }

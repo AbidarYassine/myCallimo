@@ -23,7 +23,6 @@ public class AuthRoleServiceImpl implements AuthRoleService {
     public boolean isAuthorized(String role) {
         String userName = SecurityContextHolder.getContext().getAuthentication().getName();
         UserDto user = userService.findByEmail(userName);
-        log.info("Role is " + user.getRole());
         if (!user.getRole().equalsIgnoreCase(role))  // is role isn't match
             return false;
         return true;
@@ -33,7 +32,6 @@ public class AuthRoleServiceImpl implements AuthRoleService {
     public UserDto getUserAuth() {
         String userName = SecurityContextHolder.getContext().getAuthentication().getName();
         UserDto userDto = userService.findByEmail(userName);
-        log.info("user dto {}", userDto);
         return userDto;
     }
 

@@ -1,9 +1,7 @@
 package com.rest.ai.myCallimo.controllers.supervisor;
 
-import com.rest.ai.myCallimo.dto.CallerDto;
-import com.rest.ai.myCallimo.dto.SecteurDto;
-import com.rest.ai.myCallimo.dto.SupervisorDto;
-import com.rest.ai.myCallimo.dto.UserDto;
+import com.rest.ai.myCallimo.dto.*;
+import com.rest.ai.myCallimo.request.AffectationRequest;
 import com.rest.ai.myCallimo.response.CallerResponse;
 import com.rest.ai.myCallimo.response.SecteurResponse;
 import com.rest.ai.myCallimo.response.UserResponse;
@@ -15,12 +13,14 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -34,6 +34,13 @@ public class SupervisorController {
     private final CallerService callerService;
     private final SupervisorService supervisorService;
 
+    @Autowired
+    public SupervisorController(AuthRoleService authRoleService, CallerService callerService, SupervisorService supervisorService) {
+        this.authRoleService = authRoleService;
+        this.callerService = callerService;
+        this.supervisorService = supervisorService;
+    }
+
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERVISOR')")
     @GetMapping("/affecter/{sup_id}/{secteur_id}")
@@ -43,12 +50,16 @@ public class SupervisorController {
         return new ResponseEntity<>(modelMapper.map(dto, SecteurResponse.class), HttpStatus.OK);
     }
 
-    @Autowired
-    public SupervisorController(AuthRoleService authRoleService, CallerService callerService, SupervisorService supervisorService) {
-        this.authRoleService = authRoleService;
-        this.callerService = callerService;
-        this.supervisorService = supervisorService;
+    @PostMapping("/multiple-afectation")
+    public ResponseEntity<List<SecteurResponse>> affecterSupToSecteur(@RequestBody AffectationRequest affectationRequest) {
+        ModelMapper modelMapper = new ModelMapper();
+        List<SecteurResponse> secteurResponses = supervisorService.affecterSupToSecteur(affectationRequest)
+                .stream()
+                .map(el -> modelMapper.map(el, SecteurResponse.class))
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(secteurResponses, HttpStatus.OK);
     }
+
 
     //    supervisor can add caller
     @PostMapping("/add-callers")
@@ -73,5 +84,16 @@ public class SupervisorController {
         return new ResponseEntity<>(userResponses, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('SUPERVISOR')")
+    @GetMapping("/offres")
+    public ResponseEntity<List<OffreDto>> getOffre() {
+        UserDto authUser = authRoleService.getUserAuth();
+        if (authUser.getRole().equals("SUPERVISOR")) {
+            SupervisorDto supervisorDto = supervisorService.findByEmail(authUser.getEmail());
+            return new ResponseEntity<>(supervisorDto.getOffres(), HttpStatus.OK);
+        } else {
+            throw new AccessDeniedException("Access denied !!");
+        }
 
+    }
 }

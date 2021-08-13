@@ -1,11 +1,9 @@
 package com.rest.ai.myCallimo.config.batch.offre;
 
 
-import com.rest.ai.myCallimo.entities.base.CityBase;
 import com.rest.ai.myCallimo.entities.base.OffreBase;
 import com.rest.ai.myCallimo.shared.Utils;
 import org.springframework.batch.item.ItemReader;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
@@ -56,6 +54,7 @@ public class OffreBaseReader implements ItemReader<OffreBase> {
                 OffreBase[].class
         );
         OffreBase[] offreBasetData = response.getBody();
+        System.out.println("offrre data " + offreBasetData);
         return Arrays.stream(offreBasetData).filter(x -> x.getOffer_id() != null).filter(utils.distinctByKey(OffreBase::getOffer_id)).collect(Collectors.toList());
     }
 }

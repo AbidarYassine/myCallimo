@@ -1,6 +1,5 @@
 package com.rest.ai.myCallimo.request;
 
-import com.rest.ai.myCallimo.validation.ValidationListInteger;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,10 +10,10 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AffectationOffreRequest {
+public class AffectationRequest {
 
-    @ValidationListInteger
-    private List<Integer> offres_ids;
-    @NotNull(message = "superviseur id est obligatoire")
+    @NotNull
+    private List<Integer> ids;
+    @NotNull(message = "id est obligatoire")
     private Integer id;
 }

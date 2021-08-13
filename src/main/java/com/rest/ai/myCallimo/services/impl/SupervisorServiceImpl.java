@@ -12,6 +12,7 @@ import com.rest.ai.myCallimo.entities.SupervisorEntity;
 import com.rest.ai.myCallimo.exception.NotFoundException;
 import com.rest.ai.myCallimo.exception.user.UserAlreadyExist;
 import com.rest.ai.myCallimo.exception.user.UserNotFoundException;
+import com.rest.ai.myCallimo.request.AffectationRequest;
 import com.rest.ai.myCallimo.services.facade.SecteurService;
 import com.rest.ai.myCallimo.services.facade.SupervisorService;
 import com.rest.ai.myCallimo.services.facade.UserService;
@@ -22,6 +23,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -153,6 +158,17 @@ public class SupervisorServiceImpl implements SupervisorService {
         return modelMapper.map(saved, SecteurDto.class);
     }
 
+    @Override
+    public List<SecteurDto> affecterSupToSecteur(AffectationRequest affectationRequest) {
+        /* each secteur afected to sup id*/
+        List<SecteurDto> secteurDtos = new ArrayList<>();
+        affectationRequest.getIds().forEach(el -> {
+            secteurDtos.add(this.affecterSupToSecteur(affectationRequest.getId(), el));
+        });
+        return secteurDtos;
+
+    }
+
 //    @Override
 //    public SupervisorDto getByCity(Integer id) {
 //        CityDto cityDto = cityService.findById(id);
@@ -188,4 +204,25 @@ public class SupervisorServiceImpl implements SupervisorService {
         SupervisorEntity saved = supervisorDao.save(supervisorEntity);
         return modelMapper.map(saved, SupervisorDto.class);
     }
+
+
+//    @Override
+//    public void randomAfectationn() {
+//        List<SecteurDto> secteurs = secteurService.findAll();
+//        ModelMapper modelMapper = new ModelMapper();
+//        List<SupervisorDto> supervisor = supervisorDao.findAll()
+//                .stream()
+//                .map(el -> modelMapper.map(el, SupervisorDto.class))
+//                .collect(Collectors.toList());
+//        List<Secteur> list = secteurs.stream()
+//                .filter(el -> !el.isAfected())
+//                .map(el -> modelMapper.map(el, Secteur.class))
+//                .map(el -> el.setSupervisor(getsupervisorRandom() && secteurService.save(el)))
+//                .collect(Collectors.toList());
+//
+//    }
+//
+//    private SupervisorEntity getsupervisorRandom() {
+//    }
+
 }
