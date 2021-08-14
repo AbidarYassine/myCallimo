@@ -3,7 +3,7 @@ package com.rest.ai.myCallimo.services.facade;
 import com.rest.ai.myCallimo.dto.UserDto;
 
 /***
- * * Class description:
+ *  Class description:
  - Service interface that represents Role
  * Role Service
  */

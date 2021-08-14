@@ -3,7 +3,7 @@ package com.rest.ai.myCallimo.services.facade;
 import com.rest.ai.myCallimo.dto.AnnonceurDto;
 
 /***
- * * Class description:
+ * Class description:
  - Service interface that represents Annonceur
  * Annonceur Service
  */

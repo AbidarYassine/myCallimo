@@ -6,6 +6,13 @@ import com.rest.ai.myCallimo.dto.SecteurDto;
 import com.rest.ai.myCallimo.response.SupervisorSecteurResponse;
 
 import java.util.List;
+/***
+ * Class description:
+ * SecteurService contain the different operations on Secteurs
+ * @author yassine
+ * @version v.0.0.1
+ */
+
 
 public interface SecteurService extends BaseInterface<SecteurDto> {
     SecteurDto findByLibelle(String libelle);

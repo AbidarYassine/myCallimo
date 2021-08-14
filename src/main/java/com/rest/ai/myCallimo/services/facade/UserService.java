@@ -6,6 +6,14 @@ import com.rest.ai.myCallimo.request.ChangePasswordRequest;
 
 import java.util.List;
 
+/***
+ * Class description:
+ * UserService contain the different operations on Supervisor
+ * @author yassine
+ * @version v.0.0.1
+ */
+
+
 public interface UserService {
 
     UserDto addUser(UserDto userDto, int role, UserDto authUser);

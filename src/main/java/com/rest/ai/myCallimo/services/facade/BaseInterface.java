@@ -14,20 +14,20 @@ public interface BaseInterface<T> {
     /***
      * Save
      * @param t Generic Dto
-     * @return Dto
+     * @return T
      */
     T save(T t);
 
     /***
      * get All
-     * @return
+     * @return List of T
      */
     List<T> findAll();
 
     /***
      *find by ID
      * @param id search by id;
-     * @return
+     * @return T
      */
     T findById(Integer id);
 

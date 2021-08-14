@@ -8,6 +8,13 @@ import com.rest.ai.myCallimo.request.AffectationRequest;
 
 import java.util.List;
 
+/***
+ * Class description:
+ * SupervisorService contain the different operations on Supervisor
+ * @author yassine
+ * @version v.0.0.1
+ */
+
 
 public interface SupervisorService {
     SupervisorDto save(SupervisorDto t, AdminDto admin);

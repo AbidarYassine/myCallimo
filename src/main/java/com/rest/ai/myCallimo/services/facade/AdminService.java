@@ -4,7 +4,7 @@ import com.rest.ai.myCallimo.dto.AdminDto;
 
 
 /***
- * * Class description:
+ * Class description:
  - Service interface that represents Admin
  * Admin Service
  */
