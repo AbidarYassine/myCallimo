@@ -1,0 +1,1 @@
+typeSearchIndex = [{"l":"All Classes","url":"allclasses-index.html"},{"p":"com.rest.ai.myCallimo.services.facade","l":"CallerService"}]
