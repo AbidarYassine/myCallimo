@@ -19,14 +19,6 @@ public class AuthRoleServiceImpl implements AuthRoleService {
         this.userService = userService;
     }
 
-    @Override
-    public boolean isAuthorized(String role) {
-        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
-        UserDto user = userService.findByEmail(userName);
-        if (!user.getRole().equalsIgnoreCase(role))  // is role isn't match
-            return false;
-        return true;
-    }
 
     @Override
     public UserDto getUserAuth() {

@@ -46,10 +46,18 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 .cors()
                 .and()
                 .csrf().disable()
+
                 .authorizeRequests()
+                .antMatchers("/v3/api-docs/**",
+                        "/swagger-resources",
+                        "/swagger-resources/**",
+                        "/configuration/ui",
+                        "/configuration/security",
+                        "/swagger-ui.html",
+                        "/webjars/**",
+                        "/swagger-ui/**").permitAll()
 //                .expressionHandler(webSecurityExpressionHandler())
-                .antMatchers(HttpMethod.POST, "/users/login")
-                .permitAll()
+                .antMatchers(HttpMethod.POST, "/users/login").permitAll()
                 .anyRequest().authenticated().and()
                 .logout().logoutUrl("/users/logout").invalidateHttpSession(true)
                 .and()
