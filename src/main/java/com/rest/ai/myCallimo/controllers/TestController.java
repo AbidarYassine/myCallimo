@@ -37,6 +37,6 @@ public class TestController {
 
     @GetMapping("/send-email/{email}")
     public void sendEmail(@PathVariable String email) {
-        emailSenderService.sendSimpleEmail(email, "test", "test");
+//        emailSenderService.sendSimpleEmail(email, "test", "test");
     }
 }

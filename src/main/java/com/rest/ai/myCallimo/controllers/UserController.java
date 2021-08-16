@@ -16,7 +16,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -98,7 +97,6 @@ public class UserController {
     @GetMapping("/info")
     public ResponseEntity<UserResponse> getAuthUser() {
         UserDto userDto = roleService.getUserAuth();
-        log.info("user dto {}", userDto);
         ModelMapper modelMapper = new ModelMapper();
         return new ResponseEntity<UserResponse>(modelMapper.map(userDto, UserResponse.class), HttpStatus.OK);
     }
@@ -111,8 +109,8 @@ public class UserController {
     }
 
     @CrossOrigin(origins = "*")
-    @PostMapping(value = "/modifier-avatar/{email}", consumes = {"multipart/form-data", MediaType.APPLICATION_JSON_VALUE})
-    public String modifierAvatar(@RequestPart("file") MultipartFile photo, @PathVariable() String email) throws IOException, FlickrException, ExecutionException, InterruptedException {
-        return flickrService.savePhoto(photo.getInputStream(), email);
+    @PostMapping(value = "/modifier-avatar/{email}")
+    public String modifierAvatar(@RequestPart("file") MultipartFile file, @PathVariable() String email) throws IOException, FlickrException, ExecutionException, InterruptedException {
+        return flickrService.savePhoto(file.getInputStream(), email);
     }
 }

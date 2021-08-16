@@ -1,6 +1,7 @@
 package com.rest.ai.myCallimo.services.impl;
 
 import com.rest.ai.myCallimo.dao.CityDao;
+import com.rest.ai.myCallimo.dto.CallerDto;
 import com.rest.ai.myCallimo.dto.CityDto;
 import com.rest.ai.myCallimo.dto.SecteurDto;
 import com.rest.ai.myCallimo.dto.SupervisorDto;
@@ -15,6 +16,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -98,5 +100,20 @@ public class CityServiceImpl implements CityService {
     public SecteurDto findByCityId(Integer id) {
         CityDto cityDto = findById(id);
         return null; // TODO ici
+    }
+
+    @Override
+    public List<CallerDto> findByIds(List<Integer> ids) {
+        List<CallerDto> callerDtos = new ArrayList<>();
+        ModelMapper modelMapper = new ModelMapper();
+        ids.forEach(el -> {
+            CityEntity cityEntity = cityDao.findById(el).orElse(null);
+            if (cityEntity != null) {
+                if (cityEntity.getCaller() != null) {
+                    callerDtos.add(modelMapper.map(cityEntity.getCaller(), CallerDto.class));
+                }
+            }
+        });
+        return callerDtos;
     }
 }

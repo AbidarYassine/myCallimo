@@ -27,7 +27,6 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/admin/supervisors")
 @CrossOrigin("*")
-@PreAuthorize("hasRole('ADMIN')")
 @Slf4j
 public class AdminController {
     private final AuthRoleService authRoleService;
@@ -45,6 +44,7 @@ public class AdminController {
 
 
     // add supervisor by admin connected
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/add-supervisor")
     public ResponseEntity<SupervisorResponse> addSupervisor(@Valid @RequestBody() SupervisorDto supervisorDto) {
         ModelMapper modelMapper = new ModelMapper();
@@ -54,6 +54,7 @@ public class AdminController {
     }
 
     //    all supervisor  of admin connected
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("")
     public ResponseEntity<List<SupervisorResponse>> getSupervisor() {
         UserDto authUser = authRoleService.getUserAuth();
@@ -66,6 +67,7 @@ public class AdminController {
     }
 
     //    find by id;
+    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERVISOR')")
     @GetMapping("/id/{id}")
     public ResponseEntity<SupervisorResponse> findById(@PathVariable() Integer id) {
         SupervisorDto supervisorDto = supervisorService.findById(id);

@@ -1,0 +1,17 @@
+<html>
+<head></head>
+<body>
+    <p style="font-weight: bold;">Nombre D'offres : ${nombre} </p>
+    <p>Nouvelle offre a été affecte à vous ,Merci de se connceter avotre compte pour s'avoir plus</b></p>
+
+    <a  href="http://localhost:4200/supervisor/offres">Lien de vous offres</a>
+
+
+        <a  href="http://localhost:4200/caller/offres">Lien de vous offres</a>
+
+
+    <p>Thanks</p>
+
+
+</body>
+</html>

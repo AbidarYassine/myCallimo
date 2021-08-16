@@ -18,12 +18,15 @@ import com.rest.ai.myCallimo.request.search.SearchRequestUtil;
 import com.rest.ai.myCallimo.services.facade.CallerService;
 import com.rest.ai.myCallimo.services.facade.OffreService;
 import com.rest.ai.myCallimo.services.facade.SupervisorService;
+import com.rest.ai.myCallimo.shared.EMail;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -124,8 +127,8 @@ public class OffreServiceImpl implements OffreService {
             el.setSupervisor(supervisorEntity);
             offreDao.save(el);
         });
-        String body = "Nouvelle offre a ete affecte a vous !! ";
-        emailService.sendSimpleEmail(supervisorEntity.getEmail(), body, "Nouvelle offre");
+        EMail eMail = prepareEmail(supervisorEntity.getEmail(), offres.size(), "SUPERVISOR");
+        emailService.sendEmail(eMail);
         return modelMapper.map(supervisorEntity, SupervisorDto.class);
     }
 
@@ -142,7 +145,22 @@ public class OffreServiceImpl implements OffreService {
             el.setCaller(callerEntity);
             offreDao.save(el);
         });
+
+        EMail eMail = prepareEmail(callerEntity.getEmail(), offres.size(), "CALLER");
+        emailService.sendEmail(eMail);
         return modelMapper.map(callerEntity, CallerDto.class);
+    }
+
+    EMail prepareEmail(String to, Integer numOffre, String role) {
+        EMail eMail = new EMail();
+        eMail.setFrom("yassinabidar201@gmail.com");
+        eMail.setSubject("Nouvelle offre 🙂🙂");
+        Map<String, Object> model = new HashMap<>();
+        model.put("nombre", numOffre);
+        model.put("role", role);
+        eMail.setData(model);
+        eMail.setTo(to);
+        return eMail;
     }
 
     @Override

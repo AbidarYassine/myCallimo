@@ -72,6 +72,7 @@ public class SupervisorController {
 
 
     //    get callers of supervisor
+    @PreAuthorize("hasRole('SUPERVISOR')")
     @GetMapping("/callers")
     public ResponseEntity<List<UserResponse>> getCallers() {
         UserDto authUser = authRoleService.getUserAuth();

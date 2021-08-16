@@ -1,5 +1,6 @@
 package com.rest.ai.myCallimo.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,10 +16,10 @@ public class CityDto {
     private String name;
 
     private String code_postal;
-//    @JsonIgnore
+    //    @JsonIgnore
 //    private SecteurDto secteur;
 //    @JsonIgnore
 //    private List<OffreEntity> offres;
 //    @JsonIgnore
-//    private CallerEntity caller;
+//    private CallerDto caller;
 }

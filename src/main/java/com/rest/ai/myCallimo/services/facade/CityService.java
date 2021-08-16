@@ -1,5 +1,6 @@
 package com.rest.ai.myCallimo.services.facade;
 
+import com.rest.ai.myCallimo.dto.CallerDto;
 import com.rest.ai.myCallimo.dto.CityDto;
 import com.rest.ai.myCallimo.dto.SecteurDto;
 import com.rest.ai.myCallimo.dto.SupervisorDto;
@@ -52,4 +53,12 @@ public interface CityService extends BaseInterface<CityDto> {
      * @return Sector Dto
      */
     SecteurDto findByCityId(Integer id);
+
+
+    /***
+     * Get List CallerDto by Names Cities
+     * @param ids ids of cities
+     * @return List Of CallerDto
+     */
+    List<CallerDto> findByIds(List<Integer> ids);
 }

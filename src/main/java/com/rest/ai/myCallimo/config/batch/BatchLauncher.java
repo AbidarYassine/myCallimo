@@ -5,7 +5,6 @@ import org.springframework.batch.core.*;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
 import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
-import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -16,15 +15,13 @@ public class BatchLauncher {
 
 
     private final JobLauncher jobLauncher;
-    private final JobRepository jobRepository;
 
 
     private final Job job;
 
     @Autowired
-    public BatchLauncher(JobLauncher jobLauncher, JobRepository jobRepository, Job job) throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
+    public BatchLauncher(JobLauncher jobLauncher, Job job) throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
         this.jobLauncher = jobLauncher;
-        this.jobRepository = jobRepository;
         this.job = job;
 //        run();
     }
