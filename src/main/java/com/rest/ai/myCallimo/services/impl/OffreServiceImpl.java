@@ -8,7 +8,6 @@ import com.rest.ai.myCallimo.dto.UserDto;
 import com.rest.ai.myCallimo.entities.CallerEntity;
 import com.rest.ai.myCallimo.entities.OffreEntity;
 import com.rest.ai.myCallimo.entities.SupervisorEntity;
-import com.rest.ai.myCallimo.exception.offre.AlreadyAffectedException;
 import com.rest.ai.myCallimo.exception.offre.OffreNotFoundException;
 import com.rest.ai.myCallimo.exception.user.UserNotFoundException;
 import com.rest.ai.myCallimo.request.AffectationRequest;
@@ -205,21 +204,20 @@ public class OffreServiceImpl implements OffreService {
 //        return modelMapper.map(saved, OffreDto.class);
 //
 //    }
-
     List<OffreEntity> validateOffreRequest(List<Integer> ids, boolean to_supervisor) {
         List<OffreEntity> offres = ids.stream().map(el -> offreDao.findById(el).orElse(null)).collect(Collectors.toList());
-        for (int i = 0; i < ids.size(); i++) {
-            if (offres.get(i) == null) throw new OffreNotFoundException("Offre non trouver par l'id " + ids.get(i));
-            if (to_supervisor) {
-                if (offres.get(i).is_affected_to_supervisor()) {
-                    throw new AlreadyAffectedException("offre avec l'id " + ids.get(i) + " est deja afecter");
-                }
-            } else {
-                if (offres.get(i).is_affected_to_caller()) {
-                    throw new AlreadyAffectedException("offre avec l'id " + ids.get(i) + " est deja afecter");
-                }
-            }
-        }
+//        for (int i = 0; i < ids.size(); i++) {
+//            if (offres.get(i) == null) throw new OffreNotFoundException("Offre non trouver par l'id " + ids.get(i));
+//            if (to_supervisor) {
+//                if (offres.get(i).is_affected_to_supervisor()) {
+//                    throw new AlreadyAffectedException("offre avec l'id " + ids.get(i) + " est deja afecter");
+//                }
+//            } else {
+//                if (offres.get(i).is_affected_to_caller()) {
+//                    throw new AlreadyAffectedException("offre avec l'id " + ids.get(i) + " est deja afecter");
+//                }
+//            }
+//        }
         return offres;
     }
 }

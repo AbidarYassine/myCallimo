@@ -41,15 +41,17 @@ public class UserController {
     private final AuthenticationManager authenticationManager;
     private final JwtUtils jwtUtils;
     private final FlickrService flickrService;
+    private final ModelMapper modelMapper;
 
 
     @Autowired
-    public UserController(UserService userService, AuthRoleService roleService, AuthenticationManager authenticationManager, JwtUtils jwtUtils, FlickrService flickrService) {
+    public UserController(UserService userService, AuthRoleService roleService, AuthenticationManager authenticationManager, JwtUtils jwtUtils, FlickrService flickrService, ModelMapper modelMapper) {
         this.userService = userService;
         this.roleService = roleService;
         this.authenticationManager = authenticationManager;
         this.jwtUtils = jwtUtils;
         this.flickrService = flickrService;
+        this.modelMapper = modelMapper;
     }
 
     @PostMapping("/login")
@@ -62,12 +64,13 @@ public class UserController {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 
         UserDto userDto = userService.findByEmail(userDetails.getEmail());
+
         String role = userDto.getRole();
         JwtResponse jwtResponse = JwtResponse.builder()
                 .token(jwt)
-                .id(userDto.getId())
+                .user(modelMapper.map(userDto, UserResponse.class))
                 .type("Bearer")
-                .role(role).build();
+                .build();
         return new ResponseEntity<>(jwtResponse, HttpStatus.OK);
 
 

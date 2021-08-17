@@ -150,6 +150,26 @@ public class UserServiceImpl implements UserService {
         return null;
     }
 
+    @Override
+    public List<CallerDto> findCallersByUserId(Integer id) {
+        ModelMapper modelMapper = new ModelMapper();
+        SupervisorEntity supervisorEntity = supervisorDao.findById(id).orElse(null);
+        if (supervisorEntity != null) {
+            return supervisorEntity.getCallers()
+                    .stream()
+                    .map(el -> modelMapper.map(el, CallerDto.class))
+                    .collect(Collectors.toList());
+        }
+        AdminEntity adminEntity = adminDao.findById(id).orElse(null);
+        if (adminEntity != null) {
+            return callerDao.findAll()
+                    .stream()
+                    .map(el -> modelMapper.map(el, CallerDto.class))
+                    .collect(Collectors.toList());
+        }
+        return new ArrayList<CallerDto>();
+    }
+
 
     @Override
     public UserDto changePassword(ChangePasswordRequest changePasswordRequest) {

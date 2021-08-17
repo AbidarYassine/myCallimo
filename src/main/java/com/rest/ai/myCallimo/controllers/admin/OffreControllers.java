@@ -60,7 +60,7 @@ public class OffreControllers {
     }
 
     @PostMapping("/affectation-caller")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERVISOR')")
     public ResponseEntity<CallerResponse> affecterOffreToCaller(@Valid @RequestBody() AffectationRequest affectationRequest) {
         CallerDto callerDto = offreService.affecterOffreToCaller(affectationRequest);
         ModelMapper modelMapper = new ModelMapper();

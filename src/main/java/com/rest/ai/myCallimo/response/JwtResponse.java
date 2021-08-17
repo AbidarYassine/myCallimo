@@ -11,6 +11,5 @@ import lombok.*;
 public class JwtResponse {
     private String token;
     private String type = "Bearer";
-    private Integer id;
-    private String role;
+    UserResponse user;
 }

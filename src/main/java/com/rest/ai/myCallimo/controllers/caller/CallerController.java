@@ -14,6 +14,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,9 +26,11 @@ import java.util.stream.Collectors;
 public class CallerController {
 
     private final CallerService callerService;
+    private final AuthRoleService roleService;
 
-    public CallerController(CallerService callerService, AuthRoleService authRoleService) {
+    public CallerController(CallerService callerService, AuthRoleService authRoleService, AuthRoleService roleService) {
         this.callerService = callerService;
+        this.roleService = roleService;
     }
 
 
@@ -62,5 +65,14 @@ public class CallerController {
         return new ResponseEntity<>(callerDtos.stream().map(el -> modelMapper.map(el, CallerResponse.class)).collect(Collectors.toList()), HttpStatus.OK);
     }
 
-
+    @GetMapping("/user-callers")
+    public ResponseEntity<List<CallerResponse>> getCallers() {
+        List<CallerResponse> callerResponse = new ArrayList<>();
+        ModelMapper modelMapper = new ModelMapper();
+        callerResponse = roleService.getCallers()
+                .stream()
+                .map(el -> modelMapper.map(el, CallerResponse.class))
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(callerResponse, HttpStatus.OK);
+    }
 }

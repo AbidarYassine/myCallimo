@@ -1,12 +1,12 @@
 package com.rest.ai.myCallimo.controllers.admin;
 
-import com.rest.ai.myCallimo.dto.CallerDto;
 import com.rest.ai.myCallimo.dto.CityDto;
 import com.rest.ai.myCallimo.dto.SecteurDto;
 import com.rest.ai.myCallimo.dto.SupervisorDto;
 import com.rest.ai.myCallimo.exception.city.CityNotFoundException;
 import com.rest.ai.myCallimo.request.CallerByCityNameRequest;
 import com.rest.ai.myCallimo.request.GetByIdsRequest;
+import com.rest.ai.myCallimo.response.CallerResponse;
 import com.rest.ai.myCallimo.response.CityResponse;
 import com.rest.ai.myCallimo.response.SecteurResponse;
 import com.rest.ai.myCallimo.response.SupervisorResponse;
@@ -99,8 +99,14 @@ public class CityControllers {
     }
 
     @PostMapping("/callers")
-    public List<CallerDto> findByNames(@RequestBody() CallerByCityNameRequest callerByCityNameRequest) {
-        return cityService.findByIds(callerByCityNameRequest.getIds());
+    public ResponseEntity<List<CallerResponse>> findByIds(@RequestBody() CallerByCityNameRequest callerByCityNameRequest) {
+        List<CallerResponse> callerResponse;
+        ModelMapper modelMapper = new ModelMapper();
+        callerResponse = cityService.findByIds(callerByCityNameRequest.getIds())
+                .stream()
+                .map(el -> modelMapper.map(el, CallerResponse.class))
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(callerResponse, HttpStatus.OK);
     }
 }
 

@@ -1,6 +1,9 @@
 package com.rest.ai.myCallimo.services.facade;
 
+import com.rest.ai.myCallimo.dto.CallerDto;
 import com.rest.ai.myCallimo.dto.UserDto;
+
+import java.util.List;
 
 /***
  *  Class description:
@@ -19,4 +22,10 @@ public interface AuthRoleService {
      * @return Role of user connected
      */
     String getRole();
+
+    /***
+     * get Callers by user connected
+     * @return List of caller
+     */
+    List<CallerDto> getCallers();
 }
