@@ -3,9 +3,7 @@ package com.rest.ai.myCallimo.services.impl;
 import com.rest.ai.myCallimo.dao.AdminDao;
 import com.rest.ai.myCallimo.dao.CallerDao;
 import com.rest.ai.myCallimo.dao.SupervisorDao;
-import com.rest.ai.myCallimo.dto.CallerDto;
-import com.rest.ai.myCallimo.dto.OffreDto;
-import com.rest.ai.myCallimo.dto.UserDto;
+import com.rest.ai.myCallimo.dto.*;
 import com.rest.ai.myCallimo.entities.AdminEntity;
 import com.rest.ai.myCallimo.entities.CallerEntity;
 import com.rest.ai.myCallimo.entities.SupervisorEntity;
@@ -21,6 +19,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,22 +30,24 @@ public class UserServiceImpl implements UserService {
     private final AdminDao adminDao;
     private final SupervisorDao supervisorDao;
     private final CallerDao callerDao;
+    private final ModelMapper modelMapper;
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
 
     @Autowired
-    public UserServiceImpl(AdminDao adminDao, SupervisorDao supervisorDao, CallerDao callerDao, BCryptPasswordEncoder bCryptPasswordEncoder) {
+    public UserServiceImpl(AdminDao adminDao, SupervisorDao supervisorDao, CallerDao callerDao, ModelMapper modelMapper, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.adminDao = adminDao;
         this.supervisorDao = supervisorDao;
         this.callerDao = callerDao;
+        this.modelMapper = modelMapper;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
 
     }
 
 //    @Override
 //    public UserDto save(UserDto userDto, String role) {
-//        ModelMapper modelMapper = new ModelMapper();
+//     
 //        if (adminDao.findByEmail(userDto.getEmail()) != null)
 //            return null;
 //        userDto.setEncryptedPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
@@ -64,7 +65,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto addUser(UserDto userDto, int role, UserDto authUser) {
         UserDto user = findByEmail(userDto.getEmail());
-        ModelMapper modelMapper = new ModelMapper();
+
         if (user != null) return null;
         userDto.setPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
         switch (role) {
@@ -91,7 +92,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDto> findAll() {
-        ModelMapper modelMapper = new ModelMapper();
+
         List<AdminEntity> users = adminDao.findAll();
         List<UserDto> userDtos = new ArrayList<>();
         users.forEach(el -> {
@@ -103,7 +104,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto findByEmail(String email) {
-        ModelMapper modelMapper = new ModelMapper();
+
         AdminEntity adminEntity = adminDao.findByEmail(email);
         if (adminEntity != null) {
             return modelMapper.map(adminEntity, UserDto.class);
@@ -134,7 +135,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<OffreDto> findByUserId(Integer id) {
-        ModelMapper modelMapper = new ModelMapper();
+
         CallerEntity callerEntity = callerDao.findById(id).orElse(null);
         if (callerEntity != null) {
             CallerDto callerDto = modelMapper.map(callerEntity, CallerDto.class);
@@ -151,8 +152,35 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<SecteurDto> findSecteursBySupId(Integer id) {
+        SupervisorEntity supervisorEntity = supervisorDao.findById(id).orElse(null);
+        if (supervisorDao != null) {
+            return supervisorEntity.getSecteurs()
+                    .stream()
+                    .map(el -> modelMapper.map(el, SecteurDto.class))
+                    .collect(Collectors.toList());
+        } else {
+            return Collections.emptyList();
+        }
+
+    }
+
+    @Override
+    public List<CityDto> findCitiessBySubId(Integer id) {
+        SupervisorEntity supervisorEntity = supervisorDao.findById(id).orElse(null);
+        List<CityDto> list = new ArrayList<>();
+        if (supervisorEntity != null) {
+            supervisorEntity.getSecteurs()
+                    .stream()
+                    .map(s -> modelMapper.map(s, SecteurDto.class))
+                    .map(el -> list.addAll(el.getCities()));
+        }
+        return list;
+    }
+
+    @Override
     public List<CallerDto> findCallersByUserId(Integer id) {
-        ModelMapper modelMapper = new ModelMapper();
+
         SupervisorEntity supervisorEntity = supervisorDao.findById(id).orElse(null);
         if (supervisorEntity != null) {
             return supervisorEntity.getCallers()
@@ -180,7 +208,7 @@ public class UserServiceImpl implements UserService {
             throw new InvalidOperationException("le mot de passe et la confirmation sont different !!");
         log.info("user dto {}", userDto);
         String role = userDto.getRole();
-        ModelMapper modelMapper = new ModelMapper();
+
         switch (role) {
             case "ADMIN":
                 AdminEntity adminEntity = adminDao.findByEmail(changePasswordRequest.getEmail());

@@ -3,6 +3,7 @@ package com.rest.ai.myCallimo.services.facade;
 
 import com.rest.ai.myCallimo.dto.CityDto;
 import com.rest.ai.myCallimo.dto.SecteurDto;
+import com.rest.ai.myCallimo.entities.Secteur;
 import com.rest.ai.myCallimo.response.SupervisorSecteurResponse;
 
 import java.util.List;
@@ -30,6 +31,13 @@ public interface SecteurService extends BaseInterface<SecteurDto> {
 
 
     public List<SupervisorSecteurResponse> getBySecteurCodes(List<String> ids);
+
+
+    /***
+     * get All secteurs by native query
+     * @return All Secteurs
+     */
+    List<SecteurDto> getAllSecteurs();
 
 
 }

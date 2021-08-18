@@ -25,10 +25,10 @@ public class Secteur extends AbstractEntity implements Serializable {
 
     private boolean afected = false;
 
-    @OneToMany(mappedBy = "secteur", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @OneToMany(targetEntity = CityEntity.class, mappedBy = "secteur", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<CityEntity> cities;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = SupervisorEntity.class)
     @JoinColumn(name = "supervisor_id")
     private SupervisorEntity supervisor;
 

@@ -3,19 +3,19 @@ package com.rest.ai.myCallimo.controllers.admin;
 import com.rest.ai.myCallimo.dto.CityDto;
 import com.rest.ai.myCallimo.dto.SecteurDto;
 import com.rest.ai.myCallimo.request.GetSupervisorByCodesRequest;
+import com.rest.ai.myCallimo.response.CityResponse;
 import com.rest.ai.myCallimo.response.SecteurResponse;
 import com.rest.ai.myCallimo.response.SupervisorSecteurResponse;
 import com.rest.ai.myCallimo.services.facade.SecteurService;
+import com.rest.ai.myCallimo.services.facade.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,21 +24,27 @@ import java.util.stream.Collectors;
 
 @RequestMapping("/admin/secteurs")
 public class SecteurControllers {
-    @Autowired
-    private SecteurService secteurService;
+
+    private final SecteurService secteurService;
+    private final ModelMapper modelMapper;
+    private final UserService userService;
+
+    public SecteurControllers(SecteurService secteurService, ModelMapper modelMapper, UserService userService) {
+        this.secteurService = secteurService;
+        this.modelMapper = modelMapper;
+        this.userService = userService;
+    }
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping()
     public ResponseEntity<SecteurResponse> save(@Valid @RequestBody() SecteurDto secteurDto) {
         SecteurDto dto = secteurService.save(secteurDto);
-        ModelMapper modelMapper = new ModelMapper();
         return new ResponseEntity<>(modelMapper.map(dto, SecteurResponse.class), HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERVISOR') or hasRole('CALLER')")
     @GetMapping("")
     public ResponseEntity<List<SecteurResponse>> findAll() {
-        ModelMapper modelMapper = new ModelMapper();
         List<SecteurResponse> secteurResponses =
                 secteurService.findAll().stream()
                         .map(el -> modelMapper.map(el, SecteurResponse.class))
@@ -50,7 +56,6 @@ public class SecteurControllers {
     @GetMapping("/id/{id}")
     public ResponseEntity<SecteurResponse> findById(@PathVariable() Integer id) {
         SecteurDto dto = secteurService.findById(id);
-        ModelMapper modelMapper = new ModelMapper();
         return new ResponseEntity<>(modelMapper.map(dto, SecteurResponse.class), HttpStatus.OK);
     }
 
@@ -58,7 +63,6 @@ public class SecteurControllers {
     @GetMapping("/libelle/{libelle}")
     public ResponseEntity<SecteurResponse> findByLibelle(@PathVariable() String libelle) {
         SecteurDto dto = secteurService.findByLibelle(libelle);
-        ModelMapper modelMapper = new ModelMapper();
         return new ResponseEntity<>(modelMapper.map(dto, SecteurResponse.class), HttpStatus.OK);
     }
 
@@ -66,7 +70,6 @@ public class SecteurControllers {
     @GetMapping("/code/{code}")
     public ResponseEntity<SecteurResponse> findByCode(@PathVariable() String code) {
         SecteurDto dto = secteurService.findByCode(code);
-        ModelMapper modelMapper = new ModelMapper();
         return new ResponseEntity<>(modelMapper.map(dto, SecteurResponse.class), HttpStatus.OK);
     }
 
@@ -80,7 +83,6 @@ public class SecteurControllers {
     @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERVISOR') or hasRole('CALLER')")
     @GetMapping("/non-afected")
     public ResponseEntity<List<SecteurResponse>> getSecteurNonAfecter() {
-        ModelMapper modelMapper = new ModelMapper();
         List<SecteurResponse> secteurResponses =
                 secteurService.getSecteurNonAfecter().stream()
                         .map(el -> modelMapper.map(el, SecteurResponse.class))
@@ -91,7 +93,6 @@ public class SecteurControllers {
     @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERVISOR') or hasRole('CALLER')")
     @GetMapping("/afected")
     public ResponseEntity<List<SecteurResponse>> getSecteurAfected() {
-        ModelMapper modelMapper = new ModelMapper();
         List<SecteurResponse> secteurResponses =
                 secteurService.getSecteurAfected().stream()
                         .map(el -> modelMapper.map(el, SecteurResponse.class))
@@ -107,11 +108,26 @@ public class SecteurControllers {
 
     @PostMapping("/supervisors/codes")
     public ResponseEntity<List<SupervisorSecteurResponse>> getBySecteurCodes(@RequestBody() GetSupervisorByCodesRequest getSupervisorByCodesRequest) {
-        List<SupervisorSecteurResponse> supervisorResponses = new ArrayList<>();
-        ModelMapper modelMapper = new ModelMapper();
+        List<SupervisorSecteurResponse> supervisorResponses;
         supervisorResponses = secteurService.getBySecteurCodes(getSupervisorByCodesRequest.getCodes())
                 .stream().map(el -> modelMapper.map(el, SupervisorSecteurResponse.class))
                 .collect(Collectors.toList());
         return new ResponseEntity<>(supervisorResponses, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasRole('SUPERVISOR')")
+    @GetMapping("/user-id/{id}")
+    public List<SecteurResponse> findSecteursBySupId(@PathVariable() Integer id) {
+        return userService.findSecteursBySupId(id)
+                .stream()
+                .map(el -> modelMapper.map(el, SecteurResponse.class))
+                .collect(Collectors.toList());
+    }
+
+    @PreAuthorize("hasRole('SUPERVISOR')")
+    @GetMapping("/cities/user-id/{id}")
+    public List<CityResponse> findCitiesBySubId(@PathVariable() Integer id) {
+        return userService.findCitiessBySubId(id).stream()
+                .map(el -> modelMapper.map(el, CityResponse.class)).collect(Collectors.toList());
     }
 }

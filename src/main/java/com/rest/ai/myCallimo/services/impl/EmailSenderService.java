@@ -1,18 +1,17 @@
 package com.rest.ai.myCallimo.services.impl;
 
 import com.rest.ai.myCallimo.shared.EMail;
-import freemarker.template.Configuration;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.io.File;
-import java.util.Map;
 
 @Service
 public class EmailSenderService {
@@ -20,13 +19,13 @@ public class EmailSenderService {
 //    https://stackoverflow.com/questions/59049114/how-to-send-mail-using-spring-batch
 
 
-    private JavaMailSender mailSender;
+    private final JavaMailSender mailSender;
     @Qualifier("getFreeMarkerConfiguration")
-    private Configuration fmConfiguration;
+    private final TemplateEngine templateEngine;
 
-    public EmailSenderService(JavaMailSender mailSender, Configuration fmConfiguration) {
+    public EmailSenderService(JavaMailSender mailSender, TemplateEngine templateEngine) {
         this.mailSender = mailSender;
-        this.fmConfiguration = fmConfiguration;
+        this.templateEngine = templateEngine;
     }
 
 
@@ -59,6 +58,9 @@ public class EmailSenderService {
 
     public void sendEmail(EMail eMail) {
         MimeMessage mimeMessage = mailSender.createMimeMessage();
+        Context context = new Context();
+        context.setVariable("email", eMail);
+        String process = templateEngine.process("email", context);
         try {
 
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
@@ -66,8 +68,7 @@ public class EmailSenderService {
             mimeMessageHelper.setSubject(eMail.getSubject());
             mimeMessageHelper.setFrom(eMail.getFrom());
             mimeMessageHelper.setTo(eMail.getTo());
-            eMail.setContent(geContentFromTemplate(eMail.getData()));
-            mimeMessageHelper.setText(eMail.getContent(), true);
+            mimeMessageHelper.setText(process, true);
 
             mailSender.send(mimeMessageHelper.getMimeMessage());
         } catch (MessagingException e) {
@@ -75,14 +76,14 @@ public class EmailSenderService {
         }
     }
 
-    public String geContentFromTemplate(Map<String, Object> model) {
-        StringBuffer content = new StringBuffer();
-
-        try {
-            content.append(FreeMarkerTemplateUtils.processTemplateIntoString(fmConfiguration.getTemplate("email-template.flth"), model));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return content.toString();
-    }
+//    public String geContentFromTemplate(Map<String, Object> model) {
+//        StringBuffer content = new StringBuffer();
+//
+//        try {
+//            content.append(FreeMarkerTemplateUtils.processTemplateIntoString(fmConfiguration.getTemplate("email"), model));
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return content.toString();
+//    }
 }

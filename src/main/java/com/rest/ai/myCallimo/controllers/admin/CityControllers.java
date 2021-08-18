@@ -28,9 +28,11 @@ import java.util.stream.Collectors;
 @Slf4j
 public class CityControllers {
     private final CityService cityService;
+    private final ModelMapper modelMapper;
 
-    public CityControllers(CityService cityService) {
+    public CityControllers(CityService cityService, ModelMapper modelMapper) {
         this.cityService = cityService;
+        this.modelMapper = modelMapper;
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -42,7 +44,6 @@ public class CityControllers {
     @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERVISOR') or hasRole('CALLER')")
     @GetMapping("/")
     public ResponseEntity<List<CityResponse>> findAll() {
-        ModelMapper modelMapper = new ModelMapper();
         List<CityResponse> cities = cityService.findAll()
                 .stream()
                 .map(el -> modelMapper.map(el, CityResponse.class))
@@ -90,7 +91,6 @@ public class CityControllers {
 
     @PostMapping("/supervisors")
     public ResponseEntity<List<SupervisorResponse>> getByCityIds(@RequestBody GetByIdsRequest getByIdsRequest) {
-        ModelMapper modelMapper = new ModelMapper();
         List<SupervisorResponse> supervisorResponses = cityService.getByCityIds(getByIdsRequest.getIds())
                 .stream()
                 .map(el -> modelMapper.map(el, SupervisorResponse.class))
@@ -101,7 +101,6 @@ public class CityControllers {
     @PostMapping("/callers")
     public ResponseEntity<List<CallerResponse>> findByIds(@RequestBody() CallerByCityNameRequest callerByCityNameRequest) {
         List<CallerResponse> callerResponse;
-        ModelMapper modelMapper = new ModelMapper();
         callerResponse = cityService.findByIds(callerByCityNameRequest.getIds())
                 .stream()
                 .map(el -> modelMapper.map(el, CallerResponse.class))
