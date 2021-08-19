@@ -6,10 +6,7 @@ import com.rest.ai.myCallimo.dto.SupervisorDto;
 import com.rest.ai.myCallimo.exception.city.CityNotFoundException;
 import com.rest.ai.myCallimo.request.CallerByCityNameRequest;
 import com.rest.ai.myCallimo.request.GetByIdsRequest;
-import com.rest.ai.myCallimo.response.CallerResponse;
-import com.rest.ai.myCallimo.response.CityResponse;
-import com.rest.ai.myCallimo.response.SecteurResponse;
-import com.rest.ai.myCallimo.response.SupervisorResponse;
+import com.rest.ai.myCallimo.response.*;
 import com.rest.ai.myCallimo.services.facade.CityService;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -96,13 +93,8 @@ public class CityControllers {
     }
 
     @PostMapping("/callers")
-    public ResponseEntity<List<CallerResponse>> findByIds(@RequestBody() CallerByCityNameRequest callerByCityNameRequest) {
-        List<CallerResponse> callerResponse;
-        callerResponse = cityService.findByIds(callerByCityNameRequest.getIds())
-                .stream()
-                .map(el -> modelMapper.map(el, CallerResponse.class))
-                .collect(Collectors.toList());
-        return new ResponseEntity<>(callerResponse, HttpStatus.OK);
+    public ResponseEntity<List<CallerResponse>> findByCityIds(@RequestBody() CallerByCityNameRequest callerByCityNameRequest) {
+        return new ResponseEntity<>(cityService.findByIds(callerByCityNameRequest.getIds()), HttpStatus.OK);
     }
 }
 

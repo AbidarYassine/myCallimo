@@ -6,6 +6,7 @@ import com.rest.ai.myCallimo.dto.AdminDto;
 import com.rest.ai.myCallimo.entities.AdminEntity;
 import com.rest.ai.myCallimo.exception.user.UserAlreadyExist;
 import com.rest.ai.myCallimo.exception.user.UserNotFoundException;
+import com.rest.ai.myCallimo.response.AdminResponse;
 import com.rest.ai.myCallimo.services.facade.AdminService;
 import com.rest.ai.myCallimo.services.facade.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -54,10 +55,10 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public AdminDto findByEmail(String email) {
+    public AdminResponse findByEmail(String email) {
         AdminEntity adminEntity = adminDao.findByEmail(email);
         if (adminEntity == null) throw new UserNotFoundException("admin non trouver !!");
         ModelMapper modelMapper = new ModelMapper();
-        return modelMapper.map(adminEntity, AdminDto.class);
+        return modelMapper.map(adminEntity, AdminResponse.class);
     }
 }

@@ -10,6 +10,8 @@ import com.rest.ai.myCallimo.entities.SupervisorEntity;
 import com.rest.ai.myCallimo.exception.city.CityNotFoundException;
 import com.rest.ai.myCallimo.exception.user.UserAlreadyExist;
 import com.rest.ai.myCallimo.exception.user.UserNotFoundException;
+import com.rest.ai.myCallimo.response.CallerResponse;
+import com.rest.ai.myCallimo.response.UserResponse;
 import com.rest.ai.myCallimo.services.facade.CallerService;
 import com.rest.ai.myCallimo.services.facade.CityService;
 import com.rest.ai.myCallimo.services.facade.SupervisorService;
@@ -35,21 +37,22 @@ public class CallerServiceImpl implements CallerService {
     private final UserService userService;
     private final SupervisorService supervisorService;
     private final CityService cityService;
+    private final ModelMapper modelMapper;
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
-    public CallerServiceImpl(CallerDao callerDao, UserService userService, SupervisorService supervisorService, CityService cityService, BCryptPasswordEncoder bCryptPasswordEncoder) {
+    public CallerServiceImpl(CallerDao callerDao, UserService userService, SupervisorService supervisorService, CityService cityService, ModelMapper modelMapper, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.callerDao = callerDao;
         this.userService = userService;
         this.supervisorService = supervisorService;
         this.cityService = cityService;
+        this.modelMapper = modelMapper;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     @Override
     public CallerDto findByEmail(String email) {
-        ModelMapper modelMapper = new ModelMapper();
         CallerEntity callerEntity = callerDao.findByEmail(email);
         return modelMapper.map(callerEntity, CallerDto.class);
     }
@@ -58,19 +61,19 @@ public class CallerServiceImpl implements CallerService {
     public CallerDto findById(Integer id) {
         CallerEntity callerEntity = callerDao.findById(id).orElse(null);
         if (callerEntity == null) throw new UserNotFoundException("agent non trouver par l'id " + id);
-        ModelMapper modelMapper = new ModelMapper();
+
         return modelMapper.map(callerEntity, CallerDto.class);
     }
 
     @Override
-    public CallerDto save(CallerDto callerDto, Integer supervisor_id) {
+    public CallerResponse save(CallerDto callerDto, Integer supervisor_id) {
         SupervisorDto supervisorDto = supervisorService.findById(supervisor_id);
         if (supervisorDto == null) {
             throw new UserNotFoundException("supervisor  non trouver par  id " + supervisor_id);
         }
         CityDto cityDto = cityService.findById(callerDto.getCity_id());
         if (cityDto == null) throw new CityNotFoundException("City no trouver !!");
-        ModelMapper modelMapper = new ModelMapper();
+
         SupervisorEntity supervisorEntity = modelMapper.map(supervisorDto, SupervisorEntity.class);
         if (userService.findByEmail(callerDto.getEmail()) != null) {
             throw new UserAlreadyExist("Utilisaeur avec l'email  " + callerDto.getEmail() + " déjà existe ");
@@ -87,12 +90,12 @@ public class CallerServiceImpl implements CallerService {
         callerEntity.setAvatar("https://cdn.pixabay.com/photo/2020/07/14/13/07/icon-5404125_960_720.png");
         callerEntity.setPassword(bCryptPasswordEncoder.encode(callerDto.getPassword()));
         CallerEntity saved = callerDao.save(callerEntity);
-        return modelMapper.map(saved, CallerDto.class);
+        return modelMapper.map(saved, CallerResponse.class);
     }
 
     @Override
     public CallerDto save(CallerDto callerDto) {
-        ModelMapper modelMapper = new ModelMapper();
+
         CallerEntity callerEntity = modelMapper.map(callerDto, CallerEntity.class);
         CallerEntity saved = callerDao.save(callerEntity);
         return modelMapper.map(saved, CallerDto.class);
@@ -106,9 +109,8 @@ public class CallerServiceImpl implements CallerService {
     }
 
     @Override
-    public List<CallerDto> getAll() {
-        ModelMapper modelMapper = new ModelMapper();
-        return callerDao.findAll().stream().map(el -> modelMapper.map(el, CallerDto.class)).collect(Collectors.toList());
+    public List<UserResponse> getAll() {
+        return callerDao.findAll().stream().map(el -> modelMapper.map(el, UserResponse.class)).collect(Collectors.toList());
     }
 
     @Transactional

@@ -1,16 +1,12 @@
 package com.rest.ai.myCallimo.controllers.admin;
 
 
-import com.rest.ai.myCallimo.dto.CallerDto;
 import com.rest.ai.myCallimo.dto.OffreDto;
-import com.rest.ai.myCallimo.dto.SupervisorDto;
 import com.rest.ai.myCallimo.dto.UserDto;
 import com.rest.ai.myCallimo.request.AffectationRequest;
 import com.rest.ai.myCallimo.request.GetByIdsRequest;
 import com.rest.ai.myCallimo.request.search.PagedResponse;
 import com.rest.ai.myCallimo.request.search.SearchRequest;
-import com.rest.ai.myCallimo.response.CallerResponse;
-import com.rest.ai.myCallimo.response.SupervisorResponse;
 import com.rest.ai.myCallimo.response.UserResponse;
 import com.rest.ai.myCallimo.services.facade.OffreService;
 import com.rest.ai.myCallimo.services.facade.UserService;
@@ -33,27 +29,23 @@ import java.util.stream.Collectors;
 public class OffreControllers {
     private final OffreService offreService;
     private final UserService userService;
+    private final ModelMapper modelMapper;
 
     @Autowired
-    public OffreControllers(OffreService offreService, UserService userService) {
+    public OffreControllers(OffreService offreService, UserService userService, ModelMapper modelMapper) {
         this.offreService = offreService;
         this.userService = userService;
+        this.modelMapper = modelMapper;
     }
 
-    @PostMapping("/affectation-supervisor")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<SupervisorResponse> affecterOffreToSupervisor(@Valid @RequestBody() AffectationRequest affectationRequest) {
-        SupervisorDto supervisorDto = offreService.affecterOffreToSupervisor(affectationRequest);
-        ModelMapper modelMapper = new ModelMapper();
-        return new ResponseEntity<>(modelMapper.map(supervisorDto, SupervisorResponse.class), HttpStatus.OK);
-    }
+
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERVISOR') or hasRole('CALLER')")
     @GetMapping("/user-id/{id}")
     public PagedResponse<OffreDto> findByUserId(@PathVariable() Integer id, SearchRequest request) {
         List<OffreDto> res = userService.findByUserId(id);
         if (res == null) return this.getOffres(request);
-        PagedResponse<OffreDto> pagedResponse = new PagedResponse<OffreDto>();
+        PagedResponse<OffreDto> pagedResponse = new PagedResponse<>();
         pagedResponse.setContent(res);
         pagedResponse.setCount(res.size());
         return pagedResponse;
@@ -61,10 +53,14 @@ public class OffreControllers {
 
     @PostMapping("/affectation-caller")
     @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERVISOR')")
-    public ResponseEntity<CallerResponse> affecterOffreToCaller(@Valid @RequestBody() AffectationRequest affectationRequest) {
-        CallerDto callerDto = offreService.affecterOffreToCaller(affectationRequest);
-        ModelMapper modelMapper = new ModelMapper();
-        return new ResponseEntity<>(modelMapper.map(callerDto, CallerResponse.class), HttpStatus.OK);
+    public ResponseEntity<String> affecterOffreToCaller(@Valid @RequestBody() AffectationRequest affectationRequest) {
+        return new ResponseEntity<>(offreService.affecterOffreToCaller(affectationRequest), HttpStatus.OK);
+    }
+
+    @PostMapping("/affectation-supervisor")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<String> affecterOffreToSupervisor(@Valid @RequestBody() AffectationRequest affectationRequest) {
+        return new ResponseEntity<>(offreService.affecterOffreToSupervisor(affectationRequest), HttpStatus.OK);
     }
 
     @PostMapping()
@@ -124,7 +120,7 @@ public class OffreControllers {
     @GetMapping("/offre/{id}")
     public ResponseEntity<UserResponse> getByOffre(@PathVariable() Integer id) {
         UserDto userDto = offreService.getByOffre(id);
-        ModelMapper modelMapper = new ModelMapper();
+
         return new ResponseEntity<>(modelMapper.map(userDto, UserResponse.class), HttpStatus.OK);
     }
 

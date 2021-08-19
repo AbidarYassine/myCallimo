@@ -1,6 +1,7 @@
 package com.rest.ai.myCallimo.services.facade;
 
 import com.rest.ai.myCallimo.dto.AdminDto;
+import com.rest.ai.myCallimo.response.AdminResponse;
 
 
 /***
@@ -13,8 +14,8 @@ public interface AdminService extends BaseInterface<AdminDto> {
     /***
      *  get Admin By Email
      * @param email of  admin
-     * @return AdminDto
+     * @return AdminResponse
      */
-    AdminDto findByEmail(String email);
+    AdminResponse findByEmail(String email);
 
 }

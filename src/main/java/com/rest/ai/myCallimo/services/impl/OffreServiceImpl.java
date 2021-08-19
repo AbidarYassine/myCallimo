@@ -21,6 +21,7 @@ import com.rest.ai.myCallimo.shared.EMail;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -112,32 +113,40 @@ public class OffreServiceImpl implements OffreService {
 
 
     //    affectation des offres aux supervisor
+    @Transactional
     @Override
-    public SupervisorDto affecterOffreToSupervisor(AffectationRequest affectationRequest) {
+    public String affecterOffreToSupervisor(AffectationRequest affectationRequest) {
         /*validate offres == serach by id test if offre already affected */
         List<OffreEntity> offres = validateOffreRequest(affectationRequest.getIds(), true);
         /* get supervisor */
         SupervisorDto supervisorDto = supervisorService.findById(affectationRequest.getId());
-    
+
         /*get entities */
         SupervisorEntity supervisorEntity = modelMapper.map(supervisorDto, SupervisorEntity.class);
         //        set offre is afected
-        offres.forEach(el -> {
+        offres = offres.stream().peek(el -> {
             el.set_affected_to_supervisor(true);
             el.set_affected_to_caller(false);
             el.setSupervisor(supervisorEntity);
-            offreDao.save(el);
-        });
+        }).collect(Collectors.toList());
+        offreDao.saveAll(offres);
+//        offres.forEach(el -> {
+//            el.set_affected_to_supervisor(true);
+//            el.set_affected_to_caller(false);
+//            el.setSupervisor(supervisorEntity);
+//            offreDao.save(el);
+//        });
         EMail eMail = prepareEmail(supervisorEntity.getEmail(), offres.size(), "SUPERVISOR");
         emailService.sendEmail(eMail);
-        return modelMapper.map(supervisorEntity, SupervisorDto.class);
+        return "done";
     }
 
+    @Transactional
     @Override
-    public CallerDto affecterOffreToCaller(AffectationRequest affectationRequest) {
+    public String affecterOffreToCaller(AffectationRequest affectationRequest) {
         List<OffreEntity> offres = validateOffreRequest(affectationRequest.getIds(), false);
         CallerDto callerDto = callerService.findById(affectationRequest.getId());
-    
+
         CallerEntity callerEntity = modelMapper.map(callerDto, CallerEntity.class);
         //        set offre is afected
         offres.forEach(el -> {
@@ -149,7 +158,7 @@ public class OffreServiceImpl implements OffreService {
 
         EMail eMail = prepareEmail(callerEntity.getEmail(), offres.size(), "CALLER");
         emailService.sendEmail(eMail);
-        return modelMapper.map(callerEntity, CallerDto.class);
+        return "done";
     }
 
     EMail prepareEmail(String to, Integer numOffre, String role) {

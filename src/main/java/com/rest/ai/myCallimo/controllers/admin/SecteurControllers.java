@@ -84,11 +84,7 @@ public class SecteurControllers {
     @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERVISOR') or hasRole('CALLER')")
     @GetMapping("/non-afected")
     public ResponseEntity<List<SecteurResponse>> getSecteurNonAfecter() {
-        List<SecteurResponse> secteurResponses =
-                secteurService.getSecteurNonAfecter().stream()
-                        .map(el -> modelMapper.map(el, SecteurResponse.class))
-                        .collect(Collectors.toList());
-        return new ResponseEntity<>(secteurResponses, HttpStatus.OK);
+        return new ResponseEntity<>(secteurService.getSecteurNonAfecter(), HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERVISOR') or hasRole('CALLER')")
@@ -109,11 +105,7 @@ public class SecteurControllers {
 
     @PostMapping("/supervisors/codes")
     public ResponseEntity<List<SupervisorSecteurResponse>> getBySecteurCodes(@RequestBody() GetSupervisorByCodesRequest getSupervisorByCodesRequest) {
-        List<SupervisorSecteurResponse> supervisorResponses;
-        supervisorResponses = secteurService.getBySecteurCodes(getSupervisorByCodesRequest.getCodes())
-                .stream().map(el -> modelMapper.map(el, SupervisorSecteurResponse.class))
-                .collect(Collectors.toList());
-        return new ResponseEntity<>(supervisorResponses, HttpStatus.OK);
+        return new ResponseEntity<>(secteurService.getBySecteurCodes(getSupervisorByCodesRequest.getCodes()), HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole('SUPERVISOR')")
@@ -133,5 +125,11 @@ public class SecteurControllers {
     public PagedResponse<SecteurResponse> list(SearchRequest request) {
         request.setSize(20);
         return secteurService.list(request);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/affecter/{sup_id}/{secteur_id}")
+    public ResponseEntity<String> affecterSupToSecteur(@PathVariable Integer sup_id, @PathVariable Integer secteur_id) {
+        return new ResponseEntity<>(secteurService.affecterSupToSecteur(sup_id, secteur_id), HttpStatus.OK);
     }
 }

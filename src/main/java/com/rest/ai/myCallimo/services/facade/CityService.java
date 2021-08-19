@@ -4,7 +4,9 @@ import com.rest.ai.myCallimo.dto.CallerDto;
 import com.rest.ai.myCallimo.dto.CityDto;
 import com.rest.ai.myCallimo.dto.SecteurDto;
 import com.rest.ai.myCallimo.dto.SupervisorDto;
+import com.rest.ai.myCallimo.response.CallerResponse;
 import com.rest.ai.myCallimo.response.CityResponse;
+import com.rest.ai.myCallimo.response.UserResponse;
 
 import java.util.List;
 
@@ -61,7 +63,7 @@ public interface CityService extends BaseInterface<CityDto> {
      * @param ids ids of cities
      * @return List Of CallerDto
      */
-    List<CallerDto> findByIds(List<Integer> ids);
+    List<CallerResponse> findByIds(List<Integer> ids);
 
     List<CityResponse> getAll();
 }

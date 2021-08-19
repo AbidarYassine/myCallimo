@@ -13,7 +13,7 @@ import com.rest.ai.myCallimo.exception.NotFoundException;
 import com.rest.ai.myCallimo.exception.user.UserAlreadyExist;
 import com.rest.ai.myCallimo.exception.user.UserNotFoundException;
 import com.rest.ai.myCallimo.request.AffectationRequest;
-import com.rest.ai.myCallimo.services.facade.SecteurService;
+import com.rest.ai.myCallimo.response.SecteurResponse;
 import com.rest.ai.myCallimo.services.facade.SupervisorService;
 import com.rest.ai.myCallimo.services.facade.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +26,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 @Service
@@ -39,22 +38,23 @@ public class SupervisorServiceImpl implements SupervisorService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final CallerDao callerDao;
     private final OffreDao offreDao;
-    private final SecteurService secteurService;
+    //    private final SecteurService secteurService;
+    private final ModelMapper modelMapper;
 
     @Autowired
-    public SupervisorServiceImpl(SupervisorDao supervisorDao, UserService userService, BCryptPasswordEncoder bCryptPasswordEncoder, CallerDao callerDao, OffreDao offreDao, SecteurService secteurService) {
+    public SupervisorServiceImpl(SupervisorDao supervisorDao, UserService userService, BCryptPasswordEncoder bCryptPasswordEncoder, CallerDao callerDao, OffreDao offreDao, ModelMapper modelMapper) {
         this.supervisorDao = supervisorDao;
         this.userService = userService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.callerDao = callerDao;
         this.offreDao = offreDao;
-        this.secteurService = secteurService;
+//        this.secteurService = secteurService;
+        this.modelMapper = modelMapper;
     }
 
 
     @Override
     public SupervisorDto findByEmail(String email) {
-        ModelMapper modelMapper = new ModelMapper();
         if (email.isEmpty() || email.isBlank()) {
             return null;
         }
@@ -69,14 +69,12 @@ public class SupervisorServiceImpl implements SupervisorService {
         supervisorDao.delete(supervisorEntity);
         log.info("wsal hna ...");
         return 1;
-
     }
 
     @Override
     public SupervisorDto findById(Integer id) {
         SupervisorEntity supervisorEntity = supervisorDao.findById(id).orElse(null);
         if (supervisorEntity == null) throw new UserNotFoundException("Superviseur non trouver par l'id " + id);
-        ModelMapper modelMapper = new ModelMapper();
         return modelMapper.map(supervisorEntity, SupervisorDto.class);
     }
 
@@ -86,7 +84,7 @@ public class SupervisorServiceImpl implements SupervisorService {
         if (supervisorEntity == null) return -1;
         if (userService.findByEmail(supervisorDto.getEmail()) != null && !supervisorEntity.getEmail().equals(supervisorDto.getEmail()))
             return -2;
-        ModelMapper modelMapper = new ModelMapper();
+
         String password;
         if (supervisorDto.getPassword() == null || supervisorDto.getPassword().isEmpty()) {
             password = supervisorEntity.getPassword();
@@ -137,37 +135,36 @@ public class SupervisorServiceImpl implements SupervisorService {
         return 1;
     }
 
-    @Override
-    public SecteurDto affecterSupToSecteur(Integer sup_id, Integer secteur_id) {
-        /* find dto by ids */
-        SupervisorDto supervisorDto = findById(sup_id);
-        SecteurDto dto = secteurService.findById(secteur_id);
-        /* secteur belong to one supervisor */
-        if (dto.isAfected())
-            throw new UserAlreadyExist("ce secteur " + dto.getLibelle() + " est deja affecté");
-        /* get entities from dto*/
-        ModelMapper modelMapper = new ModelMapper();
-        SupervisorEntity supervisorEntity = modelMapper.map(supervisorDto, SupervisorEntity.class);
-        Secteur secteur = modelMapper.map(dto, Secteur.class);
-        /* associate secteur with supervisor */
-        secteur.setSupervisor(supervisorEntity);
-        secteur.setAfected(true);
-        /* get dto to save */
-        SecteurDto toSave = modelMapper.map(secteur, SecteurDto.class);
-        SecteurDto saved = secteurService.save(toSave);
-        return modelMapper.map(saved, SecteurDto.class);
-    }
-
-    @Override
-    public List<SecteurDto> affecterSupToSecteur(AffectationRequest affectationRequest) {
-        /* each secteur afected to sup id*/
-        List<SecteurDto> secteurDtos = new ArrayList<>();
-        affectationRequest.getIds().forEach(el -> {
-            secteurDtos.add(this.affecterSupToSecteur(affectationRequest.getId(), el));
-        });
-        return secteurDtos;
-
-    }
+//    @Override
+//    public String affecterSupToSecteur(Integer sup_id, Integer secteur_id) {
+//        /* find dto by ids */
+//        SupervisorEntity supervisorEntity = supervisorDao.findById(sup_id).orElseThrow(
+//                () -> new UserNotFoundException("Supervisor non trouver par l'id " + sup_id));
+//        SecteurDto dto = secteurService.findById(secteur_id);
+//        /* secteur belong to one supervisor */
+//        if (dto.isAfected())
+//            throw new UserAlreadyExist("ce secteur " + dto.getLibelle() + " est deja affecté");
+//        /* get entities from dto*/
+//        Secteur secteur = modelMapper.map(dto, Secteur.class);
+//        /* associate secteur with supervisor */
+//        secteur.setSupervisor(supervisorEntity);
+//        secteur.setAfected(true);
+//        /* get dto to save */
+//        SecteurDto toSave = modelMapper.map(secteur, SecteurDto.class);
+//        secteurService.save(toSave);
+//        return "done";
+//    }
+//
+//    @Override
+//    public String affecterSupToSecteur(AffectationRequest affectationRequest) {
+//        /* each secteur afected to sup id*/
+//        List<SecteurResponse> secteurDtos = new ArrayList<>();
+//        affectationRequest.getIds().forEach(el -> {
+//            this.affecterSupToSecteur(affectationRequest.getId(), el);
+//        });
+//        return "done";
+//
+//    }
 
 //    @Override
 //    public SupervisorDto getByCity(Integer id) {
@@ -187,7 +184,7 @@ public class SupervisorServiceImpl implements SupervisorService {
         if (userService.findByEmail(t.getEmail()) != null) {
             throw new UserAlreadyExist("user with this email " + t.getEmail() + " already exists");
         }
-        ModelMapper modelMapper = new ModelMapper();
+
         SupervisorEntity supervisorEntity = modelMapper.map(t, SupervisorEntity.class);
         supervisorEntity.setRole("SUPERVISOR");
         AdminEntity adminEntity = modelMapper.map(admin, AdminEntity.class);
@@ -199,7 +196,7 @@ public class SupervisorServiceImpl implements SupervisorService {
 
     @Override
     public SupervisorDto save(SupervisorDto t) {
-        ModelMapper modelMapper = new ModelMapper();
+
         SupervisorEntity supervisorEntity = modelMapper.map(t, SupervisorEntity.class);
         SupervisorEntity saved = supervisorDao.save(supervisorEntity);
         return modelMapper.map(saved, SupervisorDto.class);
@@ -209,7 +206,7 @@ public class SupervisorServiceImpl implements SupervisorService {
 //    @Override
 //    public void randomAfectationn() {
 //        List<SecteurDto> secteurs = secteurService.findAll();
-//        ModelMapper modelMapper = new ModelMapper();
+//      
 //        List<SupervisorDto> supervisor = supervisorDao.findAll()
 //                .stream()
 //                .map(el -> modelMapper.map(el, SupervisorDto.class))

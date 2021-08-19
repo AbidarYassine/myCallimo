@@ -27,7 +27,7 @@ public interface SecteurService extends BaseInterface<SecteurDto> {
 
     List<SecteurResponse> getSecteurNonAfecter();
 
-    List<SecteurDto> getSecteurAfected();
+    List<SecteurResponse> getSecteurAfected();
 
     public void updateSecteur();
 
@@ -39,10 +39,12 @@ public interface SecteurService extends BaseInterface<SecteurDto> {
      * get All secteurs by native query
      * @return All Secteurs
      */
-    List<SecteurDto> getAllSecteurs();
+    List<SecteurResponse> getAllSecteurs();
 
 
     PagedResponse<SecteurResponse> list(final SearchRequest request);
+
+    public String affecterSupToSecteur(Integer sup_id, Integer secteur_id);
 
 
 }

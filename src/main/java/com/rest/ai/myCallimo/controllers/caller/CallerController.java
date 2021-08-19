@@ -27,33 +27,30 @@ public class CallerController {
 
     private final CallerService callerService;
     private final AuthRoleService roleService;
+    private final ModelMapper modelMapper;
 
-    public CallerController(CallerService callerService, AuthRoleService authRoleService, AuthRoleService roleService) {
+    public CallerController(CallerService callerService, AuthRoleService authRoleService, AuthRoleService roleService, ModelMapper modelMapper) {
         this.callerService = callerService;
         this.roleService = roleService;
+        this.modelMapper = modelMapper;
     }
 
 
     @GetMapping("email/{email}")
     public ResponseEntity<UserResponse> findByEmail(@PathVariable() String email) {
         CallerDto callerDto = callerService.findByEmail(email);
-        ModelMapper modelMapper = new ModelMapper();
         return new ResponseEntity<>(modelMapper.map(callerDto, CallerResponse.class), HttpStatus.OK);
     }
 
     @GetMapping("")
     public ResponseEntity<List<UserResponse>> getAllCallers() {
-        ModelMapper modelMapper = new ModelMapper();
-        List<CallerDto> callerDtos = callerService.getAll();
-        List<UserResponse> userResponses = callerDtos.stream().map(el -> modelMapper.map(el, UserResponse.class)).collect(Collectors.toList());
-        return new ResponseEntity<>(userResponses, HttpStatus.OK);
+        return new ResponseEntity<>(callerService.getAll(), HttpStatus.OK);
     }
 
     @PostMapping("/supervisor-id/{supervisor_id}")
     public ResponseEntity<CallerResponse> save(@Valid @RequestBody() CallerDto callerDto, @PathVariable() Integer supervisor_id) {
-        CallerDto callerDtoResp = callerService.save(callerDto, supervisor_id);
-        ModelMapper modelMapper = new ModelMapper();
-        return new ResponseEntity<>(modelMapper.map(callerDtoResp, CallerResponse.class), HttpStatus.CREATED);
+        CallerResponse allerResponse = callerService.save(callerDto, supervisor_id);
+        return new ResponseEntity<>(allerResponse, HttpStatus.CREATED);
 
     }
 
@@ -61,18 +58,14 @@ public class CallerController {
     public ResponseEntity<List<CallerResponse>> getBySupervisorId(@PathVariable("id") Integer id) {
         List<CallerDto> callerDtos = callerService.getBySupervisorId(id);
         if (callerDtos == null) throw new UserNotFoundException("superviseur non trouver par id " + id);
-        ModelMapper modelMapper = new ModelMapper();
+
         return new ResponseEntity<>(callerDtos.stream().map(el -> modelMapper.map(el, CallerResponse.class)).collect(Collectors.toList()), HttpStatus.OK);
     }
 
     @GetMapping("/user-callers")
     public ResponseEntity<List<CallerResponse>> getCallers() {
         List<CallerResponse> callerResponse = new ArrayList<>();
-        ModelMapper modelMapper = new ModelMapper();
-        callerResponse = roleService.getCallers()
-                .stream()
-                .map(el -> modelMapper.map(el, CallerResponse.class))
-                .collect(Collectors.toList());
-        return new ResponseEntity<>(callerResponse, HttpStatus.OK);
+
+        return new ResponseEntity<>(roleService.getCallers(), HttpStatus.OK);
     }
 }

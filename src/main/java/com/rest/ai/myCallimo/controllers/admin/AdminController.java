@@ -6,6 +6,7 @@ import com.rest.ai.myCallimo.dto.SupervisorDto;
 import com.rest.ai.myCallimo.dto.UserDto;
 import com.rest.ai.myCallimo.exception.user.UserAlreadyExist;
 import com.rest.ai.myCallimo.exception.user.UserNotFoundException;
+import com.rest.ai.myCallimo.response.AdminResponse;
 import com.rest.ai.myCallimo.response.SupervisorResponse;
 import com.rest.ai.myCallimo.response.UserResponse;
 import com.rest.ai.myCallimo.services.facade.AdminService;
@@ -21,7 +22,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 @RestController
@@ -32,14 +32,16 @@ public class AdminController {
     private final AuthRoleService authRoleService;
     private final SupervisorService supervisorService;
     private final AdminService adminService;
+    private final ModelMapper modelMapper;
 
 
     //    injection
     @Autowired
-    public AdminController(AuthRoleService authRoleService, SupervisorService supervisorService, AdminService adminService) {
+    public AdminController(AuthRoleService authRoleService, SupervisorService supervisorService, AdminService adminService, ModelMapper modelMapper) {
         this.authRoleService = authRoleService;
         this.supervisorService = supervisorService;
         this.adminService = adminService;
+        this.modelMapper = modelMapper;
     }
 
 
@@ -47,7 +49,6 @@ public class AdminController {
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/add-supervisor")
     public ResponseEntity<SupervisorResponse> addSupervisor(@Valid @RequestBody() SupervisorDto supervisorDto) {
-        ModelMapper modelMapper = new ModelMapper();
         UserDto authUser = authRoleService.getUserAuth();
         SupervisorDto result = supervisorService.save(supervisorDto, modelMapper.map(authUser, AdminDto.class));
         return new ResponseEntity<>(modelMapper.map(result, SupervisorResponse.class), HttpStatus.CREATED);
@@ -58,12 +59,8 @@ public class AdminController {
     @GetMapping("")
     public ResponseEntity<List<SupervisorResponse>> getSupervisor() {
         UserDto authUser = authRoleService.getUserAuth();
-        AdminDto adminDto = adminService.findByEmail(authUser.getEmail());
-        ModelMapper modelMapper = new ModelMapper();
-        List<SupervisorResponse> userResponses = adminDto.getSupervisors().stream()
-                .map(el -> modelMapper.map(el, SupervisorResponse.class))
-                .collect(Collectors.toList());
-        return new ResponseEntity<>(userResponses, HttpStatus.OK);
+        AdminResponse adminResponse = adminService.findByEmail(authUser.getEmail());
+        return new ResponseEntity<>(adminResponse.getSupervisors(), HttpStatus.OK);
     }
 
     //    find by id;
@@ -71,7 +68,7 @@ public class AdminController {
     @GetMapping("/id/{id}")
     public ResponseEntity<SupervisorResponse> findById(@PathVariable() Integer id) {
         SupervisorDto supervisorDto = supervisorService.findById(id);
-        ModelMapper modelMapper = new ModelMapper();
+
         return new ResponseEntity<>(modelMapper.map(supervisorDto, SupervisorResponse.class), HttpStatus.OK);
     }
 
@@ -87,7 +84,6 @@ public class AdminController {
         int res = supervisorService.update(supervisorDto, id);
         if (res == -1) throw new UserNotFoundException("supervisor not found");
         if (res == -2) throw new UserAlreadyExist("User with email " + supervisorDto.getEmail() + " already exists");
-        ModelMapper modelMapper = new ModelMapper();
         return new ResponseEntity<>(modelMapper.map(supervisorDto, UserResponse.class), HttpStatus.CREATED);
     }
 

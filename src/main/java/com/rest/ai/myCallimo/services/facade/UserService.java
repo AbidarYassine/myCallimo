@@ -5,6 +5,7 @@ import com.rest.ai.myCallimo.dto.CityDto;
 import com.rest.ai.myCallimo.dto.OffreDto;
 import com.rest.ai.myCallimo.dto.UserDto;
 import com.rest.ai.myCallimo.request.ChangePasswordRequest;
+import com.rest.ai.myCallimo.response.CallerResponse;
 import com.rest.ai.myCallimo.response.CityResponse;
 import com.rest.ai.myCallimo.response.SecteurResponse;
 
@@ -35,7 +36,7 @@ public interface UserService {
 
     List<CityResponse> findCitiessBySubId(Integer id);
 
-    List<CallerDto> findCallersByUserId(Integer id);
+    List<CallerResponse> findCallersByUserId(Integer id);
 
 
     UserDto changePassword(ChangePasswordRequest changePasswordRequest);

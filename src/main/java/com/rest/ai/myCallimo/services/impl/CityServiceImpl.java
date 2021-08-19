@@ -1,7 +1,6 @@
 package com.rest.ai.myCallimo.services.impl;
 
 import com.rest.ai.myCallimo.dao.CityDao;
-import com.rest.ai.myCallimo.dto.CallerDto;
 import com.rest.ai.myCallimo.dto.CityDto;
 import com.rest.ai.myCallimo.dto.SecteurDto;
 import com.rest.ai.myCallimo.dto.SupervisorDto;
@@ -10,6 +9,7 @@ import com.rest.ai.myCallimo.entities.Secteur;
 import com.rest.ai.myCallimo.exception.NotFoundException;
 import com.rest.ai.myCallimo.exception.city.CityNotFoundException;
 import com.rest.ai.myCallimo.exception.user.UserNotFoundException;
+import com.rest.ai.myCallimo.response.CallerResponse;
 import com.rest.ai.myCallimo.response.CityResponse;
 import com.rest.ai.myCallimo.services.facade.CityService;
 import lombok.extern.slf4j.Slf4j;
@@ -114,17 +114,16 @@ public class CityServiceImpl implements CityService {
     }
 
     @Override
-    public List<CallerDto> findByIds(List<Integer> ids) {
-        List<CallerDto> callerDtos = new ArrayList<>();
-
+    public List<CallerResponse> findByIds(List<Integer> ids) {
+        List<CallerResponse> userResponses = new ArrayList<>();
         ids.forEach(el -> {
             CityEntity cityEntity = cityDao.findById(el).orElse(null);
             if (cityEntity != null) {
                 if (cityEntity.getCaller() != null) {
-                    callerDtos.add(modelMapper.map(cityEntity.getCaller(), CallerDto.class));
+                    userResponses.add(modelMapper.map(cityEntity.getCaller(), CallerResponse.class));
                 }
             }
         });
-        return callerDtos;
+        return userResponses;
     }
 }

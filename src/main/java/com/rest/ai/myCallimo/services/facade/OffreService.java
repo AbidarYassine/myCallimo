@@ -1,12 +1,11 @@
 package com.rest.ai.myCallimo.services.facade;
 
-import com.rest.ai.myCallimo.dto.CallerDto;
 import com.rest.ai.myCallimo.dto.OffreDto;
-import com.rest.ai.myCallimo.dto.SupervisorDto;
 import com.rest.ai.myCallimo.dto.UserDto;
 import com.rest.ai.myCallimo.request.AffectationRequest;
 import com.rest.ai.myCallimo.request.search.PagedResponse;
 import com.rest.ai.myCallimo.request.search.SearchRequest;
+import com.rest.ai.myCallimo.response.UserResponse;
 
 import java.util.List;
 /***
@@ -24,14 +23,14 @@ public interface OffreService extends BaseInterface<OffreDto> {
      * @param affectationOffreRequest  The  necessary Dat for Afectation
      * @return To supervisor who we affected offers
      */
-    SupervisorDto affecterOffreToSupervisor(AffectationRequest affectationOffreRequest);
+    String affecterOffreToSupervisor(AffectationRequest affectationOffreRequest);
 
     /***
      * Afectation des offres a un Caller
      * @param affectationOffreRequest The  necessary Dat for Afectation
      * @return To supervisor who we affected offers
      */
-    CallerDto affecterOffreToCaller(AffectationRequest affectationOffreRequest);
+    String affecterOffreToCaller(AffectationRequest affectationOffreRequest);
 
     /***
      * Get User Afected to Offre id

@@ -4,12 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SupervisorSecteurResponse {
-
-    private UserResponse user;
-    /* code secteurs */
-    private String code;
+public class AdminResponse {
+    private String role = "ADMIN";
+    private List<SupervisorResponse> supervisors;
 }

@@ -13,6 +13,7 @@ import com.rest.ai.myCallimo.exception.InvalidOperationException;
 import com.rest.ai.myCallimo.exception.role.RoleNotFoundException;
 import com.rest.ai.myCallimo.exception.user.UserNotFoundException;
 import com.rest.ai.myCallimo.request.ChangePasswordRequest;
+import com.rest.ai.myCallimo.response.CallerResponse;
 import com.rest.ai.myCallimo.response.CityResponse;
 import com.rest.ai.myCallimo.response.SecteurResponse;
 import com.rest.ai.myCallimo.services.facade.UserService;
@@ -182,23 +183,23 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<CallerDto> findCallersByUserId(Integer id) {
+    public List<CallerResponse> findCallersByUserId(Integer id) {
 
         SupervisorEntity supervisorEntity = supervisorDao.findById(id).orElse(null);
         if (supervisorEntity != null) {
             return supervisorEntity.getCallers()
                     .stream()
-                    .map(el -> modelMapper.map(el, CallerDto.class))
+                    .map(el -> modelMapper.map(el, CallerResponse.class))
                     .collect(Collectors.toList());
         }
         AdminEntity adminEntity = adminDao.findById(id).orElse(null);
         if (adminEntity != null) {
             return callerDao.findAll()
                     .stream()
-                    .map(el -> modelMapper.map(el, CallerDto.class))
+                    .map(el -> modelMapper.map(el, CallerResponse.class))
                     .collect(Collectors.toList());
         }
-        return new ArrayList<CallerDto>();
+        return new ArrayList<CallerResponse>();
     }
 
 

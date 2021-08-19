@@ -1,6 +1,8 @@
 package com.rest.ai.myCallimo.services.facade;
 
 import com.rest.ai.myCallimo.dto.CallerDto;
+import com.rest.ai.myCallimo.response.CallerResponse;
+import com.rest.ai.myCallimo.response.UserResponse;
 
 import java.util.List;
 
@@ -32,7 +34,7 @@ public interface CallerService {
      * @param supervisor_id belong to supervisor
      * @return CallerDto
      */
-    CallerDto save(CallerDto callerDto, Integer supervisor_id);
+    CallerResponse save(CallerDto callerDto, Integer supervisor_id);
 
     /***
      * Add new Caller
@@ -47,7 +49,7 @@ public interface CallerService {
      * Get All Callers
      * @return tout les callers
      */
-    List<CallerDto> getAll();
+    List<UserResponse> getAll();
 
     /***
      * delete caller by id
