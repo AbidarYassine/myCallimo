@@ -43,7 +43,7 @@ public interface CallerService {
      */
     CallerDto save(CallerDto callerDto);
 
-    List<CallerDto> getBySupervisorId(Integer id);
+//    List<CallerDto> getBySupervisorId(Integer id);
 
     /***
      * Get All Callers

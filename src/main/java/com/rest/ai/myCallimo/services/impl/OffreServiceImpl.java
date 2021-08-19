@@ -3,7 +3,6 @@ package com.rest.ai.myCallimo.services.impl;
 import com.rest.ai.myCallimo.dao.OffreDao;
 import com.rest.ai.myCallimo.dto.CallerDto;
 import com.rest.ai.myCallimo.dto.OffreDto;
-import com.rest.ai.myCallimo.dto.SupervisorDto;
 import com.rest.ai.myCallimo.dto.UserDto;
 import com.rest.ai.myCallimo.entities.CallerEntity;
 import com.rest.ai.myCallimo.entities.OffreEntity;
@@ -14,6 +13,7 @@ import com.rest.ai.myCallimo.request.AffectationRequest;
 import com.rest.ai.myCallimo.request.search.PagedResponse;
 import com.rest.ai.myCallimo.request.search.SearchRequest;
 import com.rest.ai.myCallimo.request.search.SearchRequestUtil;
+import com.rest.ai.myCallimo.response.SupervisorResponse;
 import com.rest.ai.myCallimo.services.facade.CallerService;
 import com.rest.ai.myCallimo.services.facade.OffreService;
 import com.rest.ai.myCallimo.services.facade.SupervisorService;
@@ -105,18 +105,13 @@ public class OffreServiceImpl implements OffreService {
 
     @Override
     public PagedResponse<OffreDto> listNoAfected(final SearchRequest request) {
-        // TODO getAll with custom pagination
-        final Page<OffreEntity> response = offreDao.findAll(SearchRequestUtil.toPageRequest(request));
+        request.setSize(40);
+        final Page<OffreEntity> response = offreDao.getOffresAfected(SearchRequestUtil.toPageRequest(request));
         if (response.isEmpty()) {
             return new PagedResponse<>(Collections.emptyList(), 0, response.getTotalElements());
         }
-        List<OffreDto> dtos = response.getContent().stream()
-                .filter(el -> el.getAnnonceur() != null
-                        && el.getAnnonceur().getTelephone() != null
-                        && !el.getAnnonceur().getTelephone().equals("")
-                        && el.is_affected_to_caller()
-                        || !el.is_affected_to_supervisor())
-                .map(el -> modelMapper.map(el, OffreDto.class))
+        List<OffreDto> dtos = response.getContent()
+                .stream().map(el -> modelMapper.map(el, OffreDto.class))
                 .collect(Collectors.toList());
         return new PagedResponse<>(dtos, dtos.size(), response.getTotalElements());
     }
@@ -136,7 +131,7 @@ public class OffreServiceImpl implements OffreService {
         /*validate offres == serach by id test if offre already affected */
         List<OffreEntity> offres = validateOffreRequest(affectationRequest.getIds(), true);
         /* get supervisor */
-        SupervisorDto supervisorDto = supervisorService.findById(affectationRequest.getId());
+        SupervisorResponse supervisorDto = supervisorService.findById(affectationRequest.getId());
 
         /*get entities */
         SupervisorEntity supervisorEntity = modelMapper.map(supervisorDto, SupervisorEntity.class);
@@ -213,11 +208,11 @@ public class OffreServiceImpl implements OffreService {
 
     }
 
-    @Override
-    public List<OffreDto> getBySupervisor(Integer id) {
-        SupervisorDto supervisorDto = supervisorService.findById(id);
-        return supervisorDto.getOffres();
-    }
+//    @Override
+//    public List<OffreDto> getBySupervisor(Integer id) {
+//        SupervisorDto supervisorDto = supervisorService.findById(id);
+//        return supervisorDto.getOffres();
+//    }
 
     @Override
     public List<OffreDto> getByCaller(Integer id) {
@@ -225,7 +220,7 @@ public class OffreServiceImpl implements OffreService {
         return callerDto.getOffres();
     }
 
-//    @Override
+    //    @Override
 //    public OffreDto save(OffreDto offreDto) {
 //    
 //        OffreEntity saved = offreDao.save(modelMapper.map(offreDto, OffreEntity.class));

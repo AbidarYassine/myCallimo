@@ -3,7 +3,6 @@ package com.rest.ai.myCallimo.services.impl;
 import com.rest.ai.myCallimo.dao.SecteurDao;
 import com.rest.ai.myCallimo.dto.CityDto;
 import com.rest.ai.myCallimo.dto.SecteurDto;
-import com.rest.ai.myCallimo.dto.SupervisorDto;
 import com.rest.ai.myCallimo.entities.Secteur;
 import com.rest.ai.myCallimo.entities.SupervisorEntity;
 import com.rest.ai.myCallimo.exception.NotFoundException;
@@ -13,6 +12,7 @@ import com.rest.ai.myCallimo.request.search.PagedResponse;
 import com.rest.ai.myCallimo.request.search.SearchRequest;
 import com.rest.ai.myCallimo.request.search.SearchRequestUtil;
 import com.rest.ai.myCallimo.response.SecteurResponse;
+import com.rest.ai.myCallimo.response.SupervisorResponse;
 import com.rest.ai.myCallimo.response.SupervisorSecteurResponse;
 import com.rest.ai.myCallimo.response.UserResponse;
 import com.rest.ai.myCallimo.services.facade.SecteurService;
@@ -158,7 +158,7 @@ public class SecteurServiceImp implements SecteurService {
 
     @Override
     public String affecterSupToSecteur(Integer sup_id, Integer secteur_id) {
-        SupervisorDto supervisorDto = supervisorService.findById(sup_id);
+        SupervisorResponse supervisorDto = supervisorService.findById(sup_id);
         SupervisorEntity supervisorEntity = modelMapper.map(supervisorDto, SupervisorEntity.class);
         Secteur secteur = secteurDao.findById(secteur_id).orElseThrow(() -> new NotFoundException("Secteur non trouver"));
         /* secteur belong to one supervisor */

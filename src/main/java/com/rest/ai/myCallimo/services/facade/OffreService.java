@@ -43,7 +43,7 @@ public interface OffreService extends BaseInterface<OffreDto> {
      * @param id id of supervisor
      * @return List Of Offre Dto Afecte to Supervisor
      */
-    List<OffreDto> getBySupervisor(Integer id);
+//    List<OffreDto> getBySupervisor(Integer id);
 
     /***
      * Get All Offre Afected to Caller id

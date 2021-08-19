@@ -67,9 +67,7 @@ public class AdminController {
     @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERVISOR')")
     @GetMapping("/id/{id}")
     public ResponseEntity<SupervisorResponse> findById(@PathVariable() Integer id) {
-        SupervisorDto supervisorDto = supervisorService.findById(id);
-
-        return new ResponseEntity<>(modelMapper.map(supervisorDto, SupervisorResponse.class), HttpStatus.OK);
+        return new ResponseEntity<>(supervisorService.findById(id), HttpStatus.OK);
     }
 
     //TODO NOT WORK delete supervisor

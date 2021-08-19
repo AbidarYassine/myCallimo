@@ -3,6 +3,7 @@ package com.rest.ai.myCallimo.services.facade;
 
 import com.rest.ai.myCallimo.dto.AdminDto;
 import com.rest.ai.myCallimo.dto.SupervisorDto;
+import com.rest.ai.myCallimo.response.SupervisorResponse;
 
 /***
  * Class description:
@@ -21,7 +22,7 @@ public interface SupervisorService {
 
     int delete(Integer id);
 
-    SupervisorDto findById(Integer id);
+    SupervisorResponse findById(Integer id);
 
     int update(SupervisorDto supervisorDto, Integer id);
 

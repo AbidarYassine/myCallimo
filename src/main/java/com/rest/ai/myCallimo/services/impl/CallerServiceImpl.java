@@ -3,7 +3,6 @@ package com.rest.ai.myCallimo.services.impl;
 import com.rest.ai.myCallimo.dao.CallerDao;
 import com.rest.ai.myCallimo.dto.CallerDto;
 import com.rest.ai.myCallimo.dto.CityDto;
-import com.rest.ai.myCallimo.dto.SupervisorDto;
 import com.rest.ai.myCallimo.entities.CallerEntity;
 import com.rest.ai.myCallimo.entities.CityEntity;
 import com.rest.ai.myCallimo.entities.SupervisorEntity;
@@ -11,6 +10,7 @@ import com.rest.ai.myCallimo.exception.city.CityNotFoundException;
 import com.rest.ai.myCallimo.exception.user.UserAlreadyExist;
 import com.rest.ai.myCallimo.exception.user.UserNotFoundException;
 import com.rest.ai.myCallimo.response.CallerResponse;
+import com.rest.ai.myCallimo.response.SupervisorResponse;
 import com.rest.ai.myCallimo.response.UserResponse;
 import com.rest.ai.myCallimo.services.facade.CallerService;
 import com.rest.ai.myCallimo.services.facade.CityService;
@@ -67,7 +67,7 @@ public class CallerServiceImpl implements CallerService {
 
     @Override
     public CallerResponse save(CallerDto callerDto, Integer supervisor_id) {
-        SupervisorDto supervisorDto = supervisorService.findById(supervisor_id);
+        SupervisorResponse supervisorDto = supervisorService.findById(supervisor_id);
         if (supervisorDto == null) {
             throw new UserNotFoundException("supervisor  non trouver par  id " + supervisor_id);
         }
@@ -101,12 +101,12 @@ public class CallerServiceImpl implements CallerService {
         return modelMapper.map(saved, CallerDto.class);
     }
 
-    @Override
-    public List<CallerDto> getBySupervisorId(Integer id) {
-        SupervisorDto supervisorDto = supervisorService.findById(id);
-        if (supervisorDto == null) return null;
-        return supervisorDto.getCallers();
-    }
+//    @Override
+//    public List<CallerDto> getBySupervisorId(Integer id) {
+//        SupervisorDto supervisorDto = supervisorService.findById(id);
+//        if (supervisorDto == null) return null;
+//        return supervisorDto.getCallers();
+//    }
 
     @Override
     public List<UserResponse> getAll() {

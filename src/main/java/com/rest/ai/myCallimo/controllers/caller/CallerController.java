@@ -2,7 +2,6 @@ package com.rest.ai.myCallimo.controllers.caller;
 
 
 import com.rest.ai.myCallimo.dto.CallerDto;
-import com.rest.ai.myCallimo.exception.user.UserNotFoundException;
 import com.rest.ai.myCallimo.response.CallerResponse;
 import com.rest.ai.myCallimo.response.UserResponse;
 import com.rest.ai.myCallimo.services.facade.AuthRoleService;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 @RestController
@@ -54,13 +52,13 @@ public class CallerController {
 
     }
 
-    @GetMapping("/supervisor-id/{id}")
-    public ResponseEntity<List<CallerResponse>> getBySupervisorId(@PathVariable("id") Integer id) {
-        List<CallerDto> callerDtos = callerService.getBySupervisorId(id);
-        if (callerDtos == null) throw new UserNotFoundException("superviseur non trouver par id " + id);
-
-        return new ResponseEntity<>(callerDtos.stream().map(el -> modelMapper.map(el, CallerResponse.class)).collect(Collectors.toList()), HttpStatus.OK);
-    }
+//    @GetMapping("/supervisor-id/{id}")
+//    public ResponseEntity<List<CallerResponse>> getBySupervisorId(@PathVariable("id") Integer id) {
+//        List<CallerDto> callerDtos = callerService.getBySupervisorId(id);
+//        if (callerDtos == null) throw new UserNotFoundException("superviseur non trouver par id " + id);
+//
+//        return new ResponseEntity<>(callerDtos.stream().map(el -> modelMapper.map(el, CallerResponse.class)).collect(Collectors.toList()), HttpStatus.OK);
+//    }
 
     @GetMapping("/user-callers")
     public ResponseEntity<List<CallerResponse>> getCallers() {

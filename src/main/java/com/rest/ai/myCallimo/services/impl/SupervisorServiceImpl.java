@@ -4,16 +4,13 @@ import com.rest.ai.myCallimo.dao.CallerDao;
 import com.rest.ai.myCallimo.dao.OffreDao;
 import com.rest.ai.myCallimo.dao.SupervisorDao;
 import com.rest.ai.myCallimo.dto.AdminDto;
-import com.rest.ai.myCallimo.dto.SecteurDto;
 import com.rest.ai.myCallimo.dto.SupervisorDto;
 import com.rest.ai.myCallimo.entities.AdminEntity;
-import com.rest.ai.myCallimo.entities.Secteur;
 import com.rest.ai.myCallimo.entities.SupervisorEntity;
 import com.rest.ai.myCallimo.exception.NotFoundException;
 import com.rest.ai.myCallimo.exception.user.UserAlreadyExist;
 import com.rest.ai.myCallimo.exception.user.UserNotFoundException;
-import com.rest.ai.myCallimo.request.AffectationRequest;
-import com.rest.ai.myCallimo.response.SecteurResponse;
+import com.rest.ai.myCallimo.response.SupervisorResponse;
 import com.rest.ai.myCallimo.services.facade.SupervisorService;
 import com.rest.ai.myCallimo.services.facade.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -23,9 +20,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 @Service
@@ -72,10 +66,9 @@ public class SupervisorServiceImpl implements SupervisorService {
     }
 
     @Override
-    public SupervisorDto findById(Integer id) {
-        SupervisorEntity supervisorEntity = supervisorDao.findById(id).orElse(null);
-        if (supervisorEntity == null) throw new UserNotFoundException("Superviseur non trouver par l'id " + id);
-        return modelMapper.map(supervisorEntity, SupervisorDto.class);
+    public SupervisorResponse findById(Integer id) {
+        SupervisorEntity supervisorEntity = supervisorDao.findById(id).orElseThrow(() -> new UserNotFoundException("Superviseur non trouver par l\'id"));
+        return modelMapper.map(supervisorEntity, SupervisorResponse.class);
     }
 
     @Override
