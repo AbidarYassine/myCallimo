@@ -6,13 +6,19 @@ import com.rest.ai.myCallimo.dto.SecteurDto;
 import com.rest.ai.myCallimo.dto.SupervisorDto;
 import com.rest.ai.myCallimo.entities.Secteur;
 import com.rest.ai.myCallimo.exception.user.UserNotFoundException;
+import com.rest.ai.myCallimo.request.search.PagedResponse;
+import com.rest.ai.myCallimo.request.search.SearchRequest;
+import com.rest.ai.myCallimo.request.search.SearchRequestUtil;
+import com.rest.ai.myCallimo.response.SecteurResponse;
 import com.rest.ai.myCallimo.response.SupervisorResponse;
 import com.rest.ai.myCallimo.response.SupervisorSecteurResponse;
 import com.rest.ai.myCallimo.services.facade.SecteurService;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -124,10 +130,24 @@ public class SecteurServiceImp implements SecteurService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public PagedResponse<SecteurResponse> list(SearchRequest request) {
+        final Page<Secteur> response = secteurDao.findAll(SearchRequestUtil.toPageRequest(request));
+        if (response.isEmpty()) {
+            return new PagedResponse<>(Collections.emptyList(), 0, response.getTotalElements());
+        }
+        List<SecteurResponse> dtos = response.getContent().stream()
+                .map(el -> modelMapper.map(el, SecteurResponse.class))
+                .collect(Collectors.toList());
+        return new PagedResponse<>(dtos, dtos.size(), response.getTotalElements());
+    }
+
 
     @Override
-    public List<SecteurDto> getSecteurNonAfecter() {
-        return this.findAll().stream().filter(el -> !el.isAfected()).collect(Collectors.toList());
+    public List<SecteurResponse> getSecteurNonAfecter() {
+        return this.findAll().stream()
+                .map(el -> modelMapper.map(el, SecteurResponse.class))
+                .filter(el -> !el.isAfected()).collect(Collectors.toList());
     }
 
     @Override

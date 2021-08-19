@@ -10,6 +10,7 @@ import com.rest.ai.myCallimo.entities.Secteur;
 import com.rest.ai.myCallimo.exception.NotFoundException;
 import com.rest.ai.myCallimo.exception.city.CityNotFoundException;
 import com.rest.ai.myCallimo.exception.user.UserNotFoundException;
+import com.rest.ai.myCallimo.response.CityResponse;
 import com.rest.ai.myCallimo.services.facade.CityService;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -24,15 +25,17 @@ import java.util.stream.Collectors;
 @Slf4j
 public class CityServiceImpl implements CityService {
 
-    private CityDao cityDao;
+    private final CityDao cityDao;
+    private final ModelMapper modelMapper;
 
-    public CityServiceImpl(CityDao cityDao) {
+    public CityServiceImpl(CityDao cityDao, ModelMapper modelMapper) {
         this.cityDao = cityDao;
+        this.modelMapper = modelMapper;
     }
 
     @Override
     public CityDto save(CityDto cityDto) {
-        ModelMapper modelMapper = new ModelMapper();
+
         CityEntity savedCity = cityDao.save(modelMapper.map(cityDto, CityEntity.class));
         return modelMapper.map(savedCity, CityDto.class);
     }
@@ -40,8 +43,7 @@ public class CityServiceImpl implements CityService {
     @Override
     public List<CityDto> findAll() {
         List<CityEntity> cities = cityDao.findAll();
-        log.info("Size is {}", cities.size());
-        ModelMapper modelMapper = new ModelMapper();
+
         return cities
                 .stream()
                 .map(el -> modelMapper.map(el, CityDto.class))
@@ -49,10 +51,19 @@ public class CityServiceImpl implements CityService {
     }
 
     @Override
+    public List<CityResponse> getAll() {
+        List<CityEntity> cities = cityDao.findAll();
+        return cities
+                .stream()
+                .map(el -> modelMapper.map(el, CityResponse.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public CityDto findById(Integer id) {
         CityEntity cityEntity = cityDao.findById(id).orElse(null);
         if (cityEntity == null) throw new UserNotFoundException("ville non trouver par id " + id + " !!");
-        ModelMapper modelMapper = new ModelMapper();
+
         return modelMapper.map(cityEntity, CityDto.class);
     }
 
@@ -60,7 +71,7 @@ public class CityServiceImpl implements CityService {
     public CityDto findByName(String name) {
         CityEntity cityEntity = cityDao.findByName(name);
         if (cityEntity == null) throw new UserNotFoundException("ville non trouver par " + name + " !!");
-        ModelMapper modelMapper = new ModelMapper();
+
         return modelMapper.map(cityEntity, CityDto.class);
     }
 
@@ -80,7 +91,7 @@ public class CityServiceImpl implements CityService {
         Secteur secteur = cityEntity.getSecteur();
         if (secteur == null) throw new NotFoundException("secteur non trouver !!");
         if (secteur.getSupervisor() == null) return null;
-        ModelMapper modelMapper = new ModelMapper();
+
         return modelMapper.map(secteur.getSupervisor(), SupervisorDto.class);
     }
 
@@ -88,7 +99,7 @@ public class CityServiceImpl implements CityService {
     public List<SupervisorDto> getByCityIds(List<Integer> ids) {
         List<CityEntity> cities = cityDao.findAllById(ids);
         if (cities.size() == 0) throw new NotFoundException("vile non trouver !!");
-        ModelMapper modelMapper = new ModelMapper();
+
         return cities
                 .stream()
                 .filter(el -> el.getSecteur().getSupervisor() != null)
@@ -105,7 +116,7 @@ public class CityServiceImpl implements CityService {
     @Override
     public List<CallerDto> findByIds(List<Integer> ids) {
         List<CallerDto> callerDtos = new ArrayList<>();
-        ModelMapper modelMapper = new ModelMapper();
+
         ids.forEach(el -> {
             CityEntity cityEntity = cityDao.findById(el).orElse(null);
             if (cityEntity != null) {

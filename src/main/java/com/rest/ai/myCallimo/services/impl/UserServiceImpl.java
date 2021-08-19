@@ -3,7 +3,9 @@ package com.rest.ai.myCallimo.services.impl;
 import com.rest.ai.myCallimo.dao.AdminDao;
 import com.rest.ai.myCallimo.dao.CallerDao;
 import com.rest.ai.myCallimo.dao.SupervisorDao;
-import com.rest.ai.myCallimo.dto.*;
+import com.rest.ai.myCallimo.dto.CallerDto;
+import com.rest.ai.myCallimo.dto.OffreDto;
+import com.rest.ai.myCallimo.dto.UserDto;
 import com.rest.ai.myCallimo.entities.AdminEntity;
 import com.rest.ai.myCallimo.entities.CallerEntity;
 import com.rest.ai.myCallimo.entities.SupervisorEntity;
@@ -11,6 +13,8 @@ import com.rest.ai.myCallimo.exception.InvalidOperationException;
 import com.rest.ai.myCallimo.exception.role.RoleNotFoundException;
 import com.rest.ai.myCallimo.exception.user.UserNotFoundException;
 import com.rest.ai.myCallimo.request.ChangePasswordRequest;
+import com.rest.ai.myCallimo.response.CityResponse;
+import com.rest.ai.myCallimo.response.SecteurResponse;
 import com.rest.ai.myCallimo.services.facade.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -152,27 +156,26 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<SecteurDto> findSecteursBySupId(Integer id) {
+    public List<SecteurResponse> findSecteursBySupId(Integer id) {
         SupervisorEntity supervisorEntity = supervisorDao.findById(id).orElse(null);
         if (supervisorDao != null) {
             return supervisorEntity.getSecteurs()
                     .stream()
-                    .map(el -> modelMapper.map(el, SecteurDto.class))
+                    .map(el -> modelMapper.map(el, SecteurResponse.class))
                     .collect(Collectors.toList());
         } else {
             return Collections.emptyList();
         }
-
     }
 
     @Override
-    public List<CityDto> findCitiessBySubId(Integer id) {
+    public List<CityResponse> findCitiessBySubId(Integer id) {
         SupervisorEntity supervisorEntity = supervisorDao.findById(id).orElse(null);
-        List<CityDto> list = new ArrayList<>();
+        List<CityResponse> list = new ArrayList<>();
         if (supervisorEntity != null) {
             supervisorEntity.getSecteurs()
                     .stream()
-                    .map(s -> modelMapper.map(s, SecteurDto.class))
+                    .map(s -> modelMapper.map(s, SecteurResponse.class))
                     .map(el -> list.addAll(el.getCities()));
         }
         return list;

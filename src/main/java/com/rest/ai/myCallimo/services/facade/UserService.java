@@ -1,7 +1,12 @@
 package com.rest.ai.myCallimo.services.facade;
 
-import com.rest.ai.myCallimo.dto.*;
+import com.rest.ai.myCallimo.dto.CallerDto;
+import com.rest.ai.myCallimo.dto.CityDto;
+import com.rest.ai.myCallimo.dto.OffreDto;
+import com.rest.ai.myCallimo.dto.UserDto;
 import com.rest.ai.myCallimo.request.ChangePasswordRequest;
+import com.rest.ai.myCallimo.response.CityResponse;
+import com.rest.ai.myCallimo.response.SecteurResponse;
 
 import java.util.List;
 
@@ -26,9 +31,9 @@ public interface UserService {
 
     List<OffreDto> findByUserId(Integer id);
 
-    List<SecteurDto> findSecteursBySupId(Integer id);
+    List<SecteurResponse> findSecteursBySupId(Integer id);
 
-    List<CityDto> findCitiessBySubId(Integer id);
+    List<CityResponse> findCitiessBySubId(Integer id);
 
     List<CallerDto> findCallersByUserId(Integer id);
 

@@ -3,7 +3,9 @@ package com.rest.ai.myCallimo.services.facade;
 
 import com.rest.ai.myCallimo.dto.CityDto;
 import com.rest.ai.myCallimo.dto.SecteurDto;
-import com.rest.ai.myCallimo.entities.Secteur;
+import com.rest.ai.myCallimo.request.search.PagedResponse;
+import com.rest.ai.myCallimo.request.search.SearchRequest;
+import com.rest.ai.myCallimo.response.SecteurResponse;
 import com.rest.ai.myCallimo.response.SupervisorSecteurResponse;
 
 import java.util.List;
@@ -23,7 +25,7 @@ public interface SecteurService extends BaseInterface<SecteurDto> {
 
     List<CityDto> getBySecteurId(Integer id);
 
-    List<SecteurDto> getSecteurNonAfecter();
+    List<SecteurResponse> getSecteurNonAfecter();
 
     List<SecteurDto> getSecteurAfected();
 
@@ -38,6 +40,9 @@ public interface SecteurService extends BaseInterface<SecteurDto> {
      * @return All Secteurs
      */
     List<SecteurDto> getAllSecteurs();
+
+
+    PagedResponse<SecteurResponse> list(final SearchRequest request);
 
 
 }

@@ -76,8 +76,6 @@ public class OffreControllers {
     //    get all offre with annonceur contain telephone
     @GetMapping
     public List<OffreDto> findAll() {
-        List<OffreDto> offreDtos = offreService.findAll();
-        System.out.println("offres size befor filter " + offreDtos.size());
         return offreService.findAll().stream()
                 .filter
                         (el -> el.getAnnonceur() != null

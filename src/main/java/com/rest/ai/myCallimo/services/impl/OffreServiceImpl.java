@@ -35,17 +35,19 @@ public class OffreServiceImpl implements OffreService {
     private SupervisorService supervisorService;
     private CallerService callerService;
     private EmailSenderService emailService;
+    private final ModelMapper modelMapper;
 
-    public OffreServiceImpl(OffreDao offreDao, SupervisorService supervisorService, CallerService callerService, EmailSenderService service) {
+    public OffreServiceImpl(OffreDao offreDao, SupervisorService supervisorService, CallerService callerService, EmailSenderService service, ModelMapper modelMapper) {
         this.offreDao = offreDao;
         this.supervisorService = supervisorService;
         this.callerService = callerService;
         this.emailService = service;
+        this.modelMapper = modelMapper;
     }
 
     @Override
     public OffreDto save(OffreDto offreDto) {
-        ModelMapper modelMapper = new ModelMapper();
+    
         OffreEntity offreEntity = offreDao.save(modelMapper.map(offreDto, OffreEntity.class));
         OffreEntity saved = offreDao.save(offreEntity);
         return modelMapper.map(saved, OffreDto.class);
@@ -53,7 +55,7 @@ public class OffreServiceImpl implements OffreService {
 
     @Override
     public int deleteCaller(Integer id) {
-        ModelMapper modelMapper = new ModelMapper();
+    
         CallerEntity callerEntity = modelMapper.map(callerService.findById(id), CallerEntity.class);
         if (callerEntity.getOffres().size() > 0) {
             callerEntity.getOffres().forEach(el -> {
@@ -71,7 +73,7 @@ public class OffreServiceImpl implements OffreService {
     @Override
     public List<OffreDto> findByIds(List<Integer> ids) {
         List<OffreEntity> offreEntities = offreDao.findAllById(ids);
-        ModelMapper modelMapper = new ModelMapper();
+    
         return offreEntities.stream().map(el -> modelMapper.map(el, OffreDto.class))
                 .collect(Collectors.toList());
     }
@@ -79,7 +81,7 @@ public class OffreServiceImpl implements OffreService {
 
     @Override
     public List<OffreDto> findAll() {
-        ModelMapper modelMapper = new ModelMapper();
+    
         return offreDao.findAll().stream().map(el -> modelMapper.map(el, OffreDto.class)).collect(Collectors.toList());
     }
 
@@ -89,7 +91,7 @@ public class OffreServiceImpl implements OffreService {
         if (response.isEmpty()) {
             return new PagedResponse<>(Collections.emptyList(), 0, response.getTotalElements());
         }
-        ModelMapper modelMapper = new ModelMapper();
+    
         List<OffreDto> dtos = response.getContent().stream()
                 .filter(el -> el.getAnnonceur() != null
                         && el.getAnnonceur().getTelephone() != null
@@ -104,7 +106,7 @@ public class OffreServiceImpl implements OffreService {
     @Override
     public OffreDto findById(Integer id) {
         OffreEntity offreEntity = offreDao.findById(id).orElse(null);
-        ModelMapper modelMapper = new ModelMapper();
+    
         return modelMapper.map(offreEntity, OffreDto.class);
     }
 
@@ -116,7 +118,7 @@ public class OffreServiceImpl implements OffreService {
         List<OffreEntity> offres = validateOffreRequest(affectationRequest.getIds(), true);
         /* get supervisor */
         SupervisorDto supervisorDto = supervisorService.findById(affectationRequest.getId());
-        ModelMapper modelMapper = new ModelMapper();
+    
         /*get entities */
         SupervisorEntity supervisorEntity = modelMapper.map(supervisorDto, SupervisorEntity.class);
         //        set offre is afected
@@ -135,7 +137,7 @@ public class OffreServiceImpl implements OffreService {
     public CallerDto affecterOffreToCaller(AffectationRequest affectationRequest) {
         List<OffreEntity> offres = validateOffreRequest(affectationRequest.getIds(), false);
         CallerDto callerDto = callerService.findById(affectationRequest.getId());
-        ModelMapper modelMapper = new ModelMapper();
+    
         CallerEntity callerEntity = modelMapper.map(callerDto, CallerEntity.class);
         //        set offre is afected
         offres.forEach(el -> {
@@ -166,7 +168,7 @@ public class OffreServiceImpl implements OffreService {
     public UserDto getByOffre(Integer id) {
         OffreEntity offreEntity = offreDao.findById(id).orElse(null);
         if (offreEntity == null) throw new OffreNotFoundException("Offre non trouver par l'id " + id);
-        ModelMapper modelMapper = new ModelMapper();
+    
         if (offreEntity.is_affected_to_caller()) {
             if (offreEntity.getCaller() != null) {
                 return modelMapper.map(offreEntity.getCaller(), UserDto.class);
@@ -199,7 +201,7 @@ public class OffreServiceImpl implements OffreService {
 
 //    @Override
 //    public OffreDto save(OffreDto offreDto) {
-//        ModelMapper modelMapper = new ModelMapper();
+//    
 //        OffreEntity saved = offreDao.save(modelMapper.map(offreDto, OffreEntity.class));
 //        return modelMapper.map(saved, OffreDto.class);
 //

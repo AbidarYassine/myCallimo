@@ -3,6 +3,8 @@ package com.rest.ai.myCallimo.controllers.admin;
 import com.rest.ai.myCallimo.dto.CityDto;
 import com.rest.ai.myCallimo.dto.SecteurDto;
 import com.rest.ai.myCallimo.request.GetSupervisorByCodesRequest;
+import com.rest.ai.myCallimo.request.search.PagedResponse;
+import com.rest.ai.myCallimo.request.search.SearchRequest;
 import com.rest.ai.myCallimo.response.CityResponse;
 import com.rest.ai.myCallimo.response.SecteurResponse;
 import com.rest.ai.myCallimo.response.SupervisorSecteurResponse;
@@ -42,15 +44,14 @@ public class SecteurControllers {
         return new ResponseEntity<>(modelMapper.map(dto, SecteurResponse.class), HttpStatus.OK);
     }
 
-    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERVISOR') or hasRole('CALLER')")
-    @GetMapping("")
-    public ResponseEntity<List<SecteurResponse>> findAll() {
-        List<SecteurResponse> secteurResponses =
-                secteurService.findAll().stream()
-                        .map(el -> modelMapper.map(el, SecteurResponse.class))
-                        .collect(Collectors.toList());
-        return new ResponseEntity<>(secteurResponses, HttpStatus.OK);
-    }
+//    @GetMapping("")
+//    public ResponseEntity<List<SecteurResponse>> findAll() {
+//        List<SecteurResponse> secteurResponses =
+//                secteurService.findAll().stream()
+//                        .map(el -> modelMapper.map(el, SecteurResponse.class))
+//                        .collect(Collectors.toList());
+//        return new ResponseEntity<>(secteurResponses, HttpStatus.OK);
+//    }
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERVISOR') or hasRole('CALLER')")
     @GetMapping("/id/{id}")
@@ -118,16 +119,19 @@ public class SecteurControllers {
     @PreAuthorize("hasRole('SUPERVISOR')")
     @GetMapping("/user-id/{id}")
     public List<SecteurResponse> findSecteursBySupId(@PathVariable() Integer id) {
-        return userService.findSecteursBySupId(id)
-                .stream()
-                .map(el -> modelMapper.map(el, SecteurResponse.class))
-                .collect(Collectors.toList());
+        return userService.findSecteursBySupId(id);
     }
 
     @PreAuthorize("hasRole('SUPERVISOR')")
     @GetMapping("/cities/user-id/{id}")
     public List<CityResponse> findCitiesBySubId(@PathVariable() Integer id) {
-        return userService.findCitiessBySubId(id).stream()
-                .map(el -> modelMapper.map(el, CityResponse.class)).collect(Collectors.toList());
+        return userService.findCitiessBySubId(id);
+    }
+
+    @GetMapping("")
+    @PreAuthorize("hasRole('ADMIN')")
+    public PagedResponse<SecteurResponse> list(SearchRequest request) {
+        request.setSize(20);
+        return secteurService.list(request);
     }
 }

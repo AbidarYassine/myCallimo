@@ -44,10 +44,7 @@ public class CityControllers {
     @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERVISOR') or hasRole('CALLER')")
     @GetMapping("/")
     public ResponseEntity<List<CityResponse>> findAll() {
-        List<CityResponse> cities = cityService.findAll()
-                .stream()
-                .map(el -> modelMapper.map(el, CityResponse.class))
-                .collect(Collectors.toList());
+        List<CityResponse> cities = cityService.getAll();
         return new ResponseEntity<>(cities, HttpStatus.OK);
     }
 
