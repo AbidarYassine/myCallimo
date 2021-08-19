@@ -92,7 +92,6 @@ public class OffreServiceImpl implements OffreService {
         if (response.isEmpty()) {
             return new PagedResponse<>(Collections.emptyList(), 0, response.getTotalElements());
         }
-    
         List<OffreDto> dtos = response.getContent().stream()
                 .filter(el -> el.getAnnonceur() != null
                         && el.getAnnonceur().getTelephone() != null
@@ -105,9 +104,27 @@ public class OffreServiceImpl implements OffreService {
     }
 
     @Override
+    public PagedResponse<OffreDto> listNoAfected(final SearchRequest request) {
+        // TODO getAll with custom pagination
+        final Page<OffreEntity> response = offreDao.findAll(SearchRequestUtil.toPageRequest(request));
+        if (response.isEmpty()) {
+            return new PagedResponse<>(Collections.emptyList(), 0, response.getTotalElements());
+        }
+        List<OffreDto> dtos = response.getContent().stream()
+                .filter(el -> el.getAnnonceur() != null
+                        && el.getAnnonceur().getTelephone() != null
+                        && !el.getAnnonceur().getTelephone().equals("")
+                        && el.is_affected_to_caller()
+                        || !el.is_affected_to_supervisor())
+                .map(el -> modelMapper.map(el, OffreDto.class))
+                .collect(Collectors.toList());
+        return new PagedResponse<>(dtos, dtos.size(), response.getTotalElements());
+    }
+
+    @Override
     public OffreDto findById(Integer id) {
         OffreEntity offreEntity = offreDao.findById(id).orElse(null);
-    
+
         return modelMapper.map(offreEntity, OffreDto.class);
     }
 

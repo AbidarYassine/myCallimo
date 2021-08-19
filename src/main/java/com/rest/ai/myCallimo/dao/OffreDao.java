@@ -10,6 +10,6 @@ import java.util.List;
 @Repository
 public interface OffreDao extends JpaRepository<OffreEntity, Integer> {
 
-    @Query(value = "SELECT * FROM offers WHERE is_affected_to_caller=0 AND is_affected_to_supervisor=0 DESC LIMIT 1", nativeQuery = true)
-    List<OffreEntity> getOffres();
+    @Query(value = "SELECT * FROM offers WHERE is_affected_to_caller=1 || is_affected_to_supervisor=1", nativeQuery = true)
+    List<OffreEntity> getOffresAfected();
 }

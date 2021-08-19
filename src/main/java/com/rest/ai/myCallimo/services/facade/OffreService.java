@@ -5,7 +5,6 @@ import com.rest.ai.myCallimo.dto.UserDto;
 import com.rest.ai.myCallimo.request.AffectationRequest;
 import com.rest.ai.myCallimo.request.search.PagedResponse;
 import com.rest.ai.myCallimo.request.search.SearchRequest;
-import com.rest.ai.myCallimo.response.UserResponse;
 
 import java.util.List;
 /***
@@ -81,6 +80,8 @@ public interface OffreService extends BaseInterface<OffreDto> {
      * @return Page of Offre Dto
      */
     PagedResponse<OffreDto> list(final SearchRequest request);
+
+    PagedResponse<OffreDto> listNoAfected(final SearchRequest request);
 
 
 }

@@ -83,17 +83,23 @@ public class OffreControllers {
                 .collect(Collectors.toList());
     }
 
+//    @GetMapping("/affected")
+//    public List<OffreDto> getOffreAfected(SearchRequest request) {
+//        return offreService.list(request).stream()
+//                .filter
+//                        (el -> el.getAnnonceur() != null
+//                                && el.getAnnonceur().getTelephone() != null
+//                                && !el.getAnnonceur().getTelephone().equals("")
+//                                && el.is_affected_to_caller()
+//                                || el.is_affected_to_supervisor())
+//                .collect(Collectors.toList());
+//    }
+
     @GetMapping("/affected")
-    public List<OffreDto> getOffreAfected() {
-        return offreService.findAll().stream()
-                .filter
-                        (el -> el.getAnnonceur() != null
-                                && el.getAnnonceur().getTelephone() != null
-                                && !el.getAnnonceur().getTelephone().equals("")
-                                && el.is_affected_to_caller()
-                                || el.is_affected_to_supervisor())
-                .collect(Collectors.toList());
+    public PagedResponse<OffreDto> getOffreAfected(SearchRequest request) {
+        return offreService.listNoAfected(request);
     }
+
 
     //    find By Id
     @GetMapping("/id/{id}")
