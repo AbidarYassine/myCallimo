@@ -7,6 +7,7 @@ import com.rest.ai.myCallimo.dto.UserDto;
 import com.rest.ai.myCallimo.entities.CallerEntity;
 import com.rest.ai.myCallimo.entities.OffreEntity;
 import com.rest.ai.myCallimo.entities.SupervisorEntity;
+import com.rest.ai.myCallimo.exception.NotFoundException;
 import com.rest.ai.myCallimo.exception.offre.OffreNotFoundException;
 import com.rest.ai.myCallimo.exception.user.UserNotFoundException;
 import com.rest.ai.myCallimo.request.AffectationRequest;
@@ -82,44 +83,35 @@ public class OffreServiceImpl implements OffreService {
 
     @Override
     public List<OffreDto> findAll() {
-    
         return offreDao.findAll().stream().map(el -> modelMapper.map(el, OffreDto.class)).collect(Collectors.toList());
     }
 
     @Override
     public PagedResponse<OffreDto> list(final SearchRequest request) {
-        final Page<OffreEntity> response = offreDao.findAll(SearchRequestUtil.toPageRequest(request));
+        final Page<OffreEntity> response = offreDao.getAllOffre(SearchRequestUtil.toPageRequest(request));
+        return returnResponse(response);
+    }
+
+    public PagedResponse<OffreDto> returnResponse(Page<OffreEntity> response) {
         if (response.isEmpty()) {
             return new PagedResponse<>(Collections.emptyList(), 0, response.getTotalElements());
         }
         List<OffreDto> dtos = response.getContent().stream()
-                .filter(el -> el.getAnnonceur() != null
-                        && el.getAnnonceur().getTelephone() != null
-                        && !el.getAnnonceur().getTelephone().equals("")
-                        && !el.is_affected_to_caller()
-                        && !el.is_affected_to_supervisor())
                 .map(el -> modelMapper.map(el, OffreDto.class))
                 .collect(Collectors.toList());
         return new PagedResponse<>(dtos, dtos.size(), response.getTotalElements());
     }
 
     @Override
-    public PagedResponse<OffreDto> listNoAfected(final SearchRequest request) {
+    public PagedResponse<OffreDto> listAfected(final SearchRequest request) {
         request.setSize(40);
         final Page<OffreEntity> response = offreDao.getOffresAfected(SearchRequestUtil.toPageRequest(request));
-        if (response.isEmpty()) {
-            return new PagedResponse<>(Collections.emptyList(), 0, response.getTotalElements());
-        }
-        List<OffreDto> dtos = response.getContent()
-                .stream().map(el -> modelMapper.map(el, OffreDto.class))
-                .collect(Collectors.toList());
-        return new PagedResponse<>(dtos, dtos.size(), response.getTotalElements());
+        return returnResponse(response);
     }
 
     @Override
     public OffreDto findById(Integer id) {
-        OffreEntity offreEntity = offreDao.findById(id).orElse(null);
-
+        OffreEntity offreEntity = offreDao.findById(id).orElseThrow(() -> new NotFoundException("Offre not found"));
         return modelMapper.map(offreEntity, OffreDto.class);
     }
 

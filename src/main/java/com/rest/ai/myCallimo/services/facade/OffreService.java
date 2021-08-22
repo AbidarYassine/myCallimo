@@ -81,7 +81,7 @@ public interface OffreService extends BaseInterface<OffreDto> {
      */
     PagedResponse<OffreDto> list(final SearchRequest request);
 
-    PagedResponse<OffreDto> listNoAfected(final SearchRequest request);
+    PagedResponse<OffreDto> listAfected(final SearchRequest request);
 
 
 }

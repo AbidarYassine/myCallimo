@@ -97,7 +97,7 @@ public class OffreControllers {
 
     @GetMapping("/affected")
     public PagedResponse<OffreDto> getOffreAfected(SearchRequest request) {
-        return offreService.listNoAfected(request);
+        return offreService.listAfected(request);
     }
 
 

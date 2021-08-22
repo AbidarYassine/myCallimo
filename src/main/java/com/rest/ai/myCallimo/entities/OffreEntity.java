@@ -9,7 +9,8 @@ import lombok.ToString;
 import javax.persistence.*;
 import java.io.Serializable;
 
-@Entity(name = "offers")
+@Entity()
+@Table(name = "offers")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

@@ -1,7 +1,7 @@
 package com.rest.ai.myCallimo.request.search;
 
 public class SearchRequestUtil {
-    private static final int DEFAULT_PAGE_SIZE = 800;
+    private static final int DEFAULT_PAGE_SIZE = 100;
 
     private SearchRequestUtil() {
     }
