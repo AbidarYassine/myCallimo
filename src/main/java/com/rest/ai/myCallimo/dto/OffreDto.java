@@ -1,5 +1,6 @@
 package com.rest.ai.myCallimo.dto;
 
+import com.rest.ai.myCallimo.request.AppelDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

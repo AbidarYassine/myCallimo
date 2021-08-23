@@ -1,7 +1,6 @@
 package com.rest.ai.myCallimo.services.impl;
 
 import com.rest.ai.myCallimo.dao.OffreDao;
-import com.rest.ai.myCallimo.dto.CallerDto;
 import com.rest.ai.myCallimo.dto.OffreDto;
 import com.rest.ai.myCallimo.dto.UserDto;
 import com.rest.ai.myCallimo.entities.CallerEntity;
@@ -14,6 +13,7 @@ import com.rest.ai.myCallimo.request.AffectationRequest;
 import com.rest.ai.myCallimo.request.search.PagedResponse;
 import com.rest.ai.myCallimo.request.search.SearchRequest;
 import com.rest.ai.myCallimo.request.search.SearchRequestUtil;
+import com.rest.ai.myCallimo.response.CallerResponse;
 import com.rest.ai.myCallimo.response.SupervisorResponse;
 import com.rest.ai.myCallimo.services.facade.CallerService;
 import com.rest.ai.myCallimo.services.facade.OffreService;
@@ -149,9 +149,9 @@ public class OffreServiceImpl implements OffreService {
     @Override
     public String affecterOffreToCaller(AffectationRequest affectationRequest) {
         List<OffreEntity> offres = validateOffreRequest(affectationRequest.getIds(), false);
-        CallerDto callerDto = callerService.findById(affectationRequest.getId());
+        CallerResponse callerResponse = callerService.findById(affectationRequest.getId());
 
-        CallerEntity callerEntity = modelMapper.map(callerDto, CallerEntity.class);
+        CallerEntity callerEntity = modelMapper.map(callerResponse, CallerEntity.class);
         //        set offre is afected
         offres.forEach(el -> {
             el.set_affected_to_caller(true);
@@ -206,11 +206,11 @@ public class OffreServiceImpl implements OffreService {
 //        return supervisorDto.getOffres();
 //    }
 
-    @Override
-    public List<OffreDto> getByCaller(Integer id) {
-        CallerDto callerDto = callerService.findById(id);
-        return callerDto.getOffres();
-    }
+//    @Override
+//    public List<OffreDto> getByCaller(Integer id) {
+//        CallerDto callerDto = callerService.findById(id);
+//        return callerDto.getOffres();
+//    }
 
     //    @Override
 //    public OffreDto save(OffreDto offreDto) {

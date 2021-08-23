@@ -50,7 +50,7 @@ public interface OffreService extends BaseInterface<OffreDto> {
      * @param id id of Caller
      * @return List Of Offre Dto Afecte to Caller
      */
-    List<OffreDto> getByCaller(Integer id);
+//    List<OffreDto> getByCaller(Integer id);
 
     /***
      * Add new offre

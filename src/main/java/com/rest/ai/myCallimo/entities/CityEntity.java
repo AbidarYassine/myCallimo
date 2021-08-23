@@ -27,7 +27,7 @@ public class CityEntity implements Serializable {
     @OneToMany(mappedBy = "city")
     private List<OffreEntity> offres;
 
-    @OneToOne(mappedBy = "city", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "city", cascade = CascadeType.ALL)
     private CallerEntity caller;
 
     @ManyToOne(fetch = FetchType.LAZY)

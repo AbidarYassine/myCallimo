@@ -115,12 +115,7 @@ public class OffreControllers {
 //        return offreService.getBySupervisor(id);
 //    }
 
-    //    get offre affected to callers
-    @PreAuthorize("hasRole('ADMIN') or hasRole('CALLER')")
-    @GetMapping("/caller/{id}")
-    public List<OffreDto> getByCaller(@PathVariable() Integer id) {
-        return offreService.getByCaller(id);
-    }
+
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERVISOR')")
     @GetMapping("/offre/{id}")

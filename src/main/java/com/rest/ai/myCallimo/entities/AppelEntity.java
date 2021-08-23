@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
-import java.time.Instant;
+import java.util.Date;
 
 @Entity(name = "appeles")
 @Data
@@ -16,7 +16,7 @@ import java.time.Instant;
 public class AppelEntity extends AbstractEntity {
 
     @Column(nullable = false)
-    private Instant date;
+    private Date date;
     @Column(nullable = false)
     private String duree;
 
@@ -24,10 +24,16 @@ public class AppelEntity extends AbstractEntity {
     @JoinColumn(name = "caller_id")
     private CallerEntity caller;
 
-    @Enumerated(EnumType.STRING)
-    private TypeAppel typeAppel;
+    //    @Enumerated(EnumType.STRING)
+    private String typeAppel;
 
     @OneToOne(mappedBy = "appel", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private OffreEntity offre;
+
+
+    @ManyToOne()
+    @JoinColumn(name = "supervisor_id")
+    private SupervisorEntity supervisor;
+
 
 }

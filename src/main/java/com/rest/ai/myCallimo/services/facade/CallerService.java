@@ -26,7 +26,7 @@ public interface CallerService {
      * @param id id to search caller
      * @return Found Caller
      */
-    CallerDto findById(Integer id);
+    CallerResponse findById(Integer id);
 
     /***
      * Add new caller

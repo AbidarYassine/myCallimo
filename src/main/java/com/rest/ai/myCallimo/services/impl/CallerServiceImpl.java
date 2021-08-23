@@ -58,11 +58,11 @@ public class CallerServiceImpl implements CallerService {
     }
 
     @Override
-    public CallerDto findById(Integer id) {
+    public CallerResponse findById(Integer id) {
         CallerEntity callerEntity = callerDao.findById(id).orElse(null);
         if (callerEntity == null) throw new UserNotFoundException("agent non trouver par l'id " + id);
 
-        return modelMapper.map(callerEntity, CallerDto.class);
+        return modelMapper.map(callerEntity, CallerResponse.class);
     }
 
     @Override

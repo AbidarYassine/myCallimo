@@ -33,5 +33,8 @@ public class SupervisorEntity extends UserEntity {
     @OneToMany(mappedBy = "supervisor", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Secteur> secteurs;
 
+    @OneToMany(mappedBy = "supervisor", cascade = CascadeType.ALL)
+    private List<AppelEntity> appel;
+
 
 }
