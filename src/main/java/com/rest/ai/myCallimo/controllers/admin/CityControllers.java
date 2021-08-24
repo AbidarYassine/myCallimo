@@ -1,12 +1,14 @@
 package com.rest.ai.myCallimo.controllers.admin;
 
 import com.rest.ai.myCallimo.dto.CityDto;
-import com.rest.ai.myCallimo.dto.SecteurDto;
 import com.rest.ai.myCallimo.dto.SupervisorDto;
 import com.rest.ai.myCallimo.exception.city.CityNotFoundException;
 import com.rest.ai.myCallimo.request.CallerByCityNameRequest;
 import com.rest.ai.myCallimo.request.GetByIdsRequest;
-import com.rest.ai.myCallimo.response.*;
+import com.rest.ai.myCallimo.response.CallerResponse;
+import com.rest.ai.myCallimo.response.CityResponse;
+import com.rest.ai.myCallimo.response.SecteurResponse;
+import com.rest.ai.myCallimo.response.SupervisorResponse;
 import com.rest.ai.myCallimo.services.facade.CityService;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -72,15 +74,12 @@ public class CityControllers {
     public ResponseEntity<SupervisorResponse> getByCity(@PathVariable() Integer id) {
         SupervisorDto res = cityService.getByCity(id);
         if (res == null) return null;
-        ModelMapper modelMapper = new ModelMapper();
         return new ResponseEntity<>(modelMapper.map(res, SupervisorResponse.class), HttpStatus.OK);
     }
 
     @GetMapping("/secteur/{city_id}")
     public ResponseEntity<SecteurResponse> findByCityId(@PathVariable("city_id") Integer id) {
-        SecteurDto dto = cityService.findByCityId(id);
-        ModelMapper modelMapper = new ModelMapper();
-        return new ResponseEntity<>(modelMapper.map(dto, SecteurResponse.class), HttpStatus.OK);
+        return new ResponseEntity<>(cityService.findByCityId(id), HttpStatus.OK);
     }
 
     @PostMapping("/supervisors")

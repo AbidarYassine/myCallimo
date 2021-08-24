@@ -2,7 +2,6 @@ package com.rest.ai.myCallimo.services.impl;
 
 import com.rest.ai.myCallimo.dao.CityDao;
 import com.rest.ai.myCallimo.dto.CityDto;
-import com.rest.ai.myCallimo.dto.SecteurDto;
 import com.rest.ai.myCallimo.dto.SupervisorDto;
 import com.rest.ai.myCallimo.entities.CityEntity;
 import com.rest.ai.myCallimo.entities.Secteur;
@@ -11,6 +10,7 @@ import com.rest.ai.myCallimo.exception.city.CityNotFoundException;
 import com.rest.ai.myCallimo.exception.user.UserNotFoundException;
 import com.rest.ai.myCallimo.response.CallerResponse;
 import com.rest.ai.myCallimo.response.CityResponse;
+import com.rest.ai.myCallimo.response.SecteurResponse;
 import com.rest.ai.myCallimo.services.facade.CityService;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -108,9 +108,10 @@ public class CityServiceImpl implements CityService {
     }
 
     @Override
-    public SecteurDto findByCityId(Integer id) {
-        CityDto cityDto = findById(id);
-        return null; // TODO ici
+    public SecteurResponse findByCityId(Integer id) {
+        CityEntity cityEntity = cityDao.findById(id).orElseThrow(() -> new NotFoundException("City not found"));
+        if (cityEntity.getSecteur() == null) throw new NotFoundException("Secteur not found");
+        return modelMapper.map(cityEntity.getSecteur(), SecteurResponse.class);
     }
 
     @Override
