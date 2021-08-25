@@ -3,7 +3,10 @@ package com.rest.ai.myCallimo.services.facade;
 
 import com.rest.ai.myCallimo.dto.AdminDto;
 import com.rest.ai.myCallimo.dto.SupervisorDto;
+import com.rest.ai.myCallimo.response.AppelResponse;
 import com.rest.ai.myCallimo.response.SupervisorResponse;
+
+import java.util.List;
 
 /***
  * Class description:
@@ -30,9 +33,7 @@ public interface SupervisorService {
 
     int deleteById(int id);
 
-//    String affecterSupToSecteur(Integer sup_id, Integer secteur_id);
-//
-//    String affecterSupToSecteur(AffectationRequest affectationRequest);
+    List<AppelResponse> getAppeles(Integer id);
 
 
 }

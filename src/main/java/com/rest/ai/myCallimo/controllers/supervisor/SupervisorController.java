@@ -4,6 +4,7 @@ import com.rest.ai.myCallimo.dto.CallerDto;
 import com.rest.ai.myCallimo.dto.OffreDto;
 import com.rest.ai.myCallimo.dto.SupervisorDto;
 import com.rest.ai.myCallimo.dto.UserDto;
+import com.rest.ai.myCallimo.response.AppelResponse;
 import com.rest.ai.myCallimo.response.CallerResponse;
 import com.rest.ai.myCallimo.response.UserResponse;
 import com.rest.ai.myCallimo.services.facade.AuthRoleService;
@@ -44,18 +45,6 @@ public class SupervisorController {
     }
 
 
-//    @PreAuthorize("hasRole('ADMIN')")
-//    @GetMapping("/affecter/{sup_id}/{secteur_id}")
-//    public ResponseEntity<String> affecterSupToSecteur(@PathVariable() Integer sup_id, @PathVariable() Integer secteur_id) {
-//        return new ResponseEntity<>(supervisorService.affecterSupToSecteur(sup_id, secteur_id), HttpStatus.OK);
-//    }
-//
-//    @PostMapping("/multiple-afectation")
-//    public ResponseEntity<String> affecterSupToSecteur(@RequestBody AffectationRequest affectationRequest) {
-//        return new ResponseEntity<>(supervisorService.affecterSupToSecteur(affectationRequest), HttpStatus.OK);
-//    }
-
-
     //    supervisor can add caller
     @PostMapping("/add-callers")
     public ResponseEntity<CallerResponse> addCaller(@Valid @RequestBody() CallerDto callerDto) {
@@ -89,6 +78,11 @@ public class SupervisorController {
         } else {
             throw new AccessDeniedException("Access denied !!");
         }
+    }
 
+    @PreAuthorize("hasRole('SUPERVISOR')")
+    @GetMapping("/appeles/id/{id}")
+    public List<AppelResponse> getAppeles(@PathVariable() Integer id) {
+        return supervisorService.getAppeles(id);
     }
 }

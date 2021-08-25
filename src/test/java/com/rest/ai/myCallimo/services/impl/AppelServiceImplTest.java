@@ -46,7 +46,7 @@ public class AppelServiceImplTest {
                 .typeAppel("RDV")
                 .duree("1h30")
                 .build();
-        AppelResponse result = appelService.saveWithCaller(expectedValue, 3523);
+        AppelResponse result = appelService.saveWithCaller(expectedValue, 3523, 1306);
 
         Assertions.assertNotNull(result);
         Assertions.assertNotNull(result.getId());
@@ -62,7 +62,7 @@ public class AppelServiceImplTest {
                 .typeAppel("RDV")
                 .duree("1h30")
                 .build();
-        AppelResponse result = appelService.saveWithSupervisor(expectedValue, 3519);
+        AppelResponse result = appelService.saveWithSupervisor(expectedValue, 3519, 1306);
 
         Assertions.assertNotNull(result);
         Assertions.assertNotNull(result.getId());
@@ -77,7 +77,7 @@ public class AppelServiceImplTest {
                 .typeAppel("RDV")
                 .duree("1h30")
                 .build();
-        Assertions.assertThrows(NotFoundException.class, () -> appelService.saveWithSupervisor(expectedValue, 0));
+        Assertions.assertThrows(NotFoundException.class, () -> appelService.saveWithSupervisor(expectedValue, 0, 1306));
     }
 
     @Test
@@ -87,7 +87,7 @@ public class AppelServiceImplTest {
                 .typeAppel("RDV")
                 .duree("1h30")
                 .build();
-        Assertions.assertThrows(UserNotFoundException.class, () -> appelService.saveWithCaller(expectedValue, 0));
+        Assertions.assertThrows(UserNotFoundException.class, () -> appelService.saveWithCaller(expectedValue, 0, 1306));
     }
 
 }

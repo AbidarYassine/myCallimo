@@ -16,4 +16,6 @@ public interface AnnonceurService extends BaseInterface<AnnonceurDto> {
      */
     AnnonceurDto findByTelephone(String telephone);
 
+    AnnonceurDto update(AnnonceurDto annonceurDto);
+
 }

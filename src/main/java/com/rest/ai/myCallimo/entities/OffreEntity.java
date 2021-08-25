@@ -22,28 +22,28 @@ public class OffreEntity implements Serializable {
     @GeneratedValue
     private Integer id; //
     private String url; //
-    private String title;//
+    private String title;// to_update
     private String reference;
     @Column(length = 5000)
-    private String description;//
+    private String description;// to_update
     private String address; //
-    private String piscine; //
-    private String pices; //
+    private String piscine; // to_update
+    private String pices; // to_update
     private String is_active; //
     private String is_processed; //
-    private String area; //
-    private String area_units; //
-    private String currency; //
-    private String price; //
-    private String last_price; //
-    private String first_price; //
-    private String chamber; //
+    private String area; // to_update
+    private String area_units; // to_update
+    private String currency; //to_update
+    private String price; //to_update
+    private String last_price; //to_update
+    private String first_price; //to_update
+    private String chamber; //to_update
     private String last_check_date; //
     private String is_new; //
     private String offer_status; //
     private String offer_code_status; //
-    private String offer_latitude; //
-    private String offer_longitude; //
+    private String offer_latitude; //to_update
+    private String offer_longitude; //to_update
     private String offer_rank_obtained; //
     private String offer_rank_max; //
     private String is_update_price; //
@@ -51,8 +51,8 @@ public class OffreEntity implements Serializable {
     private String is_url_exist; //
     private String new_price_date; //
     private String department; //
-    private String bathroom;//
-    private String surface_land; //
+    private String bathroom;// to_update
+    private String surface_land; // to_update
     private String offer_dpe; //
     private String offer_ges;//
     private boolean is_affected_to_supervisor;
@@ -81,12 +81,6 @@ public class OffreEntity implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "city_id")
     private CityEntity city;
-
-    @JsonIgnore
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "appel_id")
-    private AppelEntity appel;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "supervisor_id")
     private SupervisorEntity supervisor;

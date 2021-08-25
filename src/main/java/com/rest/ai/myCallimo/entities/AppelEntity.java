@@ -27,13 +27,16 @@ public class AppelEntity extends AbstractEntity {
     //    @Enumerated(EnumType.STRING)
     private String typeAppel;
 
-    @OneToOne(mappedBy = "appel", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "offre_id")
     private OffreEntity offre;
 
 
     @ManyToOne()
     @JoinColumn(name = "supervisor_id")
     private SupervisorEntity supervisor;
+
+    private String audio;
 
 
 }

@@ -5,6 +5,7 @@ import com.rest.ai.myCallimo.dto.OffreDto;
 import com.rest.ai.myCallimo.dto.UserDto;
 import com.rest.ai.myCallimo.request.AffectationRequest;
 import com.rest.ai.myCallimo.request.GetByIdsRequest;
+import com.rest.ai.myCallimo.request.UpdateCategoryOffreType;
 import com.rest.ai.myCallimo.request.search.PagedResponse;
 import com.rest.ai.myCallimo.request.search.SearchRequest;
 import com.rest.ai.myCallimo.response.UserResponse;
@@ -140,6 +141,19 @@ public class OffreControllers {
     @GetMapping("/offres")
     public PagedResponse<OffreDto> getOffres(SearchRequest request) {
         return offreService.list(request);
+    }
+
+    @PutMapping("/update-category-offre-type")
+    public ResponseEntity<String> updateOffreType(@RequestBody() UpdateCategoryOffreType updateCategoryOffreType) {
+        offreService.updateOffreType(updateCategoryOffreType.getOffre_id(), updateCategoryOffreType.getOffre_type());
+        offreService.updateOffreCategory(updateCategoryOffreType.getOffre_id(), updateCategoryOffreType.getCategory());
+        return new ResponseEntity<String>("Done", HttpStatus.ACCEPTED);
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<OffreDto> updateOffre(@RequestBody() OffreDto offreDto) {
+        return new ResponseEntity<>(offreService.updateOffre(offreDto), HttpStatus.ACCEPTED);
+
     }
 }
 

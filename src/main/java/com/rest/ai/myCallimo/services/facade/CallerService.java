@@ -1,6 +1,7 @@
 package com.rest.ai.myCallimo.services.facade;
 
 import com.rest.ai.myCallimo.dto.CallerDto;
+import com.rest.ai.myCallimo.response.AppelResponse;
 import com.rest.ai.myCallimo.response.CallerResponse;
 import com.rest.ai.myCallimo.response.UserResponse;
 
@@ -57,6 +58,8 @@ public interface CallerService {
      * @return integer response
      */
     int deleteById(int id);
+
+    List<AppelResponse> getAppeles(Integer id);
 
 
 }

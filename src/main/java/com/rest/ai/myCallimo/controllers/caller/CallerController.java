@@ -2,6 +2,7 @@ package com.rest.ai.myCallimo.controllers.caller;
 
 
 import com.rest.ai.myCallimo.dto.CallerDto;
+import com.rest.ai.myCallimo.response.AppelResponse;
 import com.rest.ai.myCallimo.response.CallerResponse;
 import com.rest.ai.myCallimo.response.UserResponse;
 import com.rest.ai.myCallimo.services.facade.AuthRoleService;
@@ -13,7 +14,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -49,21 +49,15 @@ public class CallerController {
     public ResponseEntity<CallerResponse> save(@Valid @RequestBody() CallerDto callerDto, @PathVariable() Integer supervisor_id) {
         CallerResponse allerResponse = callerService.save(callerDto, supervisor_id);
         return new ResponseEntity<>(allerResponse, HttpStatus.CREATED);
-
     }
-
-//    @GetMapping("/supervisor-id/{id}")
-//    public ResponseEntity<List<CallerResponse>> getBySupervisorId(@PathVariable("id") Integer id) {
-//        List<CallerDto> callerDtos = callerService.getBySupervisorId(id);
-//        if (callerDtos == null) throw new UserNotFoundException("superviseur non trouver par id " + id);
-//
-//        return new ResponseEntity<>(callerDtos.stream().map(el -> modelMapper.map(el, CallerResponse.class)).collect(Collectors.toList()), HttpStatus.OK);
-//    }
 
     @GetMapping("/user-callers")
     public ResponseEntity<List<CallerResponse>> getCallers() {
-        List<CallerResponse> callerResponse = new ArrayList<>();
-
         return new ResponseEntity<>(roleService.getCallers(), HttpStatus.OK);
+    }
+
+    @GetMapping("/appeles/id/{id}")
+    public List<AppelResponse> getAppeles(@PathVariable() Integer id) {
+        return callerService.getAppeles(id);
     }
 }

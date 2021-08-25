@@ -15,6 +15,9 @@ import java.util.concurrent.ExecutionException;
 
 public interface FlickrService {
 
+
+    public String uploadAudio(InputStream audio) throws FlickrException, IOException, ExecutionException, InterruptedException;
+
     /**
      * @param photo photo to save
      * @param email user to update his avatar

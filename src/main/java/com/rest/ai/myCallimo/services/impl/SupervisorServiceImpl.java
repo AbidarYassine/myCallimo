@@ -10,6 +10,7 @@ import com.rest.ai.myCallimo.entities.SupervisorEntity;
 import com.rest.ai.myCallimo.exception.NotFoundException;
 import com.rest.ai.myCallimo.exception.user.UserAlreadyExist;
 import com.rest.ai.myCallimo.exception.user.UserNotFoundException;
+import com.rest.ai.myCallimo.response.AppelResponse;
 import com.rest.ai.myCallimo.response.SupervisorResponse;
 import com.rest.ai.myCallimo.services.facade.SupervisorService;
 import com.rest.ai.myCallimo.services.facade.UserService;
@@ -20,6 +21,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -126,6 +130,15 @@ public class SupervisorServiceImpl implements SupervisorService {
         }
         supervisorDao.deleteById(id);
         return 1;
+    }
+
+    @Override
+    public List<AppelResponse> getAppeles(Integer id) {
+        SupervisorEntity supervisorEntity = supervisorDao.findById(id).orElseThrow(() -> new NotFoundException("Supervisor not found"));
+        return supervisorEntity.getAppel()
+                .stream()
+                .map(el -> modelMapper.map(el, AppelResponse.class))
+                .collect(Collectors.toList());
     }
 
 //    @Override

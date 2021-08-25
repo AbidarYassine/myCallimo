@@ -17,14 +17,16 @@ public interface AppelService {
 
     AppelResponse save(AppelDto appelDto);
 
-    AppelResponse saveWithCaller(AppelDto appelDto, Integer id);
+    AppelResponse saveWithCaller(AppelDto appelDto, Integer id, Integer id_offre);
 
-    AppelResponse saveWithSupervisor(AppelDto appelDto, Integer id);
+    AppelResponse saveWithSupervisor(AppelDto appelDto, Integer id, Integer id_offre);
 
     int delete(Integer id);
 
 
     List<AppelResponse> findAll();
+
+//    String uploadAudio();
 
 
 }

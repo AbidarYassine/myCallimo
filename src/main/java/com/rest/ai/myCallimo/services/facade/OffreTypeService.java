@@ -19,4 +19,6 @@ public interface OffreTypeService extends BaseInterface<OffreTypeDto> {
      * @return OffreTypeDto
      */
     OffreTypeDto findByType(String type);
+
+
 }

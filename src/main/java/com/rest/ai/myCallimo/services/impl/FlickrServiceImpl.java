@@ -92,4 +92,11 @@ public class FlickrServiceImpl implements FlickrService {
         requestContext.setAuth(auth);
         flickr.setAuth(auth);
     }
+
+    public String uploadAudio(InputStream audio) throws FlickrException, IOException, ExecutionException, InterruptedException {
+        connect();
+        UploadMetaData uploadMetaData = new UploadMetaData();
+        return flickr.getUploader().upload(audio, uploadMetaData);
+
+    }
 }

@@ -6,9 +6,11 @@ import com.rest.ai.myCallimo.dto.CityDto;
 import com.rest.ai.myCallimo.entities.CallerEntity;
 import com.rest.ai.myCallimo.entities.CityEntity;
 import com.rest.ai.myCallimo.entities.SupervisorEntity;
+import com.rest.ai.myCallimo.exception.NotFoundException;
 import com.rest.ai.myCallimo.exception.city.CityNotFoundException;
 import com.rest.ai.myCallimo.exception.user.UserAlreadyExist;
 import com.rest.ai.myCallimo.exception.user.UserNotFoundException;
+import com.rest.ai.myCallimo.response.AppelResponse;
 import com.rest.ai.myCallimo.response.CallerResponse;
 import com.rest.ai.myCallimo.response.SupervisorResponse;
 import com.rest.ai.myCallimo.response.UserResponse;
@@ -120,6 +122,15 @@ public class CallerServiceImpl implements CallerService {
         if (callerEntity == null) throw new UserNotFoundException("Agent not found par l'id " + id);
         callerDao.deleteById(id);
         return 1;
+    }
+
+    @Override
+    public List<AppelResponse> getAppeles(Integer id) {
+        CallerEntity callerEntity = callerDao.findById(id).orElseThrow(() -> new NotFoundException("Caller Not Found"));
+        return callerEntity.getAppeles()
+                .stream()
+                .map(el -> modelMapper.map(el, AppelResponse.class))
+                .collect(Collectors.toList());
     }
 
 

@@ -3,6 +3,8 @@ package com.rest.ai.myCallimo.services.facade;
 
 import com.rest.ai.myCallimo.dto.CategoryDto;
 
+import java.util.List;
+
 /***
  * Class description:
  * CategoryService contain the different operations on category
@@ -24,5 +26,9 @@ public interface CategoryService {
      * @return Saved Category Dto
      */
     CategoryDto save(CategoryDto categoryDto);
+
+    List<CategoryDto> findAll();
+
+    CategoryDto findById(Integer id);
 
 }

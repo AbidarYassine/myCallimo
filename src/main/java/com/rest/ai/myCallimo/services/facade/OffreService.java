@@ -1,12 +1,16 @@
 package com.rest.ai.myCallimo.services.facade;
 
+import com.rest.ai.myCallimo.dto.CategoryDto;
 import com.rest.ai.myCallimo.dto.OffreDto;
+import com.rest.ai.myCallimo.dto.OffreTypeDto;
 import com.rest.ai.myCallimo.dto.UserDto;
+import com.rest.ai.myCallimo.entities.OffreEntity;
 import com.rest.ai.myCallimo.request.AffectationRequest;
 import com.rest.ai.myCallimo.request.search.PagedResponse;
 import com.rest.ai.myCallimo.request.search.SearchRequest;
 
 import java.util.List;
+
 /***
  * Class description:
  * OffreService contain the different operations on Offre
@@ -16,6 +20,8 @@ import java.util.List;
 
 public interface OffreService extends BaseInterface<OffreDto> {
 
+
+    OffreEntity findByIdE(Integer id);
 
     /***
      * Afectation des offres  a un superviseur
@@ -38,19 +44,6 @@ public interface OffreService extends BaseInterface<OffreDto> {
      */
     UserDto getByOffre(Integer id);
 
-    /***
-     * Get All Offre Afected to supervisor id
-     * @param id id of supervisor
-     * @return List Of Offre Dto Afecte to Supervisor
-     */
-//    List<OffreDto> getBySupervisor(Integer id);
-
-    /***
-     * Get All Offre Afected to Caller id
-     * @param id id of Caller
-     * @return List Of Offre Dto Afecte to Caller
-     */
-//    List<OffreDto> getByCaller(Integer id);
 
     /***
      * Add new offre
@@ -77,11 +70,43 @@ public interface OffreService extends BaseInterface<OffreDto> {
     /***
      * get All Offre With Pagination
      * @param request size and page
-     * @return Page of Offre Dto
+     * @return Page of Offre Dto No Afcted
      */
     PagedResponse<OffreDto> list(final SearchRequest request);
 
+
+    /***
+     * get All Offre With Pagination
+     * @param request size and page
+     * @return Page of Offre Dto  Afcted
+     */
     PagedResponse<OffreDto> listAfected(final SearchRequest request);
+
+
+    /***
+     * update Category of offer
+     * @param id_offre id of offer
+     * @param id_category id of category
+     * @return Category Dto
+     */
+    CategoryDto updateOffreCategory(Integer id_offre, Integer id_category);
+
+
+    /***
+     * update Type of offer
+     * @param id_offre id of offer
+     * @param id_offre_type id of Offer Type
+     * @return OffreTypeDto
+     */
+    OffreTypeDto updateOffreType(Integer id_offre, Integer id_offre_type);
+
+
+    /***
+     * update information de base de l'offre
+     * @param offreDto offre information
+     * @return Updated Offre
+     */
+    OffreDto updateOffre(OffreDto offreDto);
 
 
 }
