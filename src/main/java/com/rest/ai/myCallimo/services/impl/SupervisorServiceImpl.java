@@ -36,7 +36,6 @@ public class SupervisorServiceImpl implements SupervisorService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final CallerDao callerDao;
     private final OffreDao offreDao;
-    //    private final SecteurService secteurService;
     private final ModelMapper modelMapper;
 
     @Autowired

@@ -36,7 +36,6 @@ public class UserServiceImpl implements UserService {
     private final SupervisorDao supervisorDao;
     private final CallerDao callerDao;
     private final ModelMapper modelMapper;
-
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
 

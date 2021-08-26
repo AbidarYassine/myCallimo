@@ -6,8 +6,10 @@ import com.rest.ai.myCallimo.dto.OffreTypeDto;
 import com.rest.ai.myCallimo.dto.UserDto;
 import com.rest.ai.myCallimo.entities.OffreEntity;
 import com.rest.ai.myCallimo.request.AffectationRequest;
+import com.rest.ai.myCallimo.request.AppelDto;
 import com.rest.ai.myCallimo.request.search.PagedResponse;
 import com.rest.ai.myCallimo.request.search.SearchRequest;
+import com.rest.ai.myCallimo.response.AppelResponse;
 
 import java.util.List;
 
@@ -22,6 +24,8 @@ public interface OffreService extends BaseInterface<OffreDto> {
 
 
     OffreEntity findByIdE(Integer id);
+
+    OffreEntity save(OffreEntity offreEntity);
 
     /***
      * Afectation des offres  a un superviseur
@@ -107,6 +111,11 @@ public interface OffreService extends BaseInterface<OffreDto> {
      * @return Updated Offre
      */
     OffreDto updateOffre(OffreDto offreDto);
+
+
+    AppelResponse saveWithSup(Integer id, AppelDto appelDto, Integer sup_id);
+
+    AppelResponse saveWithCaller(Integer id, AppelDto appelDto, Integer caller_id);
 
 
 }

@@ -35,12 +35,10 @@ public class CallerServiceImpl implements CallerService {
 
 
     private final CallerDao callerDao;
-
     private final UserService userService;
     private final SupervisorService supervisorService;
     private final CityService cityService;
     private final ModelMapper modelMapper;
-
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired

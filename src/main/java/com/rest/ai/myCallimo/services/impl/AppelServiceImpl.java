@@ -15,7 +15,10 @@ import com.rest.ai.myCallimo.services.facade.CallerService;
 import com.rest.ai.myCallimo.services.facade.OffreService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,6 +48,42 @@ public class AppelServiceImpl implements AppelService {
     }
 
     @Override
+    public AppelEntity findById(Integer id) {
+        AppelEntity appelEntity = appelDao.findById(id).orElseThrow(() -> new NotFoundException("AppelNo found"));
+        return appelEntity;
+    }
+
+    @Override
+    public AppelResponse updateAudio(MultipartFile file, Integer id) {
+        AppelEntity appelEntity = appelDao.findById(id).orElseThrow(() -> new NotFoundException("Appel Not Found"));
+        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+
+        try {
+            // Check if the file's name contains invalid characters
+            if (fileName.contains("..")) {
+                throw new NotFoundException("Sorry! Filename contains invalid path sequence " + fileName);
+            }
+            appelEntity.setFileName(fileName);
+            appelEntity.setData(file.getBytes());
+            appelEntity.setFileType(file.getContentType());
+
+            AppelEntity saved = appelDao.save(appelEntity);
+            return modelMapper.map(saved, AppelResponse.class);
+        } catch (IOException ex) {
+
+        }
+        return null;
+    }
+//
+//    @Override
+//    public AppelResponse updateUrl(String url_audio, Integer id) {
+//        AppelEntity appelEntity = appelDao.findById(id).orElseThrow(() -> new NotFoundException("Appel Not Found"));
+//        appelEntity.setAudio(url_audio);
+//        AppelEntity saved = appelDao.save(appelEntity);
+//        return modelMapper.map(saved, AppelResponse.class);
+//    }
+
+    @Override
     public AppelResponse saveWithCaller(AppelDto appelDto, Integer id, Integer id_offre) {
         /*find caller by id*/
         CallerResponse callerResponse = callerService.findById(id);
@@ -56,7 +95,8 @@ public class AppelServiceImpl implements AppelService {
         appelEntity.setCaller(callerEntity);
         /*save in db*/
         AppelEntity saved = appelDao.save(appelEntity);
-//        appelDao.updateOffreId(id_offre, saved.getId());
+        offreEntity.setAppel(saved);
+        offreService.save(offreEntity);
         return modelMapper.map(saved, AppelResponse.class);
 
     }
@@ -72,7 +112,8 @@ public class AppelServiceImpl implements AppelService {
         appelEntity.setSupervisor(supervisor);
         /**/
         AppelEntity saved = appelDao.save(appelEntity);
-//        appelDao.updateOffreId(id_offre, saved.getId());
+        offreEntity.setAppel(saved);
+        offreService.save(offreEntity);
         return modelMapper.map(saved, AppelResponse.class);
     }
 

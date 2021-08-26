@@ -88,4 +88,8 @@ public class OffreEntity implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "caller_id", nullable = true)
     private CallerEntity caller;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "appel_id ")
+    private AppelEntity appel;
 }

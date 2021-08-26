@@ -10,9 +10,11 @@ import com.rest.ai.myCallimo.exception.NotFoundException;
 import com.rest.ai.myCallimo.exception.offre.OffreNotFoundException;
 import com.rest.ai.myCallimo.exception.user.UserNotFoundException;
 import com.rest.ai.myCallimo.request.AffectationRequest;
+import com.rest.ai.myCallimo.request.AppelDto;
 import com.rest.ai.myCallimo.request.search.PagedResponse;
 import com.rest.ai.myCallimo.request.search.SearchRequest;
 import com.rest.ai.myCallimo.request.search.SearchRequestUtil;
+import com.rest.ai.myCallimo.response.AppelResponse;
 import com.rest.ai.myCallimo.response.CallerResponse;
 import com.rest.ai.myCallimo.response.SupervisorResponse;
 import com.rest.ai.myCallimo.services.facade.*;
@@ -32,13 +34,13 @@ import java.util.stream.Collectors;
 @Service
 public class OffreServiceImpl implements OffreService {
 
-    private OffreDao offreDao;
-    private SupervisorService supervisorService;
-    private CallerService callerService;
-    private EmailSenderService emailService;
-    private final ModelMapper modelMapper;
+    private final OffreDao offreDao;
+    private final SupervisorService supervisorService;
+    private final CallerService callerService;
+    private final EmailSenderService emailService;
     private final CategoryService categoryService;
     private final OffreTypeService offreTypeService;
+    private final ModelMapper modelMapper;
 
     public OffreServiceImpl(OffreDao offreDao, SupervisorService supervisorService, CallerService callerService, EmailSenderService service, ModelMapper modelMapper, CategoryService categoryService, OffreTypeService offreTypeService) {
         this.offreDao = offreDao;
@@ -52,7 +54,6 @@ public class OffreServiceImpl implements OffreService {
 
     @Override
     public OffreDto save(OffreDto offreDto) {
-    
         OffreEntity offreEntity = offreDao.save(modelMapper.map(offreDto, OffreEntity.class));
         OffreEntity saved = offreDao.save(offreEntity);
         return modelMapper.map(saved, OffreDto.class);
@@ -150,6 +151,11 @@ public class OffreServiceImpl implements OffreService {
     public OffreEntity findByIdE(Integer id) {
         OffreEntity offreEntity = offreDao.findById(id).orElseThrow(() -> new NotFoundException("Offre not found"));
         return offreEntity;
+    }
+
+    @Override
+    public OffreEntity save(OffreEntity offreEntity) {
+        return offreDao.save(offreEntity);
     }
 
 
@@ -309,6 +315,17 @@ public class OffreServiceImpl implements OffreService {
             offreEntity.setPices(offreDto.getIs_active());
         }
         return modelMapper.map(offreDao.save(offreEntity), OffreDto.class);
+    }
+
+    @Override
+    public AppelResponse saveWithSup(Integer id, AppelDto appelDto, Integer sup_id) {
+        return null;
+
+    }
+
+    @Override
+    public AppelResponse saveWithCaller(Integer id, AppelDto appelDto, Integer caller_id) {
+        return null;
     }
 
 

@@ -24,11 +24,10 @@ public class AppelEntity extends AbstractEntity {
     @JoinColumn(name = "caller_id")
     private CallerEntity caller;
 
-    //    @Enumerated(EnumType.STRING)
+
     private String typeAppel;
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "offre_id")
     private OffreEntity offre;
 
 
@@ -37,6 +36,13 @@ public class AppelEntity extends AbstractEntity {
     private SupervisorEntity supervisor;
 
     private String audio;
+
+
+    @Lob
+    private byte[] data;
+    private String fileName;
+
+    private String fileType;
 
 
 }
