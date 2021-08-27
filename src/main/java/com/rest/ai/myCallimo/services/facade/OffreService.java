@@ -56,6 +56,8 @@ public interface OffreService extends BaseInterface<OffreDto> {
      */
     OffreDto save(OffreDto offreDto);
 
+    PagedResponse<OffreDto> getOffreTriate(final SearchRequest request);
+
     /***
      * Delete Caller By Id
      * @param id id of Caller

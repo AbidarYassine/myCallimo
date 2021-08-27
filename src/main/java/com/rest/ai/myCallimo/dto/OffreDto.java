@@ -1,6 +1,6 @@
 package com.rest.ai.myCallimo.dto;
 
-import com.rest.ai.myCallimo.request.AppelDto;
+import com.rest.ai.myCallimo.response.AppelResponse;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -49,16 +49,12 @@ public class OffreDto implements Serializable {
     private boolean is_affected_to_caller;
     private String lib_sector;
     private String zip_sector;
-
-
     private AnnonceurDto annonceur;
 
     private CategoryDto category;
 
     private OffreTypeDto offre_type;
-
-
     private CityDto city;
 
-    private AppelDto appel;
+    private AppelResponse appel;
 }

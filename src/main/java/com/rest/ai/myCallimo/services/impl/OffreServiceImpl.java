@@ -60,8 +60,14 @@ public class OffreServiceImpl implements OffreService {
     }
 
     @Override
+    public PagedResponse<OffreDto> getOffreTriate(final SearchRequest request) {
+        final Page<OffreEntity> response = offreDao.getOffreTraiter(SearchRequestUtil.toPageRequest(request));
+        return returnResponse(response);
+    }
+
+    @Override
     public int deleteCaller(Integer id) {
-    
+
         CallerEntity callerEntity = modelMapper.map(callerService.findById(id), CallerEntity.class);
         if (callerEntity.getOffres().size() > 0) {
             callerEntity.getOffres().forEach(el -> {

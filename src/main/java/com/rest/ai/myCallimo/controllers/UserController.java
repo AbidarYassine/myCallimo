@@ -24,6 +24,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -111,9 +112,10 @@ public class UserController {
         return modelMapper.map(userDto, UserResponse.class);
     }
 
-    @CrossOrigin(origins = "*")
     @PostMapping(value = "/modifier-avatar/{email}")
-    public String modifierAvatar(@RequestPart("file") MultipartFile file, @PathVariable() String email) throws IOException, FlickrException, ExecutionException, InterruptedException {
+    @ResponseStatus(HttpStatus.OK)
+    public String modifierAvatar(@RequestParam(value = "file", name = "file") MultipartFile file, @PathVariable() String email, HttpServletRequest request) throws IOException, FlickrException, ExecutionException, InterruptedException {
+        System.out.println("File " + file.getName());
         return flickrService.savePhoto(file.getInputStream(), email);
     }
 }

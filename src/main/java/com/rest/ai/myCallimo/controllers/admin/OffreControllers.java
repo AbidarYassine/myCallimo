@@ -153,7 +153,12 @@ public class OffreControllers {
     @PutMapping("/update")
     public ResponseEntity<OffreDto> updateOffre(@RequestBody() OffreDto offreDto) {
         return new ResponseEntity<>(offreService.updateOffre(offreDto), HttpStatus.ACCEPTED);
+    }
 
+    @GetMapping("/traite")
+    @PreAuthorize("hasRole('ADMIN')")
+    public PagedResponse<OffreDto> getOffreTriate(SearchRequest request) {
+        return offreService.getOffreTriate(request);
     }
 }
 

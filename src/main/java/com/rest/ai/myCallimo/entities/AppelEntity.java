@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
-import java.util.Date;
 
 @Entity(name = "appeles")
 @Data
@@ -16,10 +15,7 @@ import java.util.Date;
 public class AppelEntity extends AbstractEntity {
 
     @Column(nullable = false)
-    private Date date;
-    @Column(nullable = false)
     private String duree;
-
     @ManyToOne
     @JoinColumn(name = "caller_id")
     private CallerEntity caller;

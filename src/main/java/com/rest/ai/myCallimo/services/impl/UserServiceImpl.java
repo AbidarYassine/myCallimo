@@ -143,12 +143,15 @@ public class UserServiceImpl implements UserService {
         CallerEntity callerEntity = callerDao.findById(id).orElse(null);
         if (callerEntity != null) {
             CallerDto callerDto = modelMapper.map(callerEntity, CallerDto.class);
-            return callerDto.getOffres();
+            return callerDto.getOffres()
+                    .stream().filter(el -> el.getAppel() == null)
+                    .collect(Collectors.toList());
         }
         SupervisorEntity supervisorEntity = supervisorDao.findById(id).orElse(null);
         if (supervisorEntity != null) {
             return supervisorEntity.getOffres()
                     .stream()
+                    .filter(el -> el.getAppel() == null)
                     .map(el -> modelMapper.map(el, OffreDto.class))
                     .collect(Collectors.toList());
         }

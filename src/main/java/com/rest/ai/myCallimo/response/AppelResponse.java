@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.Instant;
-import java.util.Date;
 
 @Data
 @AllArgsConstructor
@@ -14,10 +13,8 @@ import java.util.Date;
 public class AppelResponse {
 
     private Integer id;
-    private Date date;
     private String duree;
     private String typeAppel;
-    private CallerResponse caller;
     private String fileName;
     private String fileType;
     private Instant created_at;

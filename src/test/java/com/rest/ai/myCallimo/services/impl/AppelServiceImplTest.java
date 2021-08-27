@@ -12,8 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.Date;
-
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -25,7 +23,6 @@ public class AppelServiceImplTest {
     @Test
     public void saveAppelSucces() {
         AppelDto expectedValue = AppelDto.builder()
-                .date(new Date())
                 .typeAppel("RDV")
                 .duree("1h30")
                 .build();
@@ -42,7 +39,6 @@ public class AppelServiceImplTest {
     @Test
     public void saveAppelWithCaller() {
         AppelDto expectedValue = AppelDto.builder()
-                .date(new Date())
                 .typeAppel("RDV")
                 .duree("1h30")
                 .build();
@@ -50,7 +46,6 @@ public class AppelServiceImplTest {
 
         Assertions.assertNotNull(result);
         Assertions.assertNotNull(result.getId());
-        Assertions.assertEquals(result.getCaller().getId(), 3523);
         Assertions.assertEquals(expectedValue.getDuree(), result.getDuree());
         Assertions.assertEquals(expectedValue.getTypeAppel(), result.getTypeAppel());
     }
@@ -58,7 +53,6 @@ public class AppelServiceImplTest {
     @Test
     public void saveAppelWithSup() {
         AppelDto expectedValue = AppelDto.builder()
-                .date(new Date())
                 .typeAppel("RDV")
                 .duree("1h30")
                 .build();
@@ -73,7 +67,6 @@ public class AppelServiceImplTest {
     @Test
     public void saveAppelWithSupFailure() {
         AppelDto expectedValue = AppelDto.builder()
-                .date(new Date())
                 .typeAppel("RDV")
                 .duree("1h30")
                 .build();
@@ -83,7 +76,6 @@ public class AppelServiceImplTest {
     @Test
     public void saveAppelWithCallerFailure() {
         AppelDto expectedValue = AppelDto.builder()
-                .date(new Date())
                 .typeAppel("RDV")
                 .duree("1h30")
                 .build();

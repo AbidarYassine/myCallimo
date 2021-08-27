@@ -7,6 +7,7 @@ import com.rest.ai.myCallimo.entities.CallerEntity;
 import com.rest.ai.myCallimo.entities.OffreEntity;
 import com.rest.ai.myCallimo.entities.SupervisorEntity;
 import com.rest.ai.myCallimo.exception.NotFoundException;
+import com.rest.ai.myCallimo.exception.offre.AlreadyAffectedException;
 import com.rest.ai.myCallimo.request.AppelDto;
 import com.rest.ai.myCallimo.response.AppelResponse;
 import com.rest.ai.myCallimo.response.CallerResponse;
@@ -88,17 +89,20 @@ public class AppelServiceImpl implements AppelService {
         /*find caller by id*/
         CallerResponse callerResponse = callerService.findById(id);
         OffreEntity offreEntity = offreService.findByIdE(id_offre);
-        /*Get Entity from dtO*/
-        AppelEntity appelEntity = modelMapper.map(appelDto, AppelEntity.class);
-        CallerEntity callerEntity = modelMapper.map(callerResponse, CallerEntity.class);
-        /*Afectation*/
-        appelEntity.setCaller(callerEntity);
-        /*save in db*/
-        AppelEntity saved = appelDao.save(appelEntity);
-        offreEntity.setAppel(saved);
-        offreService.save(offreEntity);
-        return modelMapper.map(saved, AppelResponse.class);
-
+        if (offreEntity.getAppel() != null && offreEntity.getAppel().getId() > 0) {
+            throw new AlreadyAffectedException("L'offre est deja traiter !!");
+        } else {
+            /*Get Entity from dtO*/
+            AppelEntity appelEntity = modelMapper.map(appelDto, AppelEntity.class);
+            CallerEntity callerEntity = modelMapper.map(callerResponse, CallerEntity.class);
+            /*Afectation*/
+            appelEntity.setCaller(callerEntity);
+            /*save in db*/
+            AppelEntity saved = appelDao.save(appelEntity);
+            offreEntity.setAppel(saved);
+            offreService.save(offreEntity);
+            return modelMapper.map(saved, AppelResponse.class);
+        }
     }
 
     @Override
@@ -106,15 +110,19 @@ public class AppelServiceImpl implements AppelService {
         /*find by Id*/
         SupervisorEntity supervisor = supervisorDao.findById(id).orElseThrow(() -> new NotFoundException("SUPERVISOR NOT FOUND"));
         OffreEntity offreEntity = offreService.findByIdE(id_offre);
-        /*get Entity from response */
-        AppelEntity appelEntity = modelMapper.map(appelDto, AppelEntity.class);
-        /* Afectation */
-        appelEntity.setSupervisor(supervisor);
-        /**/
-        AppelEntity saved = appelDao.save(appelEntity);
-        offreEntity.setAppel(saved);
-        offreService.save(offreEntity);
-        return modelMapper.map(saved, AppelResponse.class);
+        if (offreEntity.getAppel() != null && offreEntity.getAppel().getId() > 0) {
+            throw new AlreadyAffectedException("L'offre est deja traiter !!");
+        } else {
+            /*get Entity from response */
+            AppelEntity appelEntity = modelMapper.map(appelDto, AppelEntity.class);
+            /* Afectation */
+            appelEntity.setSupervisor(supervisor);
+            /**/
+            AppelEntity saved = appelDao.save(appelEntity);
+            offreEntity.setAppel(saved);
+            offreService.save(offreEntity);
+            return modelMapper.map(saved, AppelResponse.class);
+        }
     }
 
     @Override

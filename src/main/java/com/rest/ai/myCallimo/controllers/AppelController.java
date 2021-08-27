@@ -31,19 +31,9 @@ public class AppelController {
 
     @PostMapping("")
     public AppelResponse save(@Valid @RequestBody() AppelDto appelDto) {
-        System.out.println(appelDto.getDate());
         return appelService.save(appelDto);
     }
 
-    @PostMapping("/caller-id/{id}/offre/{id_offre}")
-    public AppelResponse saveWithCaller(@RequestBody() AppelDto appelDto, @PathVariable() Integer id, @PathVariable() Integer id_offre) {
-        return appelService.saveWithCaller(appelDto, id, id_offre);
-    }
-
-    @PostMapping("/supervisor-id/{id}/offre/{id_offre}")
-    public AppelResponse saveWithSupervisor(@RequestBody() AppelDto appelDto, @PathVariable() Integer id, @PathVariable() Integer id_offre) {
-        return appelService.saveWithSupervisor(appelDto, id, id_offre);
-    }
 
     @DeleteMapping("/id/{id}")
     public int delete(@PathVariable Integer id) {
@@ -55,14 +45,45 @@ public class AppelController {
         return appelService.findAll();
     }
 
-    @PutMapping(value = "/upload-audio/id/{id_appel}")
-    public ResponseEntity<String> uploadFile(@RequestPart("audio") MultipartFile audio, @PathVariable("id_appel") Integer id_appel) {
-        appelService.updateAudio(audio, id_appel);
-        return ResponseEntity.ok("Done");
-//        String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
-//                .path("/downloadFile/")
-//                .path(appelResponse.getFileName())
-//                .toUriString();
+    @PostMapping(value = "/supervisor-id/{id}/offre/{id_offre}")
+    public ResponseEntity<AppelResponse> saveAppelWithSup(@RequestParam("audio") MultipartFile audio,
+                                                          @PathVariable("id") Integer id,
+                                                          @PathVariable("id_offre") Integer id_offre,
+                                                          @RequestParam("duree") String duree,
+                                                          @RequestParam("typeAppel") String typeAppel
+    ) {
+        AppelDto appelDto = new AppelDto();
+        appelDto.setTypeAppel(typeAppel);
+        appelDto.setDuree(duree);
+        AppelResponse appelResponse = appelService.saveWithSupervisor(appelDto, id, id_offre);
+        AppelResponse res = appelService.updateAudio(audio, appelResponse.getId());
+        return ResponseEntity.ok(res);
+    }
+
+    @PostMapping("/caller-id/{id}/offre/{id_offre}")
+    public ResponseEntity<AppelResponse> saveWithCaller(@RequestParam("audio") MultipartFile audio,
+                                                        @PathVariable("id") Integer id,
+                                                        @PathVariable("id_offre") Integer id_offre,
+                                                        @RequestParam("duree") String duree,
+                                                        @RequestParam("typeAppel") String typeAppel) {
+        AppelDto appelDto = new AppelDto();
+        appelDto.setTypeAppel(typeAppel);
+        appelDto.setDuree(duree);
+        AppelResponse appelResponse = appelService.saveWithCaller(appelDto, id, id_offre);
+        AppelResponse res = appelService.updateAudio(audio, appelResponse.getId());
+        return ResponseEntity.ok(res);
+    }
+
+    @PostMapping("/no-audio/supervisor-id/{id}/offre/{id_offre}")
+    public ResponseEntity<AppelResponse> saveWithSup(@RequestBody AppelDto appelDto, @PathVariable("id") Integer id, @PathVariable("id_offre") Integer id_offre) {
+        AppelResponse appelResponse = appelService.saveWithSupervisor(appelDto, id, id_offre);
+        return ResponseEntity.ok(appelResponse);
+    }
+
+    @PostMapping("/no-audio/caller-id/{id}/offre/{id_offre}")
+    public ResponseEntity<AppelResponse> saveWithCaller(@RequestBody AppelDto appelDto, @PathVariable("id") Integer id, @PathVariable("id_offre") Integer id_offre) {
+        AppelResponse appelResponse = appelService.saveWithCaller(appelDto, id, id_offre);
+        return ResponseEntity.ok(appelResponse);
     }
 
 
